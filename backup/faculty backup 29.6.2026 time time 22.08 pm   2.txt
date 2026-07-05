@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty | Patliputra Vidyapeeth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/c.css">
+    
+    <style>
+        /* 📱 मोबाइल और कंप्यूटर दोनों के लिए परफेक्ट ग्रिड लेआउट */
+        .faculty-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+            gap: 30px !important;
+            padding: 40px 10% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .faculty-card {
+            background: #1e293b !important; /* आपकी प्रीमियम थीम का डार्क कार्ड बैकग्राउंड */
+            padding: 25px !important;
+            border-radius: 15px !important;
+            text-align: center !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-top: 4px solid var(--accent-lime) !important; /* लाइम ग्रीन बॉर्डर */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 12px 25px rgba(174, 234, 0, 0.15) !important;
+        }
+
+        .faculty-img {
+            width: 140px !important;
+            height: 140px !important;
+            border-radius: 50% !important; /* गोल फोटो */
+            object-fit: cover !important;
+            background: #0f172a;
+            border: 3px solid rgba(255, 255, 255, 0.1) !important;
+            margin-bottom: 15px !important;
+            transition: border-color 0.3s ease !important;
+        }
+
+        .faculty-card:hover .faculty-img {
+            border-color: var(--accent-lime) !important; /* होवर करने पर लाइम ग्रीन बॉर्डर */
+        }
+
+        @media (max-width: 768px) {
+            .faculty-grid {
+                grid-template-columns: 1fr !important; /* मोबाइल पर एक कॉलम */
+                padding: 20px 5% !important;
+            }
+        }
+    </style>
+</head>
+<body style="background-color: #0f172a; color: #f8fafc; margin: 0; padding: 0; font-family: 'Poppins', sans-serif;">
+
+    <nav id="dynamic-header"></nav>
+
+    <div class="dynamic-marquee-container" style="margin-top: 105px;">
+        <div class="marquee-label">LATEST UPDATES</div>
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();" id="dynamic-marquee-text">
+                🌟 Welcome to Patliputra Vidyapeeth Portal. Meet our expert faculty team!
+            </marquee>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding-top: 50px;">
+        <h1 style="color: #aeea00; font-size: 2.8rem; font-weight: 700; margin-bottom: 10px;">🎓 Our Expert Faculty</h1>
+        <!-- <p style="color: #94a3b8; max-width: 600px; margin: 0 auto; padding: 0 15px; font-size: 1rem; line-height: 1.6;">
+            हमारे अनुभवी, योग्य और समर्पित शिक्षक जो छात्रों के सर्वांगीण विकास के लिए सदैव प्रयासरत हैं।
+        </p> -->
+    </div>
+
+    <div class="faculty-grid">
+        
+        <div class="faculty-card">
+            <img src="/images/chairman.jpg" alt="Sri. Akash Sulabh" class="faculty-img" onerror="this.src='https://placehold.co/150?text=Akash+Sulabh';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">Sri. Akash Sulabh</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Chairman / Secretary</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">Managing Desk & Strategic Leadership with a vision for modern and Selective Basic Education.</p>
+        </div>
+
+        <div class="faculty-card">
+            <img src="/images/principal.jpg" alt="Smt. Menka" class="faculty-img" onerror="this.src='https://placehold.co/150?text=Smt.+Menka';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">Smt. Menka</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Principal</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">M.A., B.Ed. Overseeing overall academic excellence, student character development, and holistic administration.</p>
+        </div>
+
+        <div class="faculty-card">
+            <img src="/images/faculty/ashok.jpg" alt="Mr. Ashok Kumar" class="faculty-img" onerror="this.src='https://placehold.co/150?text=Ashok+Kumar';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">Mr. Ashok Kumar</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Head of Administration</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">M.Com. Managing institutional discipline, campus operations, and robust school-parent coordination.</p>
+        </div>
+
+        <div class="faculty-card">
+            <img src="/images/faculty/bkjha.jpg" alt="DR. B.K. Jha" class="faculty-img" onerror="this.src='https://placehold.co/150?text=DR.+B.K.+Jha';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">DR. B.K. Jha</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Head of Science Dept.</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">Ph.D. in Science. Senior mentor driving practical education and research models across high-end school laboratories.</p>
+        </div>
+
+        <div class="faculty-card">
+            <img src="/images/faculty/akancha.jpg" alt="Mrs. Akancha Depti" class="faculty-img" onerror="this.src='https://placehold.co/150?text=Akancha+Depti';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">Mrs. Akancha Depti</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Senior Educator & Coordinator</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">M.A. in English, B.Ed. Curating modern communication frameworks and nurturing student curriculum activities.</p>
+        </div>
+
+        <div class="faculty-card">
+            <img src="/images/faculty/sumit.jpg" alt="Mr. Sumit Sahay" class="faculty-img" onerror="this.src='https://placehold.co/150?text=Sumit+Sahay';">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 1.3rem; font-weight: 600;">Mr. Sumit Sahay</h3>
+            <p style="color: var(--accent-lime); font-weight: bold; font-size: 0.95rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Head of IT & Computers</p>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">Software Engineer overseeing advanced school computing systems, smart labs, and computer science projects.</p>
+        </div>
+
+    </div>
+
+    <div style="text-align: center; margin-bottom: 60px;">
+        <a href="/" style="background: #2e7d32; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block; transition: 0.2s;">← Back to Home</a>
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>

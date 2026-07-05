@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Gallery | Patliputra Vidyapeeth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+<body>
+
+    <nav id="dynamic-header"></nav>
+
+    <div class="dynamic-marquee-container" style="margin-top: 105px;">
+        <div class="marquee-label">LATEST UPDATES</div>
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();" id="dynamic-marquee-text">
+                Loading latest updates from admin panel...
+            </marquee>
+        </div>
+    </div>
+
+    <div class="gallery-section-limiter">
+        
+        <div class="gallery-section-header">
+            <h2>📸 Event-Wise Album Gallery</h2>
+            <p>किसी भी इवेंट एल्बम पर क्लिक करके उसके अंदर की सभी तस्वीरें देखें.</p>
+        </div>
+
+        <div id="gallery-grid" style="min-height: 300px;">
+            <p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Loading school albums...</p>
+        </div>
+
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // FORCE TRIGGER LOGIC: अगर main.js लोड होने में देरी करे, तो यह खुद डेटा फ़ेच कर लेगा
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const grid = document.getElementById("gallery-grid");
+                if (grid && (grid.innerText.includes("Loading") || grid.innerText === "")) {
+                    if (typeof renderEventCards === "function" && allEventsData && allEventsData.length > 0) {
+                        renderEventCards();
+                    } else {
+                        fetch('/api/data')
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.events && data.events.length > 0) {
+                                    allEventsData = data.events;
+                                    grid.innerHTML = "";
+                                    data.events.forEach(event => {
+                                        const eventCard = document.createElement("div");
+                                        eventCard.className = "gallery-card";
+                                        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+                                        eventCard.innerHTML = `
+                                            <img src="${event.coverImage}" alt="${event.title}">
+                                            <div class="gallery-overlay-panel">
+                                                <h3 class="gallery-overlay-title">🎉 ${event.title}</h3>
+                                                <p class="gallery-overlay-desc">${event.description} (${event.images.length} Photos)</p>
+                                            </div>
+                                        `;
+                                        grid.appendChild(eventCard);
+                                    });
+                                } else {
+                                    grid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:var(--text-muted);'>गैलरी अभी खाली है। एडमिन पैनल से इवेंट जोड़ें।</p>";
+                                }
+                            }).catch(err => console.error("Force load error:", err));
+                    }
+                }
+            }, 800);
+        });
+    </script>
+</body>
+</html>

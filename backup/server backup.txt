@@ -1,0 +1,88 @@
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.static(path.resolve(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const DATA_FILE = path.resolve(__dirname, 'data', 'database.json');
+const UPLOADS_DIR = path.resolve(__dirname, 'public', 'uploads');
+
+if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+
+// --- MULTER CONFIG (Allows Multiple Images) ---
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => { cb(null, UPLOADS_DIR); },
+    filename: (req, file, cb) => { cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname)); }
+});
+const upload = multer({ storage: storage });
+
+// --- ROUTES ---
+
+app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'index.html')); });
+app.get('/admin', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'admin.html')); });
+
+// 1. Get API for data
+app.get('/api/data', (req, res) => {
+    if (fs.existsSync(DATA_FILE)) {
+        res.json(JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')));
+    } else {
+        res.json({ notices: [], events: [] });
+    }
+});
+
+// 2. Form submission for Notice
+app.post('/api/admin/upload-notice', (req, res) => {
+    const { title, description } = req.body;
+    let localData = { notices: [], events: [] };
+    if (fs.existsSync(DATA_FILE)) { localData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+
+    localData.notices.push({
+        id: Date.now(),
+        title,
+        description,
+        date: new Date().toLocaleDateString('en-GB')
+    });
+
+    fs.writeFileSync(DATA_FILE, JSON.stringify(localData, null, 2));
+    res.send('<script>alert("Notice Published!"); window.location.href="/admin";</script>');
+});
+
+// 3. Form submission for Multiple Event Photos
+app.post('/api/admin/upload-event', upload.array('eventPhotos', 15), (req, res) => {
+    const { eventTitle, eventDescription } = req.body;
+    const uploadedFiles = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
+
+    let localData = { notices: [], events: [] };
+    if (fs.existsSync(DATA_FILE)) { localData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+
+    // Check if event already exists
+    let existingEvent = localData.events.find(e => e.title.toLowerCase() === eventTitle.trim().toLowerCase());
+
+    if (existingEvent) {
+        // Append new photos to existing event
+        existingEvent.images = existingEvent.images.concat(uploadedFiles);
+        existingEvent.description = eventDescription; // update description if changed
+    } else {
+        // Create brand new event card
+        localData.events.push({
+            id: Date.now(),
+            title: eventTitle.trim(),
+            description: eventDescription,
+            coverImage: uploadedFiles[0] || '/uploads/default-event.jpg', // First photo becomes card cover
+            images: uploadedFiles
+        });
+    }
+
+    fs.writeFileSync(DATA_FILE, JSON.stringify(localData, null, 2));
+    res.send('<script>alert("Event Gallery Updated Successfully!"); window.location.href="/admin";</script>');
+});
+
+app.listen(PORT, () => { console.log(`Server running at http://localhost:${PORT}`); });

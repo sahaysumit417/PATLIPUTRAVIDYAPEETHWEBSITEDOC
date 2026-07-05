@@ -1,0 +1,51 @@
+document.addEventListener("DOMContentLoaded", () => {
+    fetchNotices();
+});
+
+function fetchNotices() {
+    const noticeList = document.getElementById("notice-list");
+    const galleryGrid = document.getElementById("gallery-grid");
+
+    fetch('/api/notices')
+        .then(response => response.json())
+        .then(notices => {
+            if (notices.length === 0) {
+                noticeList.innerHTML = "<p style='text-align:center; color:#666;'>अभी कोई नया नोटिस नहीं है।</p>";
+                galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#666;'>गैलरी अभी खाली है। एडमिन पैनल से फोटो अपलोड करें।</p>";
+                return;
+            }
+
+            noticeList.innerHTML = "";
+            galleryGrid.innerHTML = "";
+
+            notices.forEach(item => {
+                // 1. सुंदर नोटिस कार्ड बनाना
+                const noticeCard = document.createElement("div");
+                noticeCard.className = "notice-card";
+                noticeCard.innerHTML = `
+                    <h3>📢 ${item.title}</h3>
+                    <small><i class="fas fa-calendar-alt"></i> तारीख: ${item.date}</small>
+                    <p>${item.description}</p>
+                `;
+                noticeList.appendChild(noticeCard);
+
+                // 2. अगर नोटिस के साथ फोटो है, तो उसे आपकी प्रीमियम गैलरी स्टाइल में डालना
+                if (item.image) {
+                    const imgCard = document.createElement("div");
+                    imgCard.className = "gallery-card-dynamic";
+                    imgCard.innerHTML = `
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="gallery-overlay-dynamic">
+                            <h3>${item.title}</h3>
+                            <p>${item.date}</p>
+                        </div>
+                    `;
+                    galleryGrid.appendChild(imgCard);
+                }
+            });
+        })
+        .catch(err => {
+            console.error("डेटा लोड करने में एरर:", err);
+            noticeList.innerHTML = "<p style='text-align:center; color:red;'>डेटा लोड करने में कुछ दिक्कत आ रही है।</p>";
+        });
+}

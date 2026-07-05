@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patliputra Vidyapeeth | Excellence in Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+
+<body>
+     <!-- Nav -->
+    <nav id="dynamic-header"></nav>
+            <!-- Nav Ended-->    
+
+          <!-- hero sectoin-->        
+    <section class="hero">
+        <video autoplay muted loop playsinline id="hero-video">
+            <source src="/video/time.mp4" type="video/mp4">
+        </video>
+        <div id="hero-image-slider" class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <h1>Welcome to Patliputra Vidyapeeth</h1>
+            <p>Play, Learn and Grow Together</p>
+            <div class="hero-cta-group">
+                <a href="javascript:void(0)" onclick="openEnquiryModal()" class="btn-primary">Admission Open</a>
+                <a href="/about" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+   <!-- scrolling marquee-->   
+    <div class="dynamic-marquee-container">
+        <div class="marquee-label">LATEST UPDATES</div>
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();"
+                id="dynamic-marquee-text">
+                Loading latest updates from admin panel...
+            </marquee>
+        </div>
+    </div>
+  <!-- main caontainer-->   
+    <main class="main-content-limiter">
+        <h2 class="section-title reveal">Welcome to Our Campus</h2>
+
+         <!-- =================================================== -->
+        <!-- 🎯 ABOUT SCHOOL (MISSION & VISION) COMPONENT -->
+        <!-- =================================================== -->
+        <section class="container reveal school-about-section">
+            <div class="school-about-header">
+                <h2>About Patliputra Vidyapeeth</h2>
+                <p>Shaping futures with a dedicated focus on academic brilliance and ethical anchoring.</p>
+            </div>
+
+            <div class="school-about-grid">
+                <!-- Card 1: Our Mission -->
+                <div class="why-choose-us-card school-about-card">
+                    <div class="school-about-title-row">
+                        <div class="school-about-icon-circle">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>Our Mission</h3>
+                    </div>
+                    <p>
+                        To deliver accessible, contemporary, and qualitative education that empowers children to grow intellectual capabilities, cultivate problem-solving approaches, and emerge as responsible pillars of society.
+                    </p>
+                </div>
+
+                <!-- Card 2: Our Vision -->
+                <div class="why-choose-us-card school-about-card">
+                    <div class="school-about-title-row">
+                        <div class="school-about-icon-circle">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Our Vision</h3>
+                    </div>
+                    <p>
+                        To transition traditional classrooms into futuristic landscapes where technological literacy synchronizes with emotional quotient, making our campus a gold-standard hub for sustainable learning ecosystems.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- =================================================== -->
+        <div class="container reveal flex-split-row">
+            <div class="flex-col-large">
+
+
+                <div class="campus-quote-banner">
+                    <i class="fas fa-quote-left quote-background-icon"></i>
+                    <p class="campus-quote-text">
+                        "At Patliputra Vidyapeeth, we believe that education is not just about academic excellence, but
+                        about character building and empowering young minds to become global leaders of tomorrow. We
+                        welcome you to join our journey of knowledge and innovation."
+                    </p>
+                    <div class="profile-signature-area">
+                        <h4 class="sig-name">Mrs. Principal Name</h4>
+                        <span class="sig-title">Principal, Patliputra Vidyapeeth</span>
+                    </div>
+                </div>
+
+                <h3 class="aside-title" style="font-size: 1.6rem; margin-bottom: 15px;">Nurturing Excellence, Shaping
+                    Tomorrow</h3>
+                <p class="paragraph-lead" style="color: var(--text-muted);">
+                    Established with a vision to provide world-class education in Patna, Patliputra Vidyapeeth offers a
+                    perfectly balanced curriculum blending robust academics with sports, arts, and moral values.
+                </p>
+
+                <div class="campus-feature-grid">
+                    <div class="feature-check-item"><i class="fas fa-check-circle"></i> Smart Classrooms</div>
+                    <div class="feature-check-item"><i class="fas fa-check-circle"></i> Expert Faculty</div>
+                    <div class="feature-check-item"><i class="fas fa-check-circle"></i> Holistic Growth</div>
+                    <div class="feature-check-item"><i class="fas fa-check-circle"></i> Safe Environment</div>
+                </div>
+            </div>
+
+            <div class="avatar-sidebar-box">
+                <img src="/images/principal.jpg" alt="Principal" class="avatar-sidebar-img"
+                    onerror="this.src='https://placehold.co/260x320?text=Principal+Photo';">
+                <h4 class="sig-name">Mrs. Principal Name</h4>
+                <span class="sig-title">Principal, Patliputra Vidyapeeth</span>
+            </div>
+        </div>
+
+        <!-- Director Block -->
+        <div class="container reveal flex-split-row" style="padding-top: 0;">
+            <div class="avatar-sidebar-box">
+                <img src="/images/Director.JPG" alt="Director" class="avatar-sidebar-img-large"
+                    onerror="this.src='https://placehold.co/260x320?text=Director+Photo';">
+                <h4 class="sig-name">Director Name</h4>
+                <span class="sig-title">Director, Patliputra Vidyapeeth</span>
+            </div>
+
+            <div class="flex-col-large">
+                <div class="campus-quote-banner">
+                    <i class="fas fa-quote-left quote-background-icon"></i>
+                    <p class="campus-quote-text">
+                        "Welcome to Patliputra Vidyapeeth. Our mission is to provide an environment where academic
+                        excellence goes hand-in-hand with character development. We believe in empowering students with
+                        modern skills while keeping them rooted in our moral values. Together, we are shaping the
+                        leaders of tomorrow."
+                    </p>
+                    <div class="profile-signature-area">
+                        <h4 class="sig-name">Director Name</h4>
+                        <span class="sig-title">Director, Patliputra Vidyapeeth</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+        <!-- 🧪 FIXED & REDESIGNED WORLD-CLASS FACILITIES (LABS) -->
+        <section class="activities reveal">
+            <div class="gallery-section-header">
+                <h2>🏫 World-Class Facilities</h2>
+                <p>Our state-of-the-art campus is designed to foster academic excellence, innovative research, and
+                    holistic development.</p>
+            </div>
+
+            <div class="facility-image-grid">
+                <div class="facility-photo-card" onclick="openLabModal('computer')">
+                    <div class="facility-card-img-wrapper">
+                        <img src="/images/comp1.jpg" alt="Computer Lab"
+                            onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?w=600'">
+                    </div>
+                    <div class="facility-photo-overlay">
+                        <div class="facility-title-box">
+                            <i class="fas fa-desktop"></i>
+                            <h3>Computer Science Lab</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="facility-photo-card" onclick="openLabModal('science')">
+                    <div class="facility-card-img-wrapper">
+                        <img src="/images/sci1.jpg" alt="Science Lab"
+                            onerror="this.src='https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600'">
+                    </div>
+                    <div class="facility-photo-overlay">
+                        <div class="facility-title-box">
+                            <i class="fas fa-flask"></i>
+                            <h3>Composite Science Lab</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="facility-photo-card" onclick="openLabModal('library')">
+                    <div class="facility-card-img-wrapper">
+                        <img src="/images/lib1.jpg" alt="Library"
+                            onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600'">
+                    </div>
+                    <div class="facility-photo-overlay">
+                        <div class="facility-title-box">
+                            <i class="fas fa-book"></i>
+                            <h3>Central Digital Library</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Counter Stats Strip -->
+        <div class="reveal counter-stats-strip">
+            <div class="counter-strip-flex">
+                <div class="counter-stat-node">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h2 class="stat-counter" data-target="100">0</h2>
+                    <p>Board Results (%)</p>
+                </div>
+                <div class="counter-stat-node">
+                    <i class="fas fa-users"></i>
+                    <h2 class="stat-counter" data-target="1500">0</h2>
+                    <p>Happy Students</p>
+                </div>
+                <div class="counter-stat-node">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h2 class="stat-counter" data-target="50">0</h2>
+                    <p>Expert Educators</p>
+                </div>
+                <div class="counter-stat-node">
+                    <i class="fas fa-award"></i>
+                    <h2 class="stat-counter" data-target="15">0</h2>
+                    <p>Years of Legacy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official Notice Board Wrapper -->
+        <div class="notice-board-wrapper">
+            <div class="notice-header-bar">
+                <h2><i class="fas fa-bullhorn"></i> Official Notice Board Channel</h2>
+                <span class="notice-live-badge">Live Server Terminal</span>
+            </div>
+            <div id="notice-list">
+                <p class="paragraph-standard" style="text-align: center; padding: 20px;">Synchronizing sector nodes...
+                </p>
+            </div>
+        </div>
+
+        <!-- Notice Popup Engine -->
+        <div id="notice-popup" class="notice-modal-overlay" onclick="closeNoticePopupOutside(event)">
+            <div class="notice-modal-window">
+                <span class="notice-modal-close" onclick="closeNoticePopup()">&times;</span>
+                <div style="margin-bottom: 15px;">
+                    <span id="popup-date" class="blink-new-badge">DATE LOG</span>
+                </div>
+                <h2 id="popup-title" class="profile-card-title">Notice Broadcast Title</h2>
+                <div id="popup-body" class="paragraph-standard">Broadcast content text logs payload...</div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Recent Gallery -->
+        <h2 class="section-title reveal">Recent Gallery</h2>
+        <div id="gallery-grid"></div>
+
+        <!-- Recent Gallery -->
+       <!--Beyond Academics--> 
+       <!-- Beyond Academics -->
+<section class="academics-ext-section reveal">
+    <div class="academics-ext-header">
+        <h2>🎉 Beyond Academics</h2>
+        <p>Nurturing talents, building life skills, and exploring passions through diverse co-curricular activities.</p>
+    </div>
+
+    <div class="academics-ext-grid">
+        <!-- Card 1: Sports -->
+        <a href="/beyond-academics/sports" style="text-decoration: none; color: inherit;">
+            <div class="academics-ext-card">
+                <div class="academics-card-img-box">
+                    <img src="/images/Outdoor game.png" alt="Sports & Athletics" onerror="this.src='https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?q=80&w=600'">
+                </div>
+                <div class="academics-card-content">
+                    <h3>Sports & Athletics</h3>
+                </div>
+            </div>
+        </a>
+
+        <!-- Card 2: Music -->
+        <a href="/beyond-academics/music" style="text-decoration: none; color: inherit;">
+            <div class="academics-ext-card">
+                <div class="academics-card-img-box">
+                    <img src="/images/music 2.jpeg" alt="Music & Performing Arts" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=600'">
+                </div>
+                <div class="academics-card-content">
+                    <h3>Music & Performing Arts</h3>
+                </div>
+            </div>
+        </a>
+
+        <!-- Card 3: Arts -->
+        <a href="/beyond-academics/arts" style="text-decoration: none; color: inherit;">
+            <div class="academics-ext-card">
+                <div class="academics-card-img-box">
+                    <img src="/images/Art & Craft.png" alt="Fine Arts & Crafts" onerror="this.src='https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=600'">
+                </div>
+                <div class="academics-card-content">
+                    <h3>Fine Arts & Crafts</h3>
+                </div>
+            </div>
+        </a>
+
+        <!-- Card 4: Indoor Games -->
+        <a href="/beyond-academics/indoor-games" style="text-decoration: none; color: inherit;">
+            <div class="academics-ext-card">
+                <div class="academics-card-img-box">
+                    <img src="/images/indoor game.png" alt="Strategic Indoor Games" onerror="this.src='https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?q=80&w=600'">
+                </div>
+                <div class="academics-card-content">
+                    <h3>Strategic Indoor Games</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+        <!-- Beyond Academics -->
+         
+        <!-- Why Choose Us Block -->
+        <h2 class="section-title reveal">Why Choose Patliputra Vidyapeeth?</h2>
+        <div class="container reveal"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px; padding: 20px 0;">
+            <div class="why-choose-us-card">
+                <i class="fas fa-brain"></i>
+                <h3>Innovative Learning</h3>
+                <p>We implement digital tools, smart boards, and experiential learning methods to make education
+                    engaging.</p>
+            </div>
+            <div class="why-choose-us-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Safety First</h3>
+                <p>24/7 CCTV surveillance, strictly secure campus gates, and verified staff to ensure absolute peace of
+                    mind.</p>
+            </div>
+            <div class="why-choose-us-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Value-Based Education</h3>
+                <p>Along with science and math, we deeply instill cultural values, respect, and discipline in every
+                    child.</p>
+            </div>
+        </div>
+    </main>
+    <div id="lab-modal" class="lab-modal">
+        <div class="lab-modal-content slider-mode">
+            <span class="close-modal" onclick="closeLabModal()">&times;</span>
+            <h2 id="lab-modal-title"
+                style="color: var(--white); margin-bottom: 20px; font-weight: 700; text-align: center;">Lab Photos</h2>
+
+            <div class="lab-slider-container">
+                <button class="slider-btn prev-btn" onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+
+                <div id="lab-modal-images" class="lab-slider-wrapper">
+                </div>
+
+                <button class="slider-btn next-btn" onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div id="slider-dots" class="slider-dots-container"></div>
+        </div>
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+    </script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+document.addEventListener("DOMContentLoaded", () => {
+    loadWebsiteData();
+});
+
+let allEventsData = []; // Store globally to read on click
+
+function loadWebsiteData() {
+    const noticeList = document.getElementById("notice-list");
+    const galleryGrid = document.getElementById("gallery-grid");
+
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            // 1. Render Notices
+            if (!data.notices || data.notices.length === 0) {
+                noticeList.innerHTML = "<p style='text-align:center; color:#bbb;'>अभी कोई नया नोटिस नहीं है।</p>";
+            } else {
+                noticeList.innerHTML = "";
+                data.notices.reverse().forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "notice-card";
+                    card.innerHTML = `
+                        <h3>📢 ${item.title}</h3>
+                        <small>तारीख: ${item.date}</small>
+                        <p>${item.description}</p>
+                    `;
+                    noticeList.appendChild(card);
+                });
+            }
+
+            // 2. Render Event Cards
+            allEventsData = data.events || [];
+            renderEventCards();
+        })
+        .catch(err => console.error("Error fetching data:", err));
+}
+
+// Show Initial Event Cards
+function renderEventCards() {
+    const galleryGrid = document.getElementById("gallery-grid");
+    
+    if (allEventsData.length === 0) {
+        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
+        return;
+    }
+
+    galleryGrid.innerHTML = "";
+    allEventsData.forEach(event => {
+        const eventCard = document.createElement("div");
+        eventCard.className = "gallery-card"; // Using your beautiful c.css layout
+        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+        eventCard.innerHTML = `
+            <img src="${event.coverImage}" alt="${event.title}">
+            <div class="gallery-overlay" style="opacity: 1;">
+                <h3>🎉 ${event.title}</h3>
+                <p>${event.description} (${event.images.length} Photos)</p>
+            </div>
+        `;
+        galleryGrid.appendChild(eventCard);
+    });
+}
+
+// When someone clicks an Event Card
+function openEventGallery(eventId) {
+    const galleryGrid = document.getElementById("gallery-grid");
+    const selectedEvent = allEventsData.find(e => e.id === eventId);
+
+    if (!selectedEvent) return;
+
+    // Create Inside Album Grid with a Back Button
+    galleryGrid.innerHTML = `
+        <div style="grid-column: 1/-1; margin-bottom: 20px; text-align: left;">
+            <button onclick="renderEventCards()" style="background: #aeea00; color: #111827; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-family: inherit;">
+                ← Back to Albums
+            </button>
+            <h2 style="color: white; margin-top: 15px; font-size: 1.8rem;">${selectedEvent.title} Album</h2>
+            <p style="color: #bbb;">${selectedEvent.description}</p>
+        </div>
+    `;
+
+    // Render all images inside this specific event
+    selectedEvent.images.forEach(imgUrl => {
+        const imgCard = document.createElement("div");
+        imgCard.className = "gallery-card";
+        imgCard.innerHTML = `<img src="${imgUrl}" alt="Event Photo" style="transition: none;">`;
+        galleryGrid.appendChild(imgCard);
+    });
+
+    // Smooth scroll back to gallery section title
+    document.getElementById("gallery-grid").scrollIntoView({ behavior: 'smooth' });
+}

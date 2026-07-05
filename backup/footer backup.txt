@@ -1,0 +1,28 @@
+ <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Patna, Bihar, India</p>
+                <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                <p><i class="fas fa-envelope"></i> info@patliputravidyapeeth.com</p>
+            </div>
+            <div class="footer-col">
+                <h4>Information</h4>
+                <li>CBSE Affiliation</li>
+                <li>Mandatory Disclosure</li>
+                <li>Transfer Certificate</li>
+                <li>Annual Report</li>
+            </div>
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <div style="display:flex; gap:20px; font-size:1.6rem; color: var(--accent-lime);">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Patliputra Vidyapeeth. All Rights Reserved. Managed & Developed by Sumit Sahay.
+        </div>
+    </footer>

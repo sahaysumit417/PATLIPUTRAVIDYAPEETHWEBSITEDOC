@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandatory Public Disclosures | Patliputra Vidyapeeth</title>
+    <!-- Index Page ke theme se consistency ke liye Poppins Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+    
+    <style>
+        :root {
+            --bg-pure-white: #ffffff;     /* Strict Pure White Background */
+            --text-dark-green: #064e3b;   /* Requested Dark Green Core Color */
+            --border-separator: #cbd5e1;  /* Clean elegant list line divider */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-pure-white);
+            color: var(--text-dark-green);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .disclosure-wrapper {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        /* Simple Navigation Arrow Link */
+        .back-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark-green);
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .back-nav-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Plain Minimal Header Section */
+        .disclosure-header-block {
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--text-dark-green);
+            padding-bottom: 15px;
+        }
+
+        .disclosure-header-block h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: var(--text-dark-green);
+            letter-spacing: -0.5px;
+        }
+
+        .disclosure-header-block p {
+            color: var(--text-dark-green);
+            margin: 0;
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        /* Strict Clean Ordered List Architecture (No Cards allowed) */
+        .pure-ordered-list {
+            padding-left: 25px;
+            margin: 0;
+        }
+
+        .pure-ordered-list li {
+            color: var(--text-dark-green);
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-separator);
+        }
+
+        /* Inline Text-Only Link Design */
+        .pdf-inline-action {
+            color: var(--text-dark-green);
+            text-decoration: underline;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .pdf-inline-action:hover {
+            opacity: 0.75;
+        }
+
+        /* Minimal Status Updates Typography */
+        .system-status-item {
+            list-style: none;
+            padding: 20px 0;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamically loaded header from your global navigation module -->
+    <nav id="dynamic-header"></nav>
+    
+    <div class="disclosure-wrapper">
+        <a href="/" class="back-nav-link"><i class="fas fa-arrow-left"></i> Back to Homepage</a>
+
+        <div class="disclosure-header-block">
+            <h1>Mandatory Public Disclosures</h1>
+            <p>As per CBSE compliance guidelines and school administration regulatory framework</p>
+        </div>
+
+        <!-- Strict Native HTML Ordered List Element -->
+        <ol id="dynamic-documents-container" class="pure-ordered-list">
+            <li class="system-status-item">Fetching certified documentation matrix...</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById('dynamic-documents-container');
+
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    const allDocs = data.documents || [];
+                    const mandatoryDocs = allDocs.filter(d => d.category === 'mandatory');
+
+                    if (mandatoryDocs.length === 0) {
+                        container.innerHTML = `
+                            <li class="system-status-item">
+                                अभी इस सेक्शन में स्कूल प्रशासन द्वारा कोई भी दस्तावेज अपलोड नहीं किया गया है।
+                            </li>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = "";
+                    
+                    // Appending pure list item architecture smoothly aligned to typography
+                    mandatoryDocs.reverse().forEach((doc) => {
+                        container.innerHTML += `
+                            <li>
+                                ${doc.title} 
+                                <a href="${doc.fileUrl}" target="_blank" class="pdf-inline-action">
+                                    [View PDF]
+                                </a>
+                            </li>
+                        `;
+                    });
+                })
+                .catch(err => {
+                    console.error("Database connection failure:", err);
+                    container.innerHTML = `<li class="system-status-item" style="color: red; list-style: none;">Database connection failure!</li>`;
+                });
+        });
+    </script>
+    <script src="/js/main.js"></script>
+    <!-- Dynamically loaded footer aligned to website base wrapper -->
+    <footer id="dynamic-footer"></footer>
+</body>
+</html>

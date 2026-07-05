@@ -1,0 +1,104 @@
+<div class="logo header-logo-box">
+    <a href="/" class="logo-container-circle logo-anchor-wrapper">
+         <img src="/images/logo.png" alt="School Logo" class="animated-logo school-brand-logo">
+    </a>
+    
+    <div class="logo-typography-stack">
+        <div class="logo-main-brand-text">
+            PATLIPUTRA <span class="highlight-lime">VIDYAPEETH</span>
+        </div>
+        <div class="logo-board-subtext">
+            Affiliated to CBSE, New Delhi. 10+2
+        </div>
+        <div class="logo-postal-address">
+            Health Institute Road, Near Central Jail Beur, Anishabad, Patna-800002.
+        </div>
+    </div>
+</div>
+
+<button id="mobile-toggle-btn" class="header-nav-toggle">
+    <i class="fas fa-bars"></i>
+</button>
+
+<ul class="nav-links header-menu-navigation">
+    <li><a href="/" class="nav-item-link item-home-link"><i class="fas fa-home"></i> Home</a></li>
+    
+    <!-- 🎯 1. ABOUT US DROPDOWN -->
+    <li class="nav-dropdown-item">
+        <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
+            About Us <i class="fas fa-chevron-down dropdown-caret-icon"></i>
+        </a>
+        <ul class="nav-submenu-list">
+            <li><a href="/about#the-school"><i class="fas fa-school"></i> The School</a></li>
+            <li><a href="/about#timing"><i class="fas fa-clock"></i> School Timing</a></li>
+            <li><a href="/about#academics"><i class="fas fa-book-reader"></i> Academic Program</a></li>
+            <li><a href="/about#team"><i class="fas fa-users"></i> Our Team</a></li>
+            <li><a href="/about#mandatory-info"><i class="fas fa-file-invoice"></i> Mandatory Information</a></li>
+        </ul>
+    </li>
+
+    <!-- 🎯 2. EVENTS DROPDOWN -->
+    <li class="nav-dropdown-item">
+        <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
+            Events <i class="fas fa-chevron-down dropdown-caret-icon"></i>
+        </a>
+        <ul class="nav-submenu-list">
+            <li><a href="/events#upcoming"><i class="fas fa-calendar-plus"></i> Upcoming Events</a></li>
+            <li><a href="/events#recent"><i class="fas fa-history"></i> Recent Events</a></li>
+        </ul>
+    </li>
+
+    <!-- 🎯 3. ACHIEVEMENTS DROPDOWN -->
+    <li class="nav-dropdown-item">
+        <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
+            Achievements <i class="fas fa-chevron-down dropdown-caret-icon"></i>
+        </a>
+        <ul class="nav-submenu-list">
+            <li><a href="/achievements#class-x"><i class="fas fa-graduation-cap"></i> Class X Result</a></li>
+            <li><a href="/achievements#class-xii"><i class="fas fa-user-graduate"></i> Class XII Result</a></li>
+            <li><a href="/achievements#awards"><i class="fas fa-trophy"></i> School Awards</a></li>
+        </ul>
+    </li>
+    
+    <li><a href="/gallery" class="nav-item-link">Gallery</a></li>
+    <li><a href="/contact" class="nav-item-link">Contacts</a></li>
+    
+    <li class="btn-enquiry-list-node">
+        <a href="javascript:void(0)" onclick="openEnquiryModal()" class="header-enquiry-trigger-btn">
+            Enquiry
+        </a>
+    </li>
+    
+    <li>
+        <a href="/login" class="header-admin-portal-btn">
+            <i class="fas fa-lock"></i> Admin
+        </a>
+    </li>
+</ul>
+
+<div id="enquiry-modal" class="enquiry-modal-backdrop">
+    <div class="enquiry-modal-card-window">
+        <span onclick="closeEnquiryModal()" class="enquiry-modal-close-trigger">&times;</span>
+        <h2 class="enquiry-modal-main-heading"><i class="fas fa-paper-plane"></i> Admission Enquiry</h2>
+        <p class="enquiry-modal-sub-label">कृपया अपनी जानकारी भरें, हम आपसे जल्द संपर्क करेंगे।</p>
+        
+        <form action="/api/enquiry/submit" method="POST">
+            <label class="enquiry-form-input-label">Parent's Name (अभिभावक का नाम):</label>
+            <input type="text" name="parentName" placeholder="Enter your full name" required class="enquiry-form-field">
+
+            <label class="enquiry-form-input-label">Student's Name (छात्र/छात्रा का नाम):</label>
+            <input type="text" name="studentName" placeholder="Enter student's name" required class="enquiry-form-field">
+
+            <label class="enquiry-form-input-label">Admission for Class (कक्षा):</label>
+            <input type="text" name="targetClass" placeholder="e.g., Class 5, Nursery" required class="enquiry-form-field">
+
+            <label class="enquiry-form-input-label">Mobile Number (मोबाइल नंबर):</label>
+            <input type="tel" name="phone" placeholder="Enter 10-digit number" pattern="[0-9]{10}" required class="enquiry-form-field">
+
+            <label class="enquiry-form-input-label">Any Message/Query (यदि कोई सवाल हो):</label>
+            <textarea name="message" rows="3" placeholder="Write your query here..." class="enquiry-form-field textarea-no-resize"></textarea>
+
+            <button type="submit" class="enquiry-form-submit-action">Submit Enquiry</button>
+        </form>
+    </div>
+</div>

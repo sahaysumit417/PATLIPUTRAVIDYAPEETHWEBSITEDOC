@@ -1,0 +1,211 @@
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Load Website dynamic notices & gallery data safely
+    loadWebsiteData();
+});
+
+let allEventsData = []; // Global copy to keep track of loaded events for filtering
+
+function loadWebsiteData() {
+    const noticeList = document.getElementById("notice-list");
+    const galleryGrid = document.getElementById("gallery-grid");
+    const marqueeElement = document.getElementById("dynamic-marquee-text"); 
+
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            // 1. Notices Load Karna
+            if (!data.notices || data.notices.length === 0) {
+                if (noticeList) noticeList.innerHTML = "<p style='text-align:center; color:#bbb;'>अभी कोई नया नोटिस नहीं है।</p>";
+                if (marqueeElement) {
+                    marqueeElement.innerHTML = "<span class='marquee-notice-item'>🌟 Patliputra Vidyapeeth welcomes you! Admission open for new session.</span>";
+                }
+            } else {
+                if (noticeList) noticeList.innerHTML = "";
+                let marqueeHTML = ""; 
+
+                data.notices.reverse().forEach(item => {
+                    if (noticeList) {
+                        const card = document.createElement("div");
+                        card.className = "notice-card";
+                        card.innerHTML = `
+                            <h3>📢 ${item.title}</h3>
+                            <small>तारीख: ${item.date}</small>\
+                            <p>${item.description}</p>
+                        `;
+                        noticeList.appendChild(card);
+                    }
+                    marqueeHTML += `<span class="marquee-notice-item"> ⚡ ${item.title} </span>`;
+                });
+
+                if (marqueeElement) {
+                    marqueeElement.innerHTML = marqueeHTML;
+                }
+            }
+
+            // 2. Gallery Load Karna
+            allEventsData = data.events || [];
+            if (galleryGrid) {
+                renderGallery("all");
+            }
+
+            // 🚀 HERO LOOP CALL (Safe Mode: Isko catch block se pehle safely callback me rakha hai)
+            if (document.getElementById('hero-video') && document.getElementById('hero-image-slider')) {
+                startHeroDynamicLoop(data.events);
+            }
+        })
+        .catch(err => {
+            console.error("Data load karne me dikkat:", err);
+            // Fallback initialization if API fails to prevent freeze
+            if (document.getElementById('hero-video')) {
+                startHeroDynamicLoop([]);
+            }
+        });
+}
+
+// Gallery rendering helper
+function renderGallery(category) {
+    const galleryGrid = document.getElementById("gallery-grid");
+    if (!galleryGrid) return;
+    galleryGrid.innerHTML = "";
+
+    let filtered = allEventsData;
+    if (category !== "all") {
+        filtered = allEventsData.filter(item => item.category === category);
+    }
+
+    if (filtered.length === 0) {
+        galleryGrid.innerHTML = "<p style='color:#bbb; text-align:center; width:100%; grid-column:1/-1;'>इस केटेगरी में अभी कोई फोटो नहीं है।</p>";
+        return;
+    }
+
+    filtered.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "gallery-item";
+        itemDiv.innerHTML = `
+            <img src="${item.images[0]}" alt="${item.title}" onclick="openLabModal('${item.title}', ${JSON.stringify(item.images)})">
+            <div class="gallery-desc">
+                <h4>${item.title}</h4>
+                <p>${item.description}</p>
+            </div>
+        `;
+        galleryGrid.appendChild(itemDiv);
+    });
+}
+
+// Modal and Enquiry Functions
+function openLabModal(title, images) {
+    const modal = document.getElementById("lab-modal");
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    document.getElementById("lab-modal-title").innerText = title;
+    const imagesContainer = document.getElementById("lab-modal-images");
+    imagesContainer.innerHTML = "";
+    images.forEach(img => {
+        const image = document.createElement("img");
+        image.src = img;
+        imagesContainer.appendChild(image);
+    });
+}
+
+function closeLabModal() {
+    const modal = document.getElementById("lab-modal");
+    modal.style.display = "none"; 
+    document.body.style.overflow = "auto"; 
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("lab-modal");
+    if (event.target === modal) {
+        closeLabModal();
+    }
+}
+
+function openEnquiryModal() {
+    const modal = document.getElementById("enquiry-modal");
+    if(modal) {
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
+}
+function closeEnquiryModal() {
+    const modal = document.getElementById("enquiry-modal");
+    if(modal) {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+}
+
+// 📌 APKA ORIGINAL HEADER & FOOTER LOADING CODE (SURAKSHIT)
+document.addEventListener("DOMContentLoaded", function() {
+    const headerContainer = document.getElementById('dynamic-header');
+    if (headerContainer) {
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(data => {
+                headerContainer.innerHTML = data;
+            })
+            .catch(err => console.error("Header load karne me dikkat aayi:", err));
+    }
+
+    const footerContainer = document.getElementById('dynamic-footer');
+    if (footerContainer) {
+        fetch('/footer.html')
+            .then(res => res.text())
+            .then(data => {
+                footerContainer.innerHTML = data;
+            })
+            .catch(err => console.error("Footer load karne me dikkat aayi:", err));
+    }
+});
+
+// ==========================================================================
+// 🎬 DYNAMIC HERO BACKGROUND VIDEO & IMAGE SLIDER LOOP (INDEPENDENT)
+// ==========================================================================
+function startHeroDynamicLoop(events) {
+    const video = document.getElementById('hero-video');
+    const slider = document.getElementById('hero-image-slider');
+    
+    if (!video || !slider) return; 
+
+    let recentImages = [];
+    if (events && Array.isArray(events)) {
+        events.forEach(event => {
+            if (event && event.images && Array.isArray(event.images)) {
+                recentImages = recentImages.concat(event.images);
+            }
+        });
+    }
+
+    // Default backup slides if no image found in database gallery
+    if (recentImages.length < 4) {
+        recentImages = [
+            'https://placehold.co/1200x600?text=Campus+Life+1',
+            'https://placehold.co/1200x600?text=Science+Lab+2',
+            'https://placehold.co/1200x600?text=Sports+Day+3',
+            'https://placehold.co/1200x600?text=Smart+Class+4'
+        ];
+    }
+
+    recentImages.sort(() => 0.5 - Math.random());
+    let selectedImages = recentImages.slice(0, 4);
+    let currentStep = 0; 
+
+    if (window.heroSliderInterval) clearInterval(window.heroSliderInterval);
+
+    window.heroSliderInterval = setInterval(() => {
+        if (currentStep === 0) {
+            video.style.opacity = '0';
+            slider.style.opacity = '1';
+            slider.style.backgroundImage = `url('${selectedImages[0]}')`;
+            currentStep = 1;
+        } else if (currentStep < selectedImages.length) {
+            slider.style.backgroundImage = `url('${selectedImages[currentStep]}')`;
+            currentStep++;
+        } else {
+            slider.style.opacity = '0';
+            video.style.opacity = '1';
+            currentStep = 0;
+            selectedImages.sort(() => 0.5 - Math.random());
+        }
+    }, 6000); 
+}

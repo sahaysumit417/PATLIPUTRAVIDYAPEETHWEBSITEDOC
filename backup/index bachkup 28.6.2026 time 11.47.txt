@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patliputra Vidyapeeth | Excellence in Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+
+<body>
+    <!--header-->
+    <nav id="dynamic-header"></nav>
+    <!--header-->
+
+    <!--Hero Section-->
+ <!--Hero Section-->
+
+   <section class="hero">
+
+    <video autoplay muted loop id="hero-video">
+            <source src="/video/time.mp4" type="video/mp4">
+        </video>
+    <div id="hero-image-slider" class="hero-bg" style="width: 100%; height: 100%; position: absolute; top:0; left:0; z-index: 1; opacity: 0; background-size: cover; background-position: center; transition: opacity 1s ease, background-image 1s ease;">
+    </div>
+    <div class="hero-overlay" style="position: absolute; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2;"></div>
+
+    <div class="hero-content" style="position: relative; z-index: 3;">
+
+    </div>
+
+</section>
+
+   <!--Hero Section--> 
+
+
+   <!--Hero Section-->
+
+    <!-- 📢 DYNAMIC NOTICE MARQUEE SYSTEM -->
+    <div class="dynamic-marquee-container">
+        <div class="marquee-label">LATEST UPDATES</div>
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();"
+                id="dynamic-marquee-text">
+                Loading latest updates from admin panel...
+            </marquee>
+        </div>
+    </div>
+    <!-- 📢 intro About School-->
+   <h2 class="section-title reveal">Welcome to Our Campus</h2>
+<div class="container reveal" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 60px; width: 100%; box-sizing: border-box;">
+
+    <div style="flex: 2; min-width: 300px; display: flex; flex-direction: column; color: white; box-sizing: border-box;">
+        
+      <div style="background: #1e293b; padding: 30px; border-radius: 12px; border-left: 5px solid var(--accent-lime); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 30px; box-sizing: border-box;">
+    
+    <i class="fas fa-quote-left" style="font-size: 1.8rem; color: rgba(174, 234, 0, 0.15); position: absolute; top: 15px; left: 15px;"></i>
+    
+    <p style="color: #cbd5e1; font-style: italic; line-height: 1.7; font-size: 1.05rem; margin: 0 0 15px 0; padding-left: 15px; text-align: left;">
+        "At Patliputra Vidyapeeth, we believe that education is not just about academic excellence, but about character building and empowering young minds to become global leaders of tomorrow. We welcome you to join our journey of knowledge and innovation."
+    </p>
+    
+    <div style="text-align: right; width: 100%; box-sizing: border-box;">
+        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin: 0 0 2px 0;">Mrs. Principal Name</h4>
+        <span style="color: var(--accent-lime); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px; display: block;">Principal, Patliputra Vidyapeeth</span>
+    </div>
+
+</div>
+
+        <h3 style="color: white; font-size: 1.6rem; margin-bottom: 15px; font-weight: 600; text-align: left;">Nurturing Excellence, Shaping Tomorrow</h3>
+        <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px; text-align: left;">
+            Established with a vision to provide world-class education in Patna, Patliputra Vidyapeeth offers a perfectly balanced curriculum blending robust academics with sports, arts, and moral values.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; box-sizing: border-box;">
+            <div style="color: #cbd5e1; text-align: left;"><i class="fas fa-check-circle" style="color: var(--accent-lime); margin-right: 8px;"></i> Smart Classrooms</div>
+            <div style="color: #cbd5e1; text-align: left;"><i class="fas fa-check-circle" style="color: var(--accent-lime); margin-right: 8px;"></i> Expert Faculty</div>
+            <div style="color: #cbd5e1; text-align: left;"><i class="fas fa-check-circle" style="color: var(--accent-lime); margin-right: 8px;"></i> Holistic Growth</div>
+            <div style="color: #cbd5e1; text-align: left;"><i class="fas fa-check-circle" style="color: var(--accent-lime); margin-right: 8px;"></i> Safe Environment</div>
+        </div>
+    </div>
+
+    <div style="flex: 1; min-width: 280px; background: #1e293b; padding: 20px; border-radius: 12px; border-top: 4px solid var(--accent-lime); display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); box-sizing: border-box;">
+        <img src="/images/principal.jpg" alt="Principal Ma'am"
+             style="width: 100%; max-width: 240px; height: auto; max-height: 320px; border-radius: 8px; object-fit: contain; background: #0f172a; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 12px;"
+             onerror="this.src='https://placehold.co/260x320?text=Principal+Photo';">
+        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 2px; margin-top: 5px;">Mrs. Principal Name</h4>
+        <span style="color: var(--accent-lime); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;">Principal, Patliputra Vidyapeeth</span>
+    </div>
+ <!-- 📢 Director's Message -->
+<div class="reveal" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap-reverse; margin-bottom: 60px; width: 100%; box-sizing: border-box;">
+
+    <div style="flex: 1; min-width: 280px; background: #1e293b; padding: 20px; border-radius: 12px; border-top: 4px solid var(--accent-lime); display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); box-sizing: border-box;">
+        <img src="/images/Director.JPG" alt="Director Sir"style="width: 100%; max-width: 340px; height: auto; max-height: 420px; border-radius: 8px; object-fit: contain; background: #0f172a; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 12px;"
+             onerror="this.src='https://placehold.co/260x320?text=Director+Photo';">
+        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 2px; margin-top: 5px;">Director Name </h4>
+        <span style="color: var(--accent-lime); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;">Director, Patliputra Vidyapeeth</span>
+    </div>
+
+    <div style="flex: 2; min-width: 300px; display: flex; flex-direction: column; color: white; box-sizing: border-box;">
+        
+        <div style="background: #1e293b; padding: 30px; border-radius: 12px; border-left: 5px solid var(--accent-lime); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.15); box-sizing: border-box; width: 100%;">
+            <i class="fas fa-quote-left" style="font-size: 1.8rem; color: rgba(174, 234, 0, 0.15); position: absolute; top: 15px; left: 15px;"></i>
+            
+            <p style="color: #cbd5e1; font-style: italic; line-height: 1.7; font-size: 1.05rem; margin: 0 0 15px 0; padding-left: 15px; text-align: left;">
+                "Welcome to Patliputra Vidyapeeth. Our mission is to provide an environment where academic excellence goes hand-in-hand with character development. We believe in empowering students with modern skills while keeping them rooted in our moral values. Together, we are shaping the leaders of tomorrow."
+            </p>
+            
+            <div style="text-align: right; width: 100%; box-sizing: border-box;">
+                <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin: 0 0 2px 0;">Director Name </h4>
+                <span style="color: var(--accent-lime); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px; display: block;">Director, Patliputra Vidyapeeth</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <!-- 📢 Director's Message -->
+
+</div>
+
+    <!-- 📢 intro About School-->
+
+   
+
+    <!-- 📢 Labs Cards -->
+
+    <h2 class="section-title reveal">World-Class Facilities</h2>
+
+    <div class="container reveal">
+        <div class="card" onclick="openLabModal('computer')" style="cursor: pointer;">
+            <i class="fas fa-desktop"></i>
+            <h3>Computer Lab</h3>
+            <p>Advanced IT center with high-speed systems for modern learning.</p>
+        </div>
+        <div class="card" onclick="openLabModal('chemistry')" style="cursor: pointer;">
+            <i class="fas fa-flask"></i>
+            <h3>Chemistry Lab</h3>
+            <p>Equipped with modern safety gear and experiment tools.</p>
+        </div>
+        <div class="card" onclick="openLabModal('physics')" style="cursor: pointer;">
+            <i class="fas fa-atom"></i>
+            <h3>Physics Lab</h3>
+            <p>Interactive lab to explore the wonders of physical sciences.</p>
+        </div>
+        <div class="card" onclick="openLabModal('biology')" style="cursor: pointer;">
+            <i class="fas fa-microscope"></i>
+            <h3>Biology Lab</h3>
+            <p>State-of-the-art microscopy for biological research.</p>
+        </div>
+    </div>
+    <!-- 📢 Labs Cards -->
+    <!-- 📢 Stats Section -->
+   <div class="reveal" style="background: linear-gradient(135deg, #1e293b, #0f172a); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 2px solid var(--accent-lime); padding: 40px 20px; margin: 50px 0; width: 100%; box-sizing: border-box;">
+    
+    <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+        
+        <div style="flex: 1; min-width: 220px; text-align: center; box-sizing: border-box; padding: 15px;">
+            <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 12px; display: inline-block;"></i>
+            <h2 style="color: white; font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2;">100%</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 8px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Board Results</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 220px; text-align: center; box-sizing: border-box; padding: 15px;">
+            <i class="fas fa-users" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 12px; display: inline-block;"></i>
+            <h2 style="color: white; font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2;">1500+</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 8px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Happy Students</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 220px; text-align: center; box-sizing: border-box; padding: 15px;">
+            <i class="fas fa-chalkboard-teacher" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 12px; display: inline-block;"></i>
+            <h2 style="color: white; font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2;">50+</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 8px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Expert Educators</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 220px; text-align: center; box-sizing: border-box; padding: 15px;">
+            <i class="fas fa-award" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 12px; display: inline-block;"></i>
+            <h2 style="color: white; font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2;">15+</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 8px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Years of Legacy</p>
+        </div>
+        
+    </div>
+</div>
+    <!-- 📢 Stats Section -->
+    <!-- 📢 Notice Board -->
+
+    <h2 class="section-title reveal">📢 Latest Notice Board</h2>
+    <div class="container reveal" id="notice-list"
+        style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto 50px auto;">
+        <p style="text-align: center; font-family: 'Poppins', sans-serif;">Loading notices...</p>
+    </div>
+    <!-- 📢 Notice Board -->
+    <!-- 📢 Recent Gallery -->
+    <h2 class="section-title reveal">Recent Gallery</h2>
+    <div class="gallery-grid reveal" id="gallery-grid">
+    </div>
+    <!-- 📢 Recent Gallery -->
+    <!-- 📢 Beyond Academics -->
+    <div class="activities reveal">
+        <h2 class="section-title" style="color: white; padding-top: 0;">Beyond Academics</h2>
+        <div class="activity-grid">
+            <div class="act-box"><i class="fas fa-running"></i> Sports Arena</div>
+            <div class="act-box"><i class="fas fa-guitar"></i> Music & Arts</div>
+            <div class="act-box"><i class="fas fa-chess"></i> Indoor Games</div>
+        </div>
+    </div>
+    <!-- 📢 Beyond Academics -->
+    <!-- 📢 Why Choose Us -->
+    <h2 class="section-title reveal">Why Choose Patliputra Vidyapeeth?</h2>
+<div class="container reveal" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px;">
+    <div style="background: #1e293b; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+        <i class="fas fa-brain" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 15px;"></i>
+        <h3 style="color: white; margin-bottom: 10px; font-weight: 600;">Innovative Learning</h3>
+        <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">We implement digital tools, smart boards, and experiential learning methods to make education engaging.</p>
+    </div>
+    <div style="background: #1e293b; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 15px;"></i>
+        <h3 style="color: white; margin-bottom: 10px; font-weight: 600;">Safety First</h3>
+        <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">24/7 CCTV surveillance, strictly secure campus gates, and verified staff to ensure absolute peace of mind.</p>
+    </div>
+    <div style="background: #1e293b; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+        <i class="fas fa-hand-holding-heart" style="font-size: 2.5rem; color: var(--accent-lime); margin-bottom: 15px;"></i>
+        <h3 style="color: white; margin-bottom: 10px; font-weight: 600;">Value-Based Education</h3>
+        <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">Along with science and math, we deeply instill cultural values, respect, and discipline in every child.</p>
+    </div>
+</div>
+    </div>
+    <!-- 📢 Why Choose Us -->
+
+    <div id="lab-modal" class="lab-modal">
+        <div class="lab-modal-content">
+            <span class="close-modal" onclick="closeLabModal()">&times;</span>
+            <h2 id="lab-modal-title" style="color: var(--accent-lime); margin-bottom: 20px; font-weight: 600;">Lab
+                Photos</h2>
+            <div id="lab-modal-images" class="lab-modal-grid">
+            </div>
+        </div>
+    </div>
+
+
+    <!--footer was here-->
+    <footer id="dynamic-footer"></footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+    </script>
+
+    <script src="/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,559 @@
+/* ==========================================================================
+   PATLIPUTRA VIDYAPEETH - PREMIUM RE-STRUCTURED STYLE SHEET (c.css)
+   ========================================================================== */
+
+/* ─── 1. GLOBAL VARIABLES & RESET ─── */
+:root {
+    --primary-green: #2e7d32; 
+    --accent-lime: #aeea00;  
+    --white: #ffffff;
+    --light-bg: #f1f8e9;    
+    --dark-text: #1b5e20;   
+    --dark-overlay: rgba(27, 94, 32, 0.85);
+    --gold: #ffd600;
+    --dark: #111827;
+    --bg-dark: #0f172a; /* Main dashboard background */
+}   
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: var(--bg-dark);
+}
+
+/* ─── 2. DYNAMIC HEADER (#dynamic-header) & LOGO ANIMATION FIX ─── */
+#dynamic-header {
+    background: var(--bg-dark); 
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    transition: all 0.4s ease;
+    border-bottom: 2px solid var(--accent-lime); 
+    box-sizing: border-box;
+}
+
+/* Inside container alignment */
+#dynamic-header .nav-container-block {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100%;
+}
+
+/* 🌐 GLOBAL 3D LOGO CIRCLE CONSTRAINTS & TIMING */
+.logo-container-circle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* साइज सेटिंग्स */
+    width: 75px !important;
+    height: 75px !important;
+    
+    background: #ffffff !important; 
+    border-radius: 50% !important; 
+    padding: 6px !important; 
+    box-shadow: 0 0 10px rgba(174, 234, 0, 0.4) !important;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease !important;
+
+    /* हर 5 सेकंड में ऑटोमैटिक स्पिन चक्र */
+    animation: autoSpinAndGlow 5s infinite ease-in-out !important;
+}
+
+.animated-logo {
+    height: 100% !important; 
+    width: 100% !important; 
+    object-fit: contain !important; /* इमेज को बिना काटे डिब्बे में फिट रखेगा */
+    display: block !important;
+    transition: filter 0.5s ease !important;
+}
+
+/* ऑटोमैटिक टाइमिंग चक्र: हर 5वें सेकंड पर 3D रोटेशन */
+@keyframes autoSpinAndGlow {
+    0% {
+        transform: rotateY(0deg) scale(1);
+        box-shadow: 0 0 10px rgba(174, 234, 0, 0.4) !important;
+    }
+    /* शुरुआत के 15% समय में पूरा 360 डिग्री स्पिन और प्रीमियम ग्लो */
+    15% {
+        transform: rotateY(360deg) scale(1.08); 
+        box-shadow: 0 0 20px var(--accent-lime) !important;
+        filter: brightness(1.1);
+    }
+    /* बाकी के पूरे समय लोगो स्थिर रहेगा */
+    50% {
+        transform: rotateY(360deg) scale(1);
+        box-shadow: 0 0 12px rgba(174, 234, 0, 0.5) !important;
+    }
+    100% {
+        transform: rotateY(360deg) scale(1);
+        box-shadow: 0 0 10px rgba(174, 234, 0, 0.4) !important;
+    }
+}
+
+/* Hover Effect */
+.logo-container-circle:hover {
+    background: #f8fafc !important;
+    filter: brightness(1.15) !important;
+}
+
+.logo {
+    text-shadow: 0px 10px 20px rgba(255, 255, 255, 0.7);
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.logo span { color: var(--accent-lime); }
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+.nav-links li { margin-left: 25px; }
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 200;
+    font-size: 18px;
+    transition: 0.3s ease, transform 0.2s ease;
+    padding: 2px 2px;
+    position: relative; /* अंडरलाइन एनीमेशन को पोजीशन करने के लिए */
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.nav-links a:hover { 
+    color: var(--accent-lime) !important;
+    text-shadow: 0 0 8px rgba(174, 234, 0, 0.6);
+    transform: translateY(-2px); /* हल्का सा ऊपर उठने का इफेक्ट */
+
+}
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0); /* शुरुआत में लाइन छिपी रहेगी */
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--accent-lime);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out; /* स्मूथ स्लाइडिंग ट्रांजिशन */
+}
+.nav-links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+
+/* ─── 3. HERO SECTION ─── */
+.hero {
+    height: 80vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    margin-top:105px; /* To account for the fixed header */
+}
+/* #hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    filter: brightness(40%);
+} */
+.hero-content h1, .hero-content p {
+    transition: transform 0.3s ease, text-shadow 0.3s ease, color 0.3s ease;
+}
+.hero-content h1 {
+    transform: scale(1.05) translateY(-5px); 
+    text-shadow: 0px 10px 20px rgba(255, 255, 255, 0.7); 
+    cursor: pointer;
+    font-size: 3.5rem; 
+    margin-bottom: 1rem; 
+}
+.hero-content p:hover {
+    transform: scale(1.02);
+    color: #e0e0e0; 
+}
+.hero-content p { font-size: 1.2rem; }
+
+/* ─── 4. SECTION TITLES ─── */
+.section-title {
+    text-align: center;
+    padding: 60px 0 20px;
+    font-size: 2.5rem;
+    color: var(--white);
+    position: relative;
+}
+.section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: var(--accent-lime);
+    margin: 10px auto;
+}
+
+/* ─── 5. LAB CARDS & CONTAINERS ─── */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 20px 10%;
+}
+.card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: 0.4s;
+    border-bottom: 4px solid var(--primary-green);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    color: #333;
+}
+.card:hover {
+    transform: translateY(-10px);
+    background: var(--primary-green);
+    color: white;
+}
+.card i { font-size: 3rem; margin-bottom: 15px; color: var(--primary-green); transition: 0.3s; }
+.card:hover i { color: var(--accent-lime); }
+
+/* ─── 6. NOTICE BOARD STYLING ─── */
+#notice-list {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.notice-card {
+    background: var(--white);
+    border-left: 6px solid var(--accent-lime);
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    color: #111827;
+}
+.notice-card:hover { transform: translateX(8px); }
+.notice-card h3 { color: var(--primary-green); margin-bottom: 5px; }
+
+/* ─── 7. ALBUM GALLERY GRID ─── */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 10%;
+}
+.gallery-card {
+    position: relative;
+    height: 250px;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.gallery-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s transform ease;
+}
+.gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--dark-overlay), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: 0.4s opacity ease;
+}
+.gallery-card:hover img { transform: scale(1.1); }
+.gallery-card:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay h3 { color: var(--accent-lime); font-size: 1.2rem; }
+.gallery-overlay p { color: white; font-size: 0.9rem; }
+
+/* ─── 8. BEYOND ACADEMICS SECTION ─── */
+.activities {
+    background: var(--primary-green);
+    color: white;
+    padding: 80px 10%;
+    margin-top: 40px;
+}
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+.act-box {
+    position: relative;
+    height: 180px;
+    border: 2px solid var(--accent-lime);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    overflow: hidden;
+    transition: 0.4s;
+    background: rgba(255,255,255,0.05);
+}
+.act-box i { font-size: 2.5rem; margin-bottom: 10px; color: var(--accent-lime); }
+.act-box:hover {
+    background: var(--accent-lime);
+    color: var(--dark-text);
+    transform: translateY(-5px);
+}
+.act-box:hover i { color: var(--dark-text); }
+
+/* ─── 9. LAB MODAL POPUP ─── */
+.lab-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+.lab-modal-content {
+    background: #1e293b;
+    border: 2px solid var(--accent-lime);
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+}
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.close-modal:hover { color: var(--accent-lime); }
+.lab-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+.lab-modal-grid img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: 0.3s ease;
+}
+.lab-modal-grid img:hover { transform: scale(1.05); border-color: var(--accent-lime); }
+
+/* ─── 10. DYNAMIC FOOTER (#dynamic-footer) FIX ─── */
+#dynamic-footer {
+    background: var(--dark);
+    color: white;
+    padding: 60px 10% 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+#dynamic-footer .footer-wrapper-block {
+    width: 100%;
+}
+#dynamic-footer .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    margin-bottom: 30px;
+}
+#dynamic-footer .footer-section h3 { 
+    color: var(--accent-lime); 
+    margin-bottom: 25px; 
+    font-size: 1.2rem; 
+}
+#dynamic-footer .footer-section p { 
+    font-size: 0.9rem; 
+    color: #bbb; 
+    list-style: none; 
+    margin-bottom: 12px; 
+}
+#dynamic-footer .footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 25px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* ─── 11. RESPONSIVE REVEAL ─── */
+.reveal { opacity: 0; transform: translateY(40px); transition: 1s all ease; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+.menu-btn { display: none; font-size: 1.8rem; color: var(--white); cursor: pointer; }
+@media screen and (max-width: 768px) {
+    .menu-btn { display: block; z-index: 1001; }
+    .nav-links {
+        position: absolute;
+        top: 100%; left: 0; width: 100%; height: 0;
+        background: var(--primary-green); flex-direction: column;
+        align-items: center; overflow: hidden; transition: all 0.4s ease-in-out;
+    }
+    .nav-links.active { height: 400px; padding: 30px 0; }
+    .nav-links li { margin: 15px 0; width: 100%; text-align: center; }
+}
+/* फ़ुटर आइकन्स और टेक्स्ट अलाइनमेंट फिक्स */
+#dynamic-footer .footer-section p i {
+    color: var(--accent-lime);
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+#dynamic-footer .footer-section div i:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+    filter: brightness(1.2);
+}
+/* ==========================================================================
+   📢 DYNAMIC MARQUEE PREMIUM STYLING
+   ========================================================================== */
+.dynamic-marquee-container {
+    display: flex;
+    align-items: center;
+    background: #1e293b; /* कार्ड वाला डार्क बैकग्राउंड */
+    border-top: 2px solid var(--accent-lime);
+    border-bottom: 2px solid var(--accent-lime);
+    height: 45px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* आगे का चमकता हुआ लेबल (LATEST UPDATES) */
+.marquee-label {
+    background: var(--accent-lime);
+    color: #0f172a;
+    font-weight: 700;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%); /* स्टाइलिश कट डिजाइन */
+    z-index: 10;
+    white-space: nowrap;
+}
+/* ==========================================================================
+   📢 MARQUEE HEIGHT & STYLE FIX FOR ALL PAGES
+   ========================================================================== */
+.dynamic-marquee-container {
+    display: flex;
+    align-items: center;
+    background: #1e293b !important; /* प्रीमियम डार्क बैकग्राउंड */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 3px solid var(--accent-lime);
+    height: 55px !important; /* 🟢 हाइट को बढ़ाकर 55px कर दिया ताकि टेक्स्ट साफ दिखे */
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+/* ==========================================================================
+   📢 MARQUEE HEIGHT UPGRADED TO PREMIUM LARGE (65px)
+   ========================================================================== */
+.dynamic-marquee-container {
+    display: flex;
+    align-items: center;
+    background: #1e293b !important; /* प्रीमियम डार्क बैकग्राउंड */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 3px solid var(--accent-lime);
+    height: 65px !important; /* 🟢 हाइट को बढ़ाकर 65px कर दिया ताकि एकदम चौड़ी और साफ पट्टी दिखे */
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+/* ==========================================================================
+   📢 MARQUEE HEIGHT UPGRADED TO PREMIUM LARGE (65px)
+   ========================================================================== */
+.dynamic-marquee-container {
+    display: flex;
+    align-items: center;
+    background: #1e293b !important; /* प्रीमियम डार्क बैकग्राउंड */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 3px solid var(--accent-lime);
+    height: 65px !important; /* 🟢 हाइट को बढ़ाकर 65px कर दिया ताकि एकदम चौड़ी और साफ पट्टी दिखे */
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  
+
+}
+
+/* आगे का लेबल (LATEST UPDATES) */
+.marquee-label {
+    background: var(--accent-lime);
+    color: #0f172a;
+    font-weight: 700;
+    padding: 0 30px; /* साइड पैडिंग थोड़ी और बढ़ा दी */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem; /* लेबल का साइज भी थोड़ा बढ़ाया */
+    letter-spacing: 1px;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
+    z-index: 10;
+    white-space: nowrap;
+}
+
+/* मारकी टेक्स्ट का बॉक्स */
+.marquee-box {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.marquee-box marquee {
+    color: var(--white);
+    font-size: 1.2rem; /* 🟢 फॉन्ट को और साफ और बड़ा कर दिया */
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    line-height: 65px; /* हाइट के साथ सिंक किया ताकि टेक्स्ट बिल्कुल वर्टिकली सेंटर में रहे */
+}

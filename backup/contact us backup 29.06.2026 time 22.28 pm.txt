@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Patliputra Vidyapeeth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+<body>
+      <nav id="dynamic-header"></nav>
+
+    <div style="padding: 100px 10%; text-align: center; color: white;">
+        <h1 style="color: #aeea00; font-size: 2.8rem; margin-bottom: 40px ;margin-top: 100px;">📞 Contact Information</h1>
+        <div class="container" style="max-width: 600px; margin: 0 auto; text-align: left; background: #1e293b; padding: 30px; border-radius: 12px; border: 1px solid #334155;">
+            <p style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-map-marker-alt" style="color:#aeea00; margin-right:15px;"></i> <strong>Address:</strong> Patna, Bihar, India</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-phone" style="color:#aeea00; margin-right:15px;"></i> <strong>Phone:</strong> +91 98765 43210</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-envelope" style="color:#aeea00; margin-right:15px;"></i> <strong>Email:</strong> info@patliputravidyapeeth.com</p>
+        </div>
+        <br><br>
+        <a href="/" style="background: #2e7d32; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 6px;">← Back to Home</a>
+        <div class="footer-wrapper-block"></div>
+    </div>
+
+     <footer id="dynamic-footer"></footer>
+    <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+document.addEventListener("DOMContentLoaded", () => {
+    loadWebsiteData();
+});
+
+let allEventsData = []; // ग्लोबल डेटा स्टोर
+
+function loadWebsiteData() {
+    const noticeList = document.getElementById("notice-list");
+    const galleryGrid = document.getElementById("gallery-grid");
+    const marqueeElement = document.getElementById("dynamic-marquee-text"); // 📢 मारकी एलिमेंट पकड़ा
+
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            // 1. नोटिस लोड करना
+            if (!data.notices || data.notices.length === 0) {
+                noticeList.innerHTML = "<p style='text-align:center; color:#bbb;'>अभी कोई नया नोटिस नहीं है।</p>";
+                if (marqueeElement) {
+                    marqueeElement.innerHTML = "<span class='marquee-notice-item'>🌟 Patliputra Vidyapeeth welcomes you! Admission open for new session.</span>";
+                }
+            } else {
+                noticeList.innerHTML = "";
+                let marqueeHTML = ""; // मारकी के लिए खाली स्ट्रिंग
+
+                data.notices.reverse().forEach(item => {
+                    // नोटिस बोर्ड के लिए कार्ड बनाना
+                    const card = document.createElement("div");
+                    card.className = "notice-card";
+                    card.innerHTML = `
+                        <h3>📢 ${item.title}</h3>
+                        <small>तारीख: ${item.date}</small>
+                        <p>${item.description}</p>
+                    `;
+                    noticeList.appendChild(card);
+
+                    // 📢 मारकी पट्टी के लिए टेक्स्ट तैयार करना
+                    marqueeHTML += `<span class="marquee-notice-item"> 🌟 <b>${item.title}:</b> ${item.description} </span>`;
+                });
+
+                // मारकी के अंदर एडमिन पैनल का डेटा लाइव डालना
+                if (marqueeElement) {
+                    marqueeElement.innerHTML = marqueeHTML;
+                }
+            }
+
+            // 2. इवेंट गैलरी लोड करना
+            allEventsData = data.events || [];
+            renderEventCards();
+
+            // 🚀 HERO BG VIDEO & RECENT IMAGES LOOP (Safe Trigger)
+            if (document.getElementById('hero-video') && document.getElementById('hero-image-slider')) {
+                startHeroDynamicLoop(data.events);
+            }
+        })
+        .catch(err => {
+            console.error("डेटा लोड करने में एरर:", err);
+            if (document.getElementById('hero-video') && document.getElementById('hero-image-slider')) {
+                startHeroDynamicLoop([]);
+            }
+        });
+}
+
+// होमपेज पर इवेंट्स के एलबम कार्ड दिखाना (100% ओरिजिनल बैकअप कोड)
+function renderEventCards() {
+    const galleryGrid = document.getElementById("gallery-grid");
+    if (!galleryGrid) return;
+
+    if (allEventsData.length === 0) {
+        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
+        return;
+    }
+
+    galleryGrid.innerHTML = "";
+    allEventsData.forEach(event => {
+        const eventCard = document.createElement("div");
+        eventCard.className = "gallery-card";
+        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+        eventCard.innerHTML = `
+            <img src="${event.coverImage}" alt="${event.title}">
+            <div class="gallery-overlay" style="opacity: 1;">
+                <h3>🎉 ${event.title}</h3>
+                <p>${event.description} (${event.images.length} Photos)</p>
+            </div>
+        `;
+        galleryGrid.appendChild(eventCard);
+    });
+}
+
+// किसी इवेंट एल्बम पर क्लिक करने पर अंदर की तस्वीरें दिखाना (100% ओरिजिनल बैकअप कोड)
+function openEventGallery(eventId) {
+    const galleryGrid = document.getElementById("gallery-grid");
+    const selectedEvent = allEventsData.find(e => e.id === eventId);
+
+    if (!selectedEvent) return;
+
+    galleryGrid.innerHTML = `
+        <div style="grid-column: 1/-1; margin-bottom: 20px; text-align: left;">
+            <button onclick="renderEventCards()" style="background: #aeea00; color: #111827; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-family: inherit;">
+                ← Back to Albums
+            </button>
+            <h2 style="color: white; margin-top: 15px; font-size: 1.8rem;">${selectedEvent.title} Album</h2>
+            <p style="color: #bbb;">${selectedEvent.description}</p>
+        </div>
+    `;
+
+    selectedEvent.images.forEach(imgUrl => {
+        const imgCard = document.createElement("div");
+        imgCard.className = "gallery-card";
+        imgCard.innerHTML = `<img src="${imgUrl}" alt="Event Photo" style="transition: none;">`;
+        galleryGrid.appendChild(imgCard);
+    });
+
+    document.getElementById("gallery-grid").scrollIntoView({ behavior: 'smooth' });
+}
+
+// LAB MODAL POPUP LOGIC (100% ओरिजिनल बैकअप कोड)
+const labImagesData = {
+    computer: {
+        title: "💻 Computer Science Lab",
+        images: ["/uploads/comp1.jpg", "/uploads/comp2.jpg", "/uploads/comp3.jpg"]
+    },
+    chemistry: {
+        title: "🧪 Chemistry Laboratory",
+        images: ["/uploads/chem1.jpg", "/uploads/chem2.jpg"]
+    },
+    physics: {
+        title: "⚛️ Physics Laboratory",
+        images: ["/uploads/phys1.jpg", "/uploads/phys2.jpg"]
+    },
+    biology: {
+        title: "🧬 Biology Laboratory",
+        images: ["/uploads/bio1.jpg", "/uploads/bio2.jpg"]
+    }
+};
+
+function openLabModal(labKey) {
+    const modal = document.getElementById("lab-modal");
+    const modalTitle = document.getElementById("lab-modal-title");
+    const modalImagesDiv = document.getElementById("lab-modal-images");
+
+    const selectedLab = labImagesData[labKey];
+    if (!selectedLab) return;
+
+    modalTitle.innerText = selectedLab.title;
+    modalImagesDiv.innerHTML = "";
+
+    selectedLab.images.forEach(imgUrl => {
+        const imgTag = document.createElement("img");
+        imgTag.src = imgUrl;
+        imgTag.alt = selectedLab.title;
+        imgTag.onerror = function () { this.src = 'https://placehold.co/600x400?text=Lab+Photo+Coming+Soon'; };
+        modalImagesDiv.appendChild(imgTag);
+    });
+
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+
+function closeLabModal() {
+    const modal = document.getElementById("lab-modal");
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+}
+
+window.onclick = function (event) {
+    const modal = document.getElementById("lab-modal");
+    if (event.target === modal) {
+        closeLabModal();
+    }
+}
+
+// --- ENQUIRY MODAL FUNCTIONS ---
+function openEnquiryModal() {
+    const modal = document.getElementById("enquiry-modal");
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+function closeEnquiryModal() {
+    const modal = document.getElementById("enquiry-modal");
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+}
+
+// DYNAMIC HEADER & FOOTER INJECTION (100% ओरिजिनल बैकअप कोड - FIXED SYSTEM)
+document.addEventListener("DOMContentLoaded", function () {
+    const headerContainer = document.getElementById('dynamic-header');
+    if (headerContainer) {
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(data => {
+                headerContainer.innerHTML = data;
+            })
+            .catch(err => console.error("Header load karne me dikkat aayi:", err));
+    }
+
+    const footerContainer = document.getElementById('dynamic-footer');
+    if (footerContainer) {
+        fetch('/footer.html')
+            .then(res => res.text())
+            .then(data => {
+                footerContainer.innerHTML = data;
+            })
+            .catch(err => console.error("Footer load karne me dikkat aayi:", err));
+    }
+});
+
+// ==================================================================================
+// 🎬 NEW INDEPENDENT FUNCTION FOR HERO BG VIDEO & IMAGE SLIDER LOOP
+// ==================================================================================
+function startHeroDynamicLoop(events) {
+    const video = document.getElementById('hero-video');
+    const slider = document.getElementById('hero-image-slider');
+    
+    if (!video || !slider) return;
+
+    let recentImages = [];
+    if (events && Array.isArray(events)) {
+        events.forEach(event => {
+            if (event && event.images && Array.isArray(event.images)) {
+                recentImages = recentImages.concat(event.images);
+            }
+        });
+    }
+
+    // बैकअप अगर डेटाबेस में इमेज न हो
+    if (recentImages.length < 4) {
+        recentImages = [
+            'https://placehold.co/1200x600?text=Campus+Life+1',
+            'https://placehold.co/1200x600?text=Science+Lab+2',
+            'https://placehold.co/1200x600?text=Sports+Day+3',
+            'https://placehold.co/1200x600?text=Smart+Class+4'
+        ];
+    }
+
+    recentImages.sort(() => 0.5 - Math.random());
+    let selectedImages = recentImages.slice(0, 4);
+    let currentStep = 0;
+
+    if (window.heroSliderInterval) clearInterval(window.heroSliderInterval);
+
+    window.heroSliderInterval = setInterval(() => {
+        if (currentStep === 0) {
+            video.style.opacity = '0';
+            slider.style.opacity = '1';
+            slider.style.backgroundImage = `url('${selectedImages[0]}')`;
+            currentStep = 1;
+        } else if (currentStep < selectedImages.length) {
+            slider.style.backgroundImage = `url('${selectedImages[currentStep]}')`;
+            currentStep++;
+        } else {
+            slider.style.opacity = '0';
+            video.style.opacity = '1';
+            currentStep = 0;
+            selectedImages.sort(() => 0.5 - Math.random());
+        }
+    }, 6000);
+}

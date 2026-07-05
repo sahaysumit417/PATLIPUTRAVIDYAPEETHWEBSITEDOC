@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Admin Dashboard | Patliputra Vidyapeeth</title>
+    <!-- Google Fonts & FontAwesome for Premium Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131c2e;
+            --bg-input: #090d16;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --accent-lime: #aeea00;
+            --text-muted: #94a3b8;
+            --text-main: #f8fafc;
+            --danger: #ef4444;
+            --success: #10b981;
+            --info: #0ea5e9;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            /* स्क्रीन को ऐप जैसा फील देने के लिए फिक्स */
+        }
+
+        /* 🏢 CORPORATE HEADER */
+        .top-navbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            box-sizing: border-box;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-lime);
+            font-size: 1.4rem;
+        }
+
+        .navbar-brand h1 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* 📊 METRICS RIBBON (TOP OF SYSTEM) */
+        .metrics-ribbon {
+            background: rgba(19, 28, 46, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 30px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .metric-mini-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .metric-mini-item span {
+            color: var(--text-muted);
+        }
+
+        .metric-mini-item strong {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* 🎛️ MAIN WORKSPACE LAYOUT */
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: calc(100vh - 116px);
+            /* हेडर और रिबन को घटाकर */
+        }
+
+        /* 🛠️ LEFT SIDEBAR: TOOLS NAVIGATION */
+        .sidebar-tools {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tool-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .tool-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+        }
+
+        .tool-nav-btn.active {
+            background: rgba(174, 234, 0, 0.08);
+            color: var(--accent-lime);
+            border: 1px solid rgba(174, 234, 0, 0.15);
+        }
+
+        /* 🖥️ RIGHT SIDE: ACTIVE INTERFACE SCREEN */
+        .interface-screen {
+            padding: 30px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            background: var(--bg-main);
+        }
+
+        /* 📦 DYNAMIC SPLIT SCREEN FOR CONTENT + LIST */
+        .tool-split-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .tool-split-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* INTERFACE BOX DECORATIONS */
+        .form-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-card h2,
+        .list-panel-header h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            margin-top: 6px;
+            padding: 12px 16px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            background: var(--bg-input);
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--accent-lime);
+            box-shadow: 0 0 0 3px rgba(174, 234, 0, 0.15);
+            outline: none;
+        }
+
+        .btn-prime {
+            background: var(--accent-lime);
+            color: var(--bg-main);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-prime:hover {
+            box-shadow: 0 4px 12px rgba(174, 234, 0, 0.25);
+        }
+
+        /* 🃏 DATA ROW CARDS */
+        .data-card {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .data-meta {
+            flex-grow: 1;
+        }
+
+        .data-meta strong {
+            display: block;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .data-meta small {
+            color: var(--text-muted);
+            display: block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .badge-enq {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .crud-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-crud {
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-crud-edit {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--warning);
+        }
+
+        .btn-crud-edit:hover {
+            background: var(--warning);
+            color: black;
+        }
+
+        .btn-crud-del {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+        }
+
+        .btn-crud-del:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active-panel {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🏢 TOP NAV -->
+    <nav class="top-navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-shield-halved"></i>
+            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span>
+            </h1>
+        </div>
+        <a href="/admin/logout" class="btn-logout">
+            <i class="fas fa-power-off"></i> Sign Out
+        </a>
+    </nav>
+
+    <!-- 📊 MINI METRICS STRIP -->
+    <div class="metrics-ribbon">
+        <div class="metric-mini-item">
+            <i class="fas fa-envelope-open-text" style="color:var(--warning);"></i>
+            <span>Enquiries:</span> <strong id="cnt-enquiries" style="color:var(--warning);">0</strong>
+        </div>
+        <div class="metric-mini-item">
+            <i class="fas fa-bullhorn" style="color:var(--success);"></i>
+            <span>Active Notices:</span> <strong id="cnt-notices" style="color:var(--success);">0</strong>
+        </div>
+        <div class="metric-mini-item">
+            <i class="fas fa-images" style="color:var(--info);"></i>
+            <span>Live Albums:</span> <strong id="cnt-events" style="color:var(--info);">0</strong>
+        </div>
+    </div>
+
+    <!-- 🎛️ WORKSPACE CONTAINER -->
+    <div class="workspace-layout">
+
+        <!-- 🛠️ LEFT MENU TOOL SELECTION -->
+        <div class="sidebar-tools">
+            <div
+                style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 15px; margin-bottom: 10px; letter-spacing: 0.5px;">
+                Control Panel Tools</div>
+
+            <button class="tool-nav-btn active" onclick="switchToolTab('tab-enquiries', this)">
+                <i class="fas fa-inbox"></i> Admission Enquiries
+            </button>
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-notices', this)">
+                <i class="fas fa-pen-to-square"></i> Notice Board Manager
+            </button>
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-gallery', this)">
+                <i class="fas fa-photo-film"></i> Event Album Registry
+            </button>
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-documents', this)">
+                <i class="fas fa-file-pdf"></i> School Documents Manager
+            </button>
+        </div>
+
+        <!-- 🖥️ RIGHT CONTENT DISPLAY MODULE -->
+        <div class="interface-screen">
+            <div id="tab-documents" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2><i class="fas fa-file-shield" style="color:var(--warning);"></i> Document Upload Portal</h2>
+                        <form id="document-form" action="/api/admin/upload-document" method="POST"
+                            enctype="multipart/form-data">
+                            <label>Select Document Category</label>
+                            <select id="doc-category" name="category" required
+                                style="width: 100%; margin-top: 6px; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: white; font-family: inherit;">
+                                <option value="disclosure">CBSE Affiliation </option>
+                                <option value="mandatory">Mandatory Disclosure</option>
+                                <option value="calendar">Academic Calendar</option>
+                                <option value="rules">Rules & Regulations</option>
+                                <option value="tc">Transfer Certificate (TC)</option>
+                                <option value="report">Annual Academic Report</option>
+                            </select>
+
+                            <label>Document Display Name (Title)</label>
+                            <input type="text" id="doc-title" name="title"
+                                placeholder="e.g., CBSE Mandatory Disclosure 2026" required>
+
+                            <label>Select PDF File</label>
+                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
+                                style="padding:8px;">
+
+                            <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
+                                <i class="fas fa-upload"></i> Publish Document to Footer
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Live Active Documents
+                            </h2>
+                        </div>
+                        <div id="sidebar-documents">Loading documents...</div>
+                    </div>
+                </div>
+            </div>
+            <!-- TOOL 1: ADMISSION ENQUIRIES VIEW -->
+            <div id="tab-enquiries" class="tab-panel active-panel">
+                <div class="list-panel-header">
+                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Live Submission Logs
+                        (Parents Telemetry)</h2>
+                </div>
+                <div id="sidebar-enquiries" style="max-width: 850px;">Loading database records...</div>
+            </div>
+
+            <!-- TOOL 2: NOTICE DISPATCH MANAGEMENT -->
+            <div id="tab-notices" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2 id="notice-form-title"><i class="fas fa-bullhorn" style="color:var(--success);"></i> Notice
+                            Dispatch Terminal</h2>
+                        <form id="notice-form" action="/api/admin/upload-notice" method="POST">
+                            <input type="hidden" id="notice-id" name="noticeId" value="">
+                            <label>Notice Headline / Broadcast Title</label>
+                            <input type="text" id="notice-title" name="title"
+                                placeholder="Enter formal broadcast header..." required>
+                            <label>Detailed Content Body</label>
+                            <textarea id="notice-desc" name="description" rows="5"
+                                placeholder="Compose absolute notice logs here..." required></textarea>
+                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i>
+                                Dispatch Live Broadcast</button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-circle-nodes" style="color:var(--success);"></i> Currently Active
+                                Broadcasts</h2>
+                        </div>
+                        <div id="sidebar-notices">Loading logs...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL 3: EVENT ASSET REGISTRY -->
+            <div id="tab-gallery" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2 id="event-form-title"><i class="fas fa-images" style="color:var(--info);"></i> Asset & Album
+                            Registry Management</h2>
+                        <form id="event-form" action="/api/admin/upload-event" method="POST"
+                            enctype="multipart/form-data">
+                            <input type="hidden" id="event-id" name="eventId" value="">
+                            <label>Corporate Event Title</label>
+                            <input type="text" id="event-title" name="eventTitle"
+                                placeholder="e.g., Annual Sports Meet 2026" required>
+                            <label>Event Ledger Description</label>
+                            <textarea id="event-desc" name="eventDescription" rows="3"
+                                placeholder="Brief statement regarding event criteria..." required></textarea>
+                            <label>Media Source Selection (Multiple Frames)</label>
+                            <input type="file" id="event-photos" name="eventPhotos" accept="image/*" multiple
+                                style="padding:8px;">
+                            <p id="photo-helper-text" class="info-text">💡 Injecting assets appends photos directly to
+                                active records.</p>
+                            <button type="submit" id="event-btn" class="btn-prime"
+                                style="background: var(--info); color: white;"><i class="fas fa-cloud-arrow-up"></i>
+                                Commit Changes to Registry</button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-folder-open" style="color:var(--info);"></i> Active Media Folders</h2>
+                        </div>
+                        <div id="sidebar-events">Loading structures...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let globalNotices = [];
+        let globalEvents = [];
+        let globalEnquiries = [];
+
+        // 🎯 TAB NAVIGATION LOGIC (MNC STYLE DYNAMIC RENDER)
+        function switchToolTab(panelId, btnElement) {
+            // सभी पैनल्स छुपाएं
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active-panel');
+            });
+            // सभी बटन्स से एक्टिव क्लास हटाएं
+            document.querySelectorAll('.tool-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // मनचाहा पैनल खोलें और बटन एक्टिव करें
+            document.getElementById(panelId).classList.add('active-panel');
+            btnElement.classList.add('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchSidebarData);
+
+        function fetchSidebarData() {
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    globalNotices = data.notices || [];
+                    globalEvents = data.events || [];
+                    globalEnquiries = data.enquiries || [];
+
+                    // Live stats calculations
+                    document.getElementById("cnt-enquiries").innerText = globalEnquiries.length;
+                    document.getElementById("cnt-notices").innerText = globalNotices.length;
+                    document.getElementById("cnt-events").innerText = globalEvents.length;
+
+                    renderSidebar();
+                });
+        }
+
+        function renderSidebar() {
+            const noticeContainer = document.getElementById("sidebar-notices");
+            const eventContainer = document.getElementById("sidebar-events");
+            const enquiryContainer = document.getElementById("sidebar-enquiries");
+         // 4. Documents Renderer (Inside renderSidebar function)
+const docContainer = document.getElementById("sidebar-documents");
+// 🎯 globalNotices की तरह इसे भी ऊपर डिफाइन ग्लोबल एरे या डायरेक्ट डेटा से मैप करें
+const globalDocuments = globalNotices.length >= 0 ? (window.globalDocsList || []) : []; 
+
+// इसे सीधे सिंक करने के लिए fetchSidebarData() में यह लाइन जोड़ देना:
+// window.globalDocsList = data.documents || [];
+        
+     
+
+// इसे सीधे सिंक करने के लिए fetchSidebarData() में यह लाइन जोड़ देना:
+// window.globalDocsList = data.documents || [];
+
+            // 1. Enquiries Renderer[cite: 11]
+            if (globalEnquiries.length === 0) {
+                enquiryContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No submission telemetry detected.</p>";
+            } else {
+                enquiryContainer.innerHTML = "";
+                [...globalEnquiries].reverse().forEach(enq => {
+                    enquiryContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--warning);">
+                        <div class="data-meta">
+                            <strong><i class="fas fa-user-tie"></i> Parent Contact: ${enq.parentName}</strong>
+                            <span class="badge badge-enq">Student Target: ${enq.studentName} (${enq.targetClass})</span>
+                            <small style="margin-top:6px; color:#f8fafc;"><i class="fas fa-phone"></i> Call Direct: ${enq.phone}</small>
+                            ${enq.message ? `<p style="margin:8px 0 0 0; color:var(--text-muted); background:var(--bg-main); padding:8px; border-radius:6px; font-size:12px; border:1px solid var(--border-color)">${enq.message}</p>` : ''}
+                            <small style="margin-top:6px;"><i class="fas fa-clock"></i> Recorded: ${enq.date}</small>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('enquiry', ${enq.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                });
+            }
+
+            // 2. Notices Renderer[cite: 11]
+            if (globalNotices.length === 0) {
+                noticeContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No broadcast channels found.</p>";
+            } else {
+                noticeContainer.innerHTML = "";
+                globalNotices.forEach(n => {
+                    noticeContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--success);">
+                        <div class="data-meta">
+                            <strong>${n.title}</strong>
+                            <small><i class="fas fa-calendar-day"></i> Timestamp: ${n.date}</small>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-edit" onclick="setupEdit('notice', ${n.id})"><i class="fas fa-pen"></i></button>
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('notice', ${n.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                });
+            }
+
+            // 3. Media Folder Renderer[cite: 11]
+            if (globalEvents.length === 0) {
+                eventContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Repository map empty.</p>";
+            } else {
+                eventContainer.innerHTML = "";
+                globalEvents.forEach(e => {
+                    eventContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--info);">
+                        <div class="data-meta">
+                            <strong>🎉 ${e.title}</strong>
+                            <span class="badge" style="background:rgba(14,165,233,0.1); color:var(--info);"><i class="fas fa-file-image"></i> ${e.images.length} Objects Stack</span>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-edit" onclick="setupEdit('event', ${e.id})"><i class="fas fa-pen"></i></button>
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('event', ${e.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                });
+            }
+
+        
+
+            if (globalDocuments.length === 0) {
+                docContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No documents uploaded yet.</p>";
+            } else {
+                docContainer.innerHTML = "";
+                globalDocuments.forEach(d => {
+                    docContainer.innerHTML += `
+            <div class="data-card" style="border-left: 3px solid var(--warning);">
+                <div class="data-meta">
+                    <strong>📄 ${d.title}</strong>
+                    <span class="badge" style="background:rgba(245,158,11,0.1); color:var(--warning); text-transform:uppercase;">Type: ${d.category}</span>
+                </div>
+                <div class="crud-actions">
+                    <button class="btn-crud btn-crud-del" onclick="deleteItem('document', ${d.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+                });
+            }
+        }
+
+        function setupEdit(type, id) {
+            if (type === 'notice') {
+                const item = globalNotices.find(n => n.id === id);
+                if (!item) return;
+                document.getElementById("notice-id").value = item.id;
+                document.getElementById("notice-title").value = item.title;
+                document.getElementById("notice-desc").value = item.description;
+                document.getElementById("notice-form-title").innerHTML = `<i class="fas fa-pen" style="color:var(--warning);"></i> Override Mode: ${item.title}`;
+                document.getElementById("notice-btn").innerHTML = "<i class='fas fa-check'></i> Update Active Broadcast";
+                document.getElementById("notice-btn").style.background = "var(--warning)";
+                document.getElementById("notice-btn").style.color = "black";
+                document.getElementById("notice-title").focus();
+            } else if (type === 'event') {
+                const item = globalEvents.find(e => e.id === id);
+                if (!item) return;
+                document.getElementById("event-id").value = item.id;
+                document.getElementById("event-title").value = item.title;
+                document.getElementById("event-desc").value = item.description;
+                document.getElementById("event-form-title").innerHTML = `<i class="fas fa-pen" style="color:var(--warning);"></i> Patch Repository: ${item.title}`;
+                document.getElementById("event-btn").innerHTML = "<i class='fas fa-check'></i> Deploy Assets Patch";
+                document.getElementById("event-btn").style.background = "var(--warning)";
+                document.getElementById("event-btn").style.color = "black";
+                document.getElementById("event-photos").required = false;
+                document.getElementById("photo-helper-text").innerText = "⚠️ Leaving files vacant preserves older assets.";
+                document.getElementById("event-title").focus();
+            }
+        }
+
+        //[cite: 11]
+        Tar
+        function deleteItem(type, id) {
+            if (confirm(`Are you absolutely sure you want to terminate this ${type} record?`)) {
+                fetch(`/api/admin/delete/${type}/${id}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(resData => {
+                        alert(resData.message);
+                        fetchSidebarData();
+                    })
+                    .catch(err => alert("Telemetry loop crash during transaction"));
+            }
+        }
+    </script>
+
+</body>
+
+</html>

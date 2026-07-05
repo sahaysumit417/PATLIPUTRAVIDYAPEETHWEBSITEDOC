@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patliputra Vidyapeeth | Excellence in Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+<body>
+    <nav>
+        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+            <a href="/">
+                <img src="/images/logo.png" alt="School Logo" style="height: 45px; width: auto; object-fit: contain; vertical-align: middle;">
+            </a>
+            <div>PATLIPUTRA <span>VIDYAPEETH</span></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/about">About</a></li>
+            <li><a href="/faculty">Faculty</a></li>
+            <li><a href="#notice-list">Recent News</a></li>
+            <li><a href="#gallery-grid">Gallery</a></li>
+            <li><a href="/contact">Contacts</a></li>
+            <li><a href="#" style="background:var(--accent-lime); padding:8px 18px; border-radius:5px; color:var(--dark-text); font-weight:bold;">Enquiry</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <video autoplay muted loop id="hero-video">
+            <source src="/video/time.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1>Welcome to Patliputra Vidyapeeth</h1>
+            <p>Empowering Minds, Shaping Futures in Patna.</p>
+        </div>
+    </section>
+
+    <h2 class="section-title reveal">World-Class Facilities</h2>
+    
+    <div class="container reveal">
+        <div class="card" onclick="openLabModal('computer')" style="cursor: pointer;">
+            <i class="fas fa-desktop"></i>
+            <h3>Computer Lab</h3>
+            <p>Advanced IT center with high-speed systems for modern learning.</p>
+        </div>
+        <div class="card" onclick="openLabModal('chemistry')" style="cursor: pointer;">
+            <i class="fas fa-flask"></i>
+            <h3>Chemistry Lab</h3>
+            <p>Equipped with modern safety gear and experiment tools.</p>
+        </div>
+        <div class="card" onclick="openLabModal('physics')" style="cursor: pointer;">
+            <i class="fas fa-atom"></i>
+            <h3>Physics Lab</h3>
+            <p>Interactive lab to explore the wonders of physical sciences.</p>
+        </div>
+        <div class="card" onclick="openLabModal('biology')" style="cursor: pointer;">
+            <i class="fas fa-microscope"></i>
+            <h3>Biology Lab</h3>
+            <p>State-of-the-art microscopy for biological research.</p>
+        </div>
+    </div>
+
+    <h2 class="section-title reveal">📢 Latest Notice Board</h2>
+    <div class="container reveal" id="notice-list" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto 50px auto;">
+        <p style="text-align: center; font-family: 'Poppins', sans-serif;">Loading notices...</p>
+    </div>
+
+    <h2 class="section-title reveal">Recent Gallery</h2>
+    <div class="gallery-grid reveal" id="gallery-grid">
+    </div>
+
+    <div class="activities reveal">
+        <h2 class="section-title" style="color: white; padding-top: 0;">Beyond Academics</h2>
+        <div class="activity-grid">
+            <div class="act-box"><i class="fas fa-running"></i> Sports Arena</div>
+            <div class="act-box"><i class="fas fa-guitar"></i> Music & Arts</div>
+            <div class="act-box"><i class="fas fa-chess"></i> Indoor Games</div>
+        </div>
+    </div>
+
+    <div id="lab-modal" class="lab-modal">
+        <div class="lab-modal-content">
+            <span class="close-modal" onclick="closeLabModal()">&times;</span>
+            <h2 id="lab-modal-title" style="color: var(--accent-lime); margin-bottom: 20px; font-weight: 600;">Lab Photos</h2>
+            <div id="lab-modal-images" class="lab-modal-grid">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Patna, Bihar, India</p>
+                <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                <p><i class="fas fa-envelope"></i> info@patliputravidyapeeth.com</p>
+            </div>
+            <div class="footer-col">
+                <h4>Information</h4>
+                <li>CBSE Affiliation</li>
+                <li>Mandatory Disclosure</li>
+                <li>Transfer Certificate</li>
+                <li>Annual Report</li>
+            </div>
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <div style="display:flex; gap:20px; font-size:1.6rem; color: var(--accent-lime);">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Patliputra Vidyapeeth. All Rights Reserved. Managed & Developed by Sumit Sahay.
+        </div>
+    </footer>
+
+    <script>
+        // Old scroll animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+    </script>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

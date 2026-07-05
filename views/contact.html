@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Patliputra Vidyapeeth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+<body>
+
+    <nav id="dynamic-header"></nav>
+
+    <div class="dynamic-marquee-container" style="margin-top: 105px;">
+        <div class="marquee-label">LATEST UPDATES</div>
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();" id="dynamic-marquee-text">
+                🌟 Feel free to Contact us. Patliputra Vidyapeeth Welcomes You!
+            </marquee>
+        </div>
+    </div>
+
+    <div class="map-container-top">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3599.2310129759863!2d85.09703357599723!3d25.563964316715003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed57b6f658098b%3A0xe6ea3123b3a3ab80!2sPatliputra%20Vidyapeeth!5e0!3m2!1sen!2sin!4v1714500000000!5m2!1sen!2sin" 
+            class="map-frame"
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+    <div class="contact-wrapper">
+        
+        <div class="info-box">
+            <h2 class="page-title-main" style="margin-top:0; font-size:1.8rem;">Contact info</h2>
+            <p class="contact-info-subtitle">Feel free to Contact us</p>
+            
+            <div class="contact-info-stack">
+                
+                <div class="contact-info-node">
+                    <i class="fas fa-school"></i>
+                    <div>
+                        <h4 class="contact-node-title">Patliputra Vidyapeeth</h4>
+                        <p class="contact-node-desc">
+                            Health Institute Road,<br>
+                            Beur, Patna, Pin- 800002
+                        </p>
+                    </div>
+                </div>
+
+                <div class="contact-info-node">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <h4 class="contact-node-title">Mobile Numbers</h4>
+                        <p class="contact-node-desc">
+                            <a href="tel:9386745004">9386745004</a>, 
+                            <a href="tel:7488412808">7488412808</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="contact-info-node">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4 class="contact-node-title">Email Addresses</h4>
+                        <p class="contact-node-desc" style="word-break: break-all;">
+                            aakash.sulabh@gmail.com<br>
+                            Vidyapeethpatliputra@gmail.com
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-box">
+            <h2 class="form-box-title">Send a Message</h2>
+            <p class="form-box-desc">हम जल्द से जल्द आपसे संपर्क करेंगे।</p>
+            
+            <form action="/api/enquiry/submit" method="POST">
+                
+                <label class="form-field-label">Full Name *</label>
+                <input type="text" name="parentName" class="contact-input" placeholder="Enter your full name" required>
+
+                <label class="form-field-label">Email Address</label>
+                <input type="email" name="studentName" class="contact-input" placeholder="Enter your email address (Optional)"> 
+
+                <label class="form-field-label">Contact No *</label>
+                <input type="tel" name="phone" class="contact-input" placeholder="Enter 10 digit mobile number" pattern="[0-9]{10}" required>
+
+                <label class="form-field-label">Address *</label>
+                <input type="text" name="targetClass" class="contact-input" placeholder="Enter your complete address" required>
+
+                <label class="form-field-label">Your Queries *</label>
+                <textarea name="message" class="contact-input contact-textarea" placeholder="Type your message or enquiry here..." required></textarea>
+
+                <button type="submit" class="btn-primary" style="width:100%;">
+                    Submit Message →
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="back-home-wrapper" style="margin-bottom:60px;">
+        <a href="/" class="btn-primary" style="background:#334155;">← Back to Home</a>
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>

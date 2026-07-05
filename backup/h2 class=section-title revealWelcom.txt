@@ -1,0 +1,57 @@
+ <h2 class="section-title reveal">Welcome to Our Campus</h2>
+    <div class="container reveal"
+        style="display: flex; gap: 40px; align-items: stretch; flex-wrap: wrap-reverse; margin-bottom: 60px;">
+
+        <div
+            style="flex: 2; min-width: 300px; display: flex; flex-direction: column; justify-content: space-between; color: white;">
+            <div>
+
+                <div
+                    style="display: flex; gap: 30px; align-items: stretch; flex-wrap: wrap; margin-bottom: 25px; width: 100%;">
+
+                    <div
+                        style="flex: 2; min-width: 300px; background: #1e293b; padding: 30px; border-radius: 12px; border-left: 5px solid var(--accent-lime); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center;">
+                        <i class="fas fa-quote-left"
+                            style="font-size: 1.8rem; color: rgba(174, 234, 0, 0.15); position: absolute; top: 15px; left: 15px;"></i>
+                        <p
+                            style="color: #cbd5e1; font-style: italic; line-height: 1.7; font-size: 1.05rem; margin: 0; padding-left: 15px;">
+                            "At Patliputra Vidyapeeth, we believe that education is not just about academic excellence,
+                            but about character building and empowering young minds to become global leaders of
+                            tomorrow. We welcome you to join our journey of knowledge and innovation."
+                        </p>
+                        <div
+                            style="flex: 1; min-width: 280px; background: #1e293b; padding: 20px; border-radius: 12px; border-top: 4px solid var(--accent-lime); display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <img src="/images/principal.jpg" alt="Principal Ma'am"
+                                style="width: 100%; max-width: 240px; height: auto; max-height: 320px; border-radius: 8px; object-fit: contain; background: #0f172a; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 12px;"
+                                onerror="this.src='https://placehold.co/260x320?text=Principal+Photo';">
+                            <h4
+                                style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 2px; margin-top: 5px;">
+                                Mrs. Principal Name</h4>
+                            <span
+                                style="color: var(--accent-lime); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;">Principal,
+                                Patliputra Vidyapeeth</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <h3 style="color: white; font-size: 1.6rem; margin-bottom: 15px; font-weight: 600;">Nurturing Excellence,
+                Shaping Tomorrow</h3>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Established with a vision to provide world-class education in Patna, Patliputra Vidyapeeth offers a
+                perfectly balanced curriculum blending robust academics with sports, arts, and moral values.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="color: #cbd5e1;"><i class="fas fa-check-circle"
+                        style="color: var(--accent-lime); margin-right: 8px;"></i> Smart Classrooms</div>
+                <div style="color: #cbd5e1;"><i class="fas fa-check-circle"
+                        style="color: var(--accent-lime); margin-right: 8px;"></i> Expert Faculty</div>
+                <div style="color: #cbd5e1;"><i class="fas fa-check-circle"
+                        style="color: var(--accent-lime); margin-right: 8px;"></i> Holistic Growth</div>
+                <div style="color: #cbd5e1;"><i class="fas fa-check-circle"
+                        style="color: var(--accent-lime); margin-right: 8px;"></i> Safe Environment</div>
+            </div>
+        </div>
+
+    </div>

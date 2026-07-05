@@ -1,0 +1,23 @@
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 200;
+    font-size: 18px;
+    transition: 0.3s;
+    padding: 2px 2px;
+}
+
+.nav-links a:hover { color: var(--accent-lime); }
+
+/* ─── 3. HERO SECTION ─── */
+.hero {
+    height: 80vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    margin-top:105px; /* To account
