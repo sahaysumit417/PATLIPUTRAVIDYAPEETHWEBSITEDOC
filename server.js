@@ -67,7 +67,8 @@ app.get('/beyond-academics/:type', (req, res) => {
 });
 
 // --- CORE VIEW ROUTES ---
-
+// एक्सप्रेस को बताना कि जब फ्रंटएंड '/get-component' पर रिक्वेस्ट भेजे तो फ़ाइल डिलीवर करे
+app.get('/campus', (req, res) => {res.sendFile(path.resolve(__dirname, 'views', 'campus.html'));});
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'index.html')); });
 app.get('/about', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'about.html')); });
 app.get('/faculty', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'faculty.html')); });
@@ -128,17 +129,7 @@ app.get('/api/data', (req, res) => {
         res.json({ notices: [], events: [], enquiries: [] });
     }
 });
-// --- Admin login Routes ---
-// app.post('/api/admin/login', (req, res) => {
-//     const { username, password } = req.body;
-//     const correctUsername = process.env.ADMIN_USERNAME;
-//     if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-//         req.session.isAdmin = true; 
-//         res.redirect('/admin'); 
-//     } else {
-//         res.send('<script>alert("Invalid Username or Password! Try again."); window.location.href="/login";</script>');
-//     }
-// });
+
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     
@@ -240,9 +231,8 @@ app.post('/api/enquiry/submit', (req, res) => {
     res.send('<script>alert("Thank you! Enquiry submitted successfully."); window.location.href = "/";</script>');
 });
 
-app.delete('/api/admin/delete/:type/:id', (req, res) => {
-    if (!req.session.isAdmin) return res.status(403).json({ message: "Unauthorized action!" });
-
+// 🗑️ DELETE API ENGINE (FIXED CLOSURE)
+app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, (req, res) => {
     const { type, id } = req.params;
     if (!fs.existsSync(DATA_FILE)) return res.status(404).json({ message: "Database not found" });
 
@@ -267,13 +257,31 @@ app.delete('/api/admin/delete/:type/:id', (req, res) => {
             });
         }
         localData.events = localData.events.filter(e => e.id !== itemId);
+    } else if (type === 'document') {
+        // 🎯 डाक्यूमेंट्स को एडमिन पैनल से लाइव डिलीट करने का ब्लॉक
+        if (localData.documents) {
+            localData.documents = localData.documents.filter(d => d.id !== itemId);
+        }
     } else {
         return res.status(400).json({ message: "Invalid type requested" });
     }
 
     fs.writeFileSync(DATA_FILE, JSON.stringify(localData, null, 2));
-    res.json({ message: `Successfully deleted the requested ${type}!` });
+    // 🎯 रिस्पॉन्स क्लोजर डाल दिया ताकि एक्सप्रेस आगे के रूट्स ब्लॉक न करे!
+    res.json({ success: true, message: `Successfully terminated the requested ${type}!` });
 });
+
+// 📑 ROUTE FOR MANDATORY DISCLOSURE BOARD PAGE
+app.get('/mandatory-disclosure', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html'));
+});
+
+// 🎯 कैंपस इंफ्रास्ट्रक्चर फाइल को index.html पर स्ट्रीम करने का गेटवे
+app.get('/campus.html', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'campus.html'));
+});
+
+
 // 📄 NEW API: HANDLING SCHOOL DOCUMENTS UPLOAD (MULTER READY)
 app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), (req, res) => {
     if (!req.file) {
@@ -319,7 +327,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
 app.get('/mandatory-disclosure', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html'));});
 
-
+   
 // ==================================================================================
 // 📡 🚀 SERVER INITIALIZATION ENGINE (लोकलहोस्ट पर लाइव करने का कमांड)
 // ==================================================================================

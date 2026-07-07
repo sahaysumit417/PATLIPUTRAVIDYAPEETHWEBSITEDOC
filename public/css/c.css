@@ -1764,7 +1764,7 @@ body {
 
 .school-about-grid {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Side-by-Side View */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important; /* Side-by-Side View with auto responsive fallback */
     gap: 30px !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -1777,6 +1777,12 @@ body {
     flex-direction: column !important;
     height: 100% !important;
     justify-content: flex-start !important;
+    border-radius: 12px !important; /* Premium smooth corners */
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.school-about-card:hover {
+    transform: translateY(-5px) !important;
 }
 
 .school-about-title-row {
@@ -1786,9 +1792,10 @@ body {
     gap: 15px !important;
 }
 
+/* Icons Inside Cards Custom Contrast */
 .school-about-icon-circle {
-    background: var(--primary-brand) !important;
-    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.2) !important; /* Semi-transparent white overlay for luxury contrast */
+    color: #ffffff !important;
     width: 50px !important;
     height: 50px !important;
     display: flex !important;
@@ -1796,23 +1803,41 @@ body {
     justify-content: center !important;
     border-radius: 50% !important;
     font-size: 1.4rem !important;
-    box-shadow: var(--green-shadow) !important;
 }
 
 .school-about-card h3 {
     margin: 0 !important;
-    color: var(--primary-brand) !important;
     font-size: 1.4rem !important;
     font-weight: 700 !important;
 }
 
 .school-about-card p {
-    color: var(--text-muted) !important;
     line-height: 1.7 !important;
     margin: 0 !important;
     font-size: 0.98rem !important;
 }
 
+/* ─── 🔴 CARD 1: POORA MISSION CARD RED (WITH WHITE TEXT) ─── */
+.school-about-grid .school-about-card:nth-child(1) {
+    background: #ef4444 !important; /* Flat Premium Red */
+    border: 1px solid rgba(239, 68, 68, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2) !important;
+}
+.school-about-grid .school-about-card:nth-child(1) h3,
+.school-about-grid .school-about-card:nth-child(1) p {
+    color: #ffffff !important; /* Texts forced to pure white */
+}
+
+/* ─── 🔵 CARD 2: POORA VISION CARD BLUE (WITH WHITE TEXT) ─── */
+.school-about-grid .school-about-card:nth-child(2) {
+    background: #3b82f6 !important; /* Flat Royal Blue */
+    border: 1px solid rgba(59, 130, 246, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2) !important;
+}
+.school-about-grid .school-about-card:nth-child(2) h3,
+.school-about-grid .school-about-card:nth-child(2) p {
+    color: #ffffff !important; /* Texts forced to pure white */
+}
 /* 📱 Responsive Adjustments for Mobile Viewports */
 @media (max-width: 850px) {
     .school-about-grid {

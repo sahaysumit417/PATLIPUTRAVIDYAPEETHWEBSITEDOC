@@ -1,0 +1,238 @@
+<style>
+    :root {
+        --bg-body-custom: #ffffff;
+        --primary-green-custom: #1b4332; /* आपका प्रीमियम स्कूल फॉरेस्ट ग्रीन */
+        --text-main-custom: #1e293b;
+        --text-muted-custom: #475569;
+        --shadow-glow-custom: rgba(27, 67, 50, 0.12);
+    }
+
+    .campus-infra-section {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background-color: var(--bg-body-custom);
+        font-family: 'Inter', sans-serif;
+        overflow: hidden; /* बाहर जाने वाले एलिमेंट्स को छुपाने के लिए */
+    }
+
+    .campus-header {
+        text-align: center;
+        margin-bottom: 40px;
+        border-bottom: 2px solid var(--primary-green-custom);
+        padding-bottom: 15px;
+    }
+
+    .campus-header h2 {
+        font-size: 2.3rem;
+        color: var(--primary-green-custom);
+        margin: 0 0 10px 0;
+        font-weight: 700;
+    }
+
+    .campus-header p {
+        color: var(--text-muted-custom);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    /* 🎪 SLIDER COUPLING ENGINE (MAIN HORIZONTAL TRACK) */
+    .facilities-carousel-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
+    }
+
+    .facilities-wrapper {
+        display: flex;
+        width: 600%; /* 6 कार्ड्स के लिए पर्याप्त चौड़ाई */
+        animation: autoScrollLeft 30s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    }
+
+    /* जब यूज़र किसी भी कार्ड पर माउस ले जाएगा, तो ऑटो-स्क्रॉल रुक जाएगा (ताकि वो पढ़ सके) */
+    .facilities-carousel-container:hover .facilities-wrapper {
+        animation-play-state: paused;
+    }
+
+    .facility-row {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        width: 16.66%; /* हर एक सेक्शन को बराबर 100% व्यू पोर्ट विड्थ मिलेगी */
+        flex-shrink: 0;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    /* स्लाइर मोड में हमेशा इमेज एक तरफ और टेक्स्ट एक तरफ रहेगा ताकि फ्लो बना रहे */
+    .facility-row.reverse {
+        flex-direction: row; 
+    }
+
+    .facility-image-side {
+        flex: 1;
+        width: 50%;
+    }
+
+    .facility-image-side .img-container-wrapper {
+        width: 100%;
+        height: 360px;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .facility-image-side .img-container-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .facility-text-side {
+        flex: 1;
+        width: 50%;
+        padding-right: 20px;
+    }
+
+    .facility-text-side h3 {
+        font-size: 1.8rem;
+        color: var(--primary-green-custom);
+        margin: 0 0 15px 0;
+        font-weight: 700;
+    }
+
+    .facility-text-side p {
+        color: var(--text-muted-custom);
+        font-size: 1.1rem;
+        margin: 0;
+        line-height: 1.7;
+        text-align: justify;
+    }
+
+    /* 🔄 CSS KEYFRAMES FOR RIGHT TO LEFT AUTO-SCROLL */
+    /* 6 सेक्शन्स को 100% टाइम में बराबर बांटकर ठहराव (Pause) के साथ शिफ्ट करना */
+    @keyframes autoScrollLeft {
+        0%, 13% { transform: translateX(0); }
+        16%, 29% { transform: translateX(-16.66%); }
+        32%, 45% { transform: translateX(-33.33%); }
+        48%, 61% { transform: translateX(-50%); }
+        64%, 77% { transform: translateX(-66.66%); }
+        80%, 93% { transform: translateX(-83.33%); }
+        100% { transform: translateX(0); } /* वापस पहली स्लाइड पर स्मूथ लूप */
+    }
+
+    /* 📱 MOBILE RESPONSIVENESS */
+    @media (max-width: 768px) {
+        .facility-row, .facility-row.reverse {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .facility-image-side, .facility-text-side {
+            width: 100%;
+        }
+        .facility-image-side .img-container-wrapper {
+            height: 220px;
+        }
+        .facility-text-side h3 {
+            font-size: 1.4rem;
+        }
+        .facility-text-side p {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="campus-infra-section">
+    <div class="campus-header">
+        <h2>Our Campus & Infrastructure</h2>
+        <p>A glimpse into the state-of-the-art infrastructure at Patliputra Vidyapeeth.</p>
+    </div>
+
+    <!-- 🎪 Slider Container Outer Wrapper -->
+    <div class="facilities-carousel-container">
+        <div class="facilities-wrapper">
+
+            <!-- Section 1: Chemistry Lab -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/uploads/chem1.jpg" alt="Advanced Chemistry Laboratory">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Advanced Chemistry Laboratory</h3>
+                    <p>Our fully equipped chemical laboratory provides students with hands-on practical research experience under professional supervision, ensuring safety and compliance with global education metrics.</p>
+                </div>
+            </div>
+
+            <!-- Section 2: Computer Lab -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/uploads/comp2.jpg" alt="Next-Gen Computer Terminal">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Next-Gen Computer Terminal</h3>
+                    <p>A modern IT suite equipped with high-speed computers and learning assets, allowing students to explore coding, digital arts, and complete technological syllabus frameworks efficiently.</p>
+                </div>
+            </div>
+
+            <!-- Section 3: Academic Building -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/images/school building.jpeg" alt="Academic Arena Blocks">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Academic Arena Blocks</h3>
+                    <p>The core school architecture designed with spacious ventilation, vast structural integrity, and dedicated digital classrooms to offer a calm environment for primary and secondary scholars.</p>
+                </div>
+            </div>
+
+            <!-- Section 4: Co-Curricular Arts -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/images/Art & Craft.png" alt="Co-Curricular Event Modules">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Co-Curricular Event Modules</h3>
+                    <p>Active student development captured live during academic functions. We emphasize equally on standard education and cultural assembly participation to build team spirit.</p>
+                </div>
+            </div>
+
+            <!-- Section 5: Interactive Classroom -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/images/class.jpg" alt="Interactive Classroom Sessions">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Interactive Classroom Sessions</h3>
+                    <p>Students collaborating and executing analytical tasks. Our smart classroom setup promotes active discussions and creative logic application among peer groups.</p>
+                </div>
+            </div>
+
+            <!-- Section 6: Annual Day -->
+            <div class="facility-row">
+                <div class="facility-image-side">
+                    <div class="img-container-wrapper">
+                        <img src="/images/annual day.jpeg" alt="Annual Assembly Functions">
+                    </div>
+                </div>
+                <div class="facility-text-side">
+                    <h3>Annual Day Glimpses</h3>
+                    <p>A vibrant celebration of talent, teamwork, and achievements. Our Annual Day brings together students, teachers, and parents to witness spectacular cultural performances, grand musical acts, and the felicitation of our academic and extra-curricular stars.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

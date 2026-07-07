@@ -475,18 +475,20 @@ window.closeEnquiryModal = function() {
     const modal = document.getElementById("enquiry-modal");
     if (modal) modal.style.setProperty('display', 'none');
 }
-if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-                navLinks.classList.remove("nav-active");
-                navLinks.classList.remove("active");
+
+// if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+//                 navLinks.classList.remove("nav-active");
+//                 navLinks.classList.remove("active");
                 
-                document.querySelectorAll(".nav-dropdown-item").forEach(item => {
-                    item.classList.remove("mobile-active");
-                });
+//                 document.querySelectorAll(".nav-dropdown-item").forEach(item => {
+//                     item.classList.remove("mobile-active");
+//                 });
                 
-                // 🚀 यहाँ भी आइकॉन को सेफली रीसेट करें
-                const icon = hamburger.querySelector("i");
-                if (icon) icon.className = 'fas fa-bars';
-            }
+//                 // 🚀 यहाँ भी आइकॉन को सेफली रीसेट करें
+//                 const icon = hamburger.querySelector("i");
+//                 if (icon) icon.className = 'fas fa-bars';
+//             }
+
 
 function openDocModal(category) {
     // 🎯 लाइव डेटाबेस से लिंक्स फेच करना
@@ -516,4 +518,26 @@ function openDocModal(category) {
 }
 function closeDocModal() {
     document.getElementById('doc-list-modal').style.display = 'none';
+}
+
+function loadCampusInfrastructure() {
+    const targetContainer = document.getElementById('my-dynamic-component');
+    if (targetContainer) {
+        fetch('/campus')
+            .then(res => {
+                if (!res.ok) throw new Error("Component HTTP request failure");
+                return res.text(); 
+            })
+            .then(htmlText => {
+                targetContainer.innerHTML = htmlText;
+            })
+            .catch(err => console.error("Component injection failed:", err));
+    }
+}
+
+// Surakshit tarika: Agar DOM taiyar hai toh turant chalao, nahi toh wait karo
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadCampusInfrastructure);
+} else {
+    loadCampusInfrastructure(); // DOM pehle se loaded hai, seedhe function chalao
 }
