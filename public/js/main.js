@@ -130,57 +130,90 @@ function loadWebsiteData() {
 //         galleryGrid.appendChild(eventCard);
 //     });
 // }
+// function renderEventCards() {
+//     const grid = document.getElementById('events-gallery-grid');
+//     if (!grid) {
+//         console.error("Gallery grid container #events-gallery-grid nahi mila!");
+//         return;
+//     }
+
+//     grid.innerHTML = '';
+
+//     if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
+//         grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1/-1;">No recent gallery events available.</p>';
+//         return;
+//     }
+
+//     // Safely copy array, reverse to show latest first, and take max 4 items
+//     const recent4Events = [...allEventsData].reverse().slice(0, 4);
+
+//     recent4Events.forEach(event => {
+//         // Extract cover image or first image from array
+//         let coverImg = '/uploads/default-event.jpg';
+//         if (event.coverImage) {
+//             coverImg = event.coverImage;
+//         } else if (event.images && event.images.length > 0) {
+//             coverImg = event.images[0];
+//         } else if (event.photos && event.photos.length > 0) {
+//             coverImg = event.photos[0];
+//         }
+
+//         const card = document.createElement('div');
+//         card.className = 'gallery-card';
+//         card.style.cursor = 'pointer';
+
+//         // Modal click binding
+//         card.onclick = function() {
+//             if (typeof openEventModal === 'function') {
+//                 openEventModal(event.id);
+//             } else if (typeof openAlbumModal === 'function') {
+//                 openAlbumModal(event.id);
+//             }
+//         };
+
+//         card.innerHTML = `
+//             <div class="gallery-card-img-wrapper" style="overflow:hidden; border-radius:8px;">
+//                 <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy" style="width:100%; height:200px; object-fit:cover;">
+//             </div>
+//             <div class="gallery-card-content" style="padding: 12px 5px;">
+//                 <h3 class="album-title" style="margin:5px 0; font-size:1.1rem; color: #0a3d62;">${event.title || 'Untitled Event'}</h3>
+//                 <p class="album-desc" style="font-size:0.85rem; color:#555;">${event.description || ''}</p>
+//             </div>
+//         `;
+//         grid.appendChild(card);
+//     });
+// }
 function renderEventCards() {
-    const grid = document.getElementById('events-gallery-grid');
-    if (!grid) {
-        console.error("Gallery grid container #events-gallery-grid nahi mila!");
+    // 🎯 Aapke index.html me ID 'gallery-grid' hai
+    const galleryGrid = document.getElementById("gallery-grid");
+    if (!galleryGrid) return;
+
+    if (!allEventsData || allEventsData.length === 0) {
+        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
         return;
     }
 
-    grid.innerHTML = '';
+    galleryGrid.innerHTML = "";
 
-    if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1/-1;">No recent gallery events available.</p>';
-        return;
-    }
-
-    // Safely copy array, reverse to show latest first, and take max 4 items
+    // 🎯 REVERSE (Latest Pehle) + SLICE(0, 4) (Sirf top 4 recent albums)
     const recent4Events = [...allEventsData].reverse().slice(0, 4);
 
     recent4Events.forEach(event => {
-        // Extract cover image or first image from array
-        let coverImg = '/uploads/default-event.jpg';
-        if (event.coverImage) {
-            coverImg = event.coverImage;
-        } else if (event.images && event.images.length > 0) {
-            coverImg = event.images[0];
-        } else if (event.photos && event.photos.length > 0) {
-            coverImg = event.photos[0];
-        }
-
-        const card = document.createElement('div');
-        card.className = 'gallery-card';
-        card.style.cursor = 'pointer';
-
-        // Modal click binding
-        card.onclick = function() {
-            if (typeof openEventModal === 'function') {
-                openEventModal(event.id);
-            } else if (typeof openAlbumModal === 'function') {
-                openAlbumModal(event.id);
-            }
-        };
-
-        card.innerHTML = `
-            <div class="gallery-card-img-wrapper" style="overflow:hidden; border-radius:8px;">
-                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy" style="width:100%; height:200px; object-fit:cover;">
-            </div>
-            <div class="gallery-card-content" style="padding: 12px 5px;">
-                <h3 class="album-title" style="margin:5px 0; font-size:1.1rem; color: #0a3d62;">${event.title || 'Untitled Event'}</h3>
-                <p class="album-desc" style="font-size:0.85rem; color:#555;">${event.description || ''}</p>
+        const coverImg = event.coverImage || (event.images && event.images[0]) || '/uploads/default-event.jpg';
+        const eventCard = document.createElement("div");
+        eventCard.className = "gallery-card";
+        
+        // 🎯 Wapas purana waala click function link kar diya jo Album kholta tha!
+        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+        
+        eventCard.innerHTML = `
+            <img src="${coverImg}" alt="${event.title}">
+            <div class="gallery-overlay" style="opacity: 1;">
+                <h3>🎉 ${event.title}</h3>
+                <p>${event.description} (${event.images ? event.images.length : 0} Photos)</p>
             </div>
         `;
-        grid.appendChild(card);
+        galleryGrid.appendChild(eventCard);
     });
 }
 
