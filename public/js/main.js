@@ -4,14 +4,52 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let allEventsData = [];
+// 🎬 HERO SECTION VIDEO + CLOUDINARY SLIDER ENGINE
+function renderHeroSliderImages(events) {
+    const sliderContainer = document.getElementById("hero-image-slider");
+    const videoElement = document.getElementById("hero-video");
 
+    if (!sliderContainer) return;
+
+    let heroImages = [];
+
+    events.forEach(event => {
+        if (event.coverImage) heroImages.push(event.coverImage);
+        if (event.images && Array.isArray(event.images)) {
+            heroImages = heroImages.concat(event.images);
+        } else if (event.photos && Array.isArray(event.photos)) {
+            heroImages = heroImages.concat(event.photos);
+        }
+    });
+
+    heroImages = [...new Set(heroImages)].filter(url => url && url.length > 5);
+
+    if (heroImages.length === 0) return;
+
+    if (videoElement) {
+        videoElement.style.opacity = "0.35";
+    }
+
+    let currentIndex = 0;
+    sliderContainer.style.backgroundImage = `url('${heroImages[0]}')`;
+    sliderContainer.style.opacity = "1";
+
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % heroImages.length;
+        sliderContainer.style.transition = "background-image 1s ease-in-out, opacity 1s ease-in-out";
+        sliderContainer.style.backgroundImage = `url('${heroImages[currentIndex]}')`;
+    }, 4000);
+}
 function loadWebsiteData() {
     const noticeList = document.getElementById("notice-list");
     const marqueeElement = document.getElementById("dynamic-marquee-text");
-
+    
     fetch('/api/data')
         .then(response => response.json())
         .then(data => {
+            if (data.events && data.events.length > 0) {
+             renderHeroSliderImages(data.events); // 👈 Bas ye ek line call karni hai
+            }
             if (!data.notices || data.notices.length === 0) {
                 // If API response is empty, layout handles fallback elements defined in HTML
             } else {
@@ -475,19 +513,6 @@ window.closeEnquiryModal = function() {
     const modal = document.getElementById("enquiry-modal");
     if (modal) modal.style.setProperty('display', 'none');
 }
-
-// if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-//                 navLinks.classList.remove("nav-active");
-//                 navLinks.classList.remove("active");
-                
-//                 document.querySelectorAll(".nav-dropdown-item").forEach(item => {
-//                     item.classList.remove("mobile-active");
-//                 });
-                
-//                 // 🚀 यहाँ भी आइकॉन को सेफली रीसेट करें
-//                 const icon = hamburger.querySelector("i");
-//                 if (icon) icon.className = 'fas fa-bars';
-//             }
 
 
 function openDocModal(category) {
