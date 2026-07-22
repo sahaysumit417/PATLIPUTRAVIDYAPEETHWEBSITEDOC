@@ -5,9 +5,9 @@ const fs = require('fs');
 const multer = require('multer');
 const session = require('express-session'); 
 const bcrypt = require('bcryptjs');
-const https = require('https'); // 🔥 GitHub API Sync ke liye
+const https = require('https');
 
-// 🚀 CLOUDINARY INTEGRATION PACKAGES
+// ☁️ CLOUDINARY STORAGE PACKAGES
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
@@ -18,19 +18,23 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Express Session Config
+// Express Session
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_secret_key',
+    secret: (process.env.SESSION_SECRET || 'default_secret_key').trim(),
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60 * 60 * 1000 } 
 }));
 
-// Cloudinary Configuration
+// ☁️ CLOUDINARY CONFIGURATION (ENV Fallback Match)
+const cloudName = (process.env.CLOUDINARY_NAME || process.env.CLOUDINARY_CLOUD_NAME || '').trim();
+const apiKey = (process.env.CLOUDINARY_API_KEY || '').trim();
+const apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim();
+
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret
 });
 
 const DATA_FILE = path.resolve(__dirname, 'data', 'database.json');
@@ -44,9 +48,9 @@ if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Storage Strategy setup
+// ☁️ MULTER STORAGE STRATEGY
 let storageStrategy;
-if (process.env.CLOUDINARY_NAME && process.env.CLOUDINARY_API_KEY) {
+if (cloudName && apiKey && apiSecret) {
     storageStrategy = new CloudinaryStorage({
         cloudinary: cloudinary,
         params: {
@@ -55,18 +59,18 @@ if (process.env.CLOUDINARY_NAME && process.env.CLOUDINARY_API_KEY) {
             resource_type: 'auto'
         }
     });
-    console.log("☁️ Cloudinary Storage Layer Activated!");
+    console.log("☁️ CLOUDINARY STORAGE ENGINE ACTIVATED SUCCESSFULLY!");
 } else {
     storageStrategy = multer.diskStorage({
         destination: (req, file, cb) => cb(null, UPLOADS_DIR),
         filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
     });
-    console.log("📂 Local Storage Fallback Mode Active!");
+    console.log("⚠️ CLOUDINARY KEYS MISSING! Falling back to Temporary Disk.");
 }
 
 const upload = multer({ storage: storageStrategy });
 
-// Helper to read local data safely
+// Helper to read local data
 function getLocalData() {
     if (!fs.existsSync(DATA_FILE)) {
         return { notices: [], events: [], documents: [] };
@@ -79,19 +83,18 @@ function getLocalData() {
     }
 }
 
-// 🔄 GITHUB API AUTO-SYNC ENGINE (Render Ephemeral Fix)
+// 🔄 GITHUB API AUTO-SYNC ENGINE
 async function syncDatabaseToGitHub(updatedData) {
-    const token = process.env.GITHUB_TOKEN;
-    const repo = process.env.GITHUB_REPO; 
+    const token = (process.env.GITHUB_TOKEN || '').trim();
+    const repo = (process.env.GITHUB_REPO || '').trim(); 
     const filePath = "data/database.json"; 
 
     if (!token || !repo) {
-        console.log("⚠️ GITHUB_TOKEN ya GITHUB_REPO env variables missing hain. Skipping GitHub Sync.");
+        console.log("⚠️ GITHUB_TOKEN ya GITHUB_REPO missing. Git Sync Skipped.");
         return;
     }
 
     try {
-        // 1. Current SHA hash fetch karna
         const getShaOptions = {
             hostname: 'api.github.com',
             path: `/repos/${repo}/contents/${filePath}`,
@@ -111,11 +114,10 @@ async function syncDatabaseToGitHub(updatedData) {
         });
 
         if (!shaRes.sha) {
-            console.error("❌ GitHub file SHA fetch failed:", shaRes.message || "File not found in repo");
+            console.error("❌ GitHub SHA Fetch Error:", shaRes.message || "File path missing in repository");
             return;
         }
 
-        // 2. Base64 encode JSON and Push to GitHub API
         const contentBase64 = Buffer.from(JSON.stringify(updatedData, null, 2)).toString('base64');
 
         const putData = JSON.stringify({
@@ -138,9 +140,9 @@ async function syncDatabaseToGitHub(updatedData) {
 
         const req = https.request(putOptions, (res) => {
             if (res.statusCode === 200 || res.statusCode === 201) {
-                console.log("🎉 Database.json 100% Synced with GitHub Repository!");
+                console.log("🎉 Database.json successfully committed & synced to GitHub!");
             } else {
-                console.error("❌ GitHub API Sync Failed with Status:", res.statusCode);
+                console.error("❌ GitHub API Sync Failed! Status:", res.statusCode);
             }
         });
 
@@ -148,14 +150,13 @@ async function syncDatabaseToGitHub(updatedData) {
         req.end();
 
     } catch (err) {
-        console.error("❌ Git API Sync Error:", err.message);
+        console.error("❌ Git Sync Error:", err.message);
     }
 }
 
-// Helper to save local JSON and trigger GitHub Push
 function saveAndSyncData(data) {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-    syncDatabaseToGitHub(data); // 🔥 Trigger GitHub Sync
+    syncDatabaseToGitHub(data);
 }
 
 // ==========================================
@@ -212,7 +213,7 @@ app.post('/api/admin/add-notice', (req, res) => {
     res.json({ success: true, message: "Notice Added and Synced!" });
 });
 
-// 📌 PUBLISH GALLERY/HERO EVENT
+// 📌 PUBLISH GALLERY/HERO EVENT (Cloudinary Upload Support)
 app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
     if (!req.session.isAuthorized) return res.status(403).send("Unauthorized access");
 
@@ -220,7 +221,8 @@ app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
         const { eventTitle, eventDate, eventCategory } = req.body;
         let localData = getLocalData();
 
-        const photoUrls = req.files ? req.files.map(f => f.path || `/uploads/${f.filename}`) : [];
+        // Cloudinary URL extracted cleanly
+        const photoUrls = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
 
         const newEvent = {
             id: 'evt_' + Date.now(),
@@ -235,9 +237,9 @@ app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
 
         saveAndSyncData(localData);
 
-        res.send('<script>alert("Event published successfully!"); window.location.href="/admin";</script>');
+        res.send('<script>alert("Event published & Synced to Cloudinary!"); window.location.href="/admin";</script>');
     } catch (err) {
-        console.error(err);
+        console.error("Upload Error:", err);
         res.status(500).send("Upload Error");
     }
 });
@@ -250,7 +252,7 @@ app.post('/api/admin/upload-disclosure', upload.single('docFile'), (req, res) =>
         const { category, title } = req.body;
         let localData = getLocalData();
 
-        const fileUrl = req.file ? (req.file.path || `/uploads/${req.file.filename}`) : '';
+        const fileUrl = req.file ? (req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`) : '';
 
         const newDoc = {
             id: Date.now(),
@@ -264,10 +266,10 @@ app.post('/api/admin/upload-disclosure', upload.single('docFile'), (req, res) =>
 
         saveAndSyncData(localData);
 
-        res.send('<script>alert("Document Published Successfully!"); window.location.href="/admin";</script>');
+        res.send('<script>alert("Document Uploaded & Synced!"); window.location.href="/admin";</script>');
     } catch (err) {
-        console.error("Database Write Error:", err);
-        res.status(500).send("Database transaction crash!");
+        console.error("Doc Error:", err);
+        res.status(500).send("Document Upload Error");
     }
 });
 
@@ -291,7 +293,7 @@ app.delete('/api/admin/delete-notice/:id', (req, res) => {
 app.delete('/api/admin/terminate-album/:id', (req, res) => {
     if (!req.session.isAuthorized) return res.status(403).json({ message: "Unauthorized" });
 
-    const { id: albumId } = req.params;
+    const albumId = req.params.id;
     let localData = getLocalData();
 
     if (localData.events) {
@@ -300,16 +302,15 @@ app.delete('/api/admin/terminate-album/:id', (req, res) => {
 
     saveAndSyncData(localData);
 
-    res.json({ success: true, message: "Successfully terminated the entire album block!" });
+    res.json({ success: true, message: "Album deleted!" });
 });
 
-// Static Page Routes
+// Static Pages
 app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
 app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 
-// Start Server
 app.listen(PORT, () => {
     console.log(`===================================================`);
-    console.log(`🚀 Patliputra Vidyapeeth Server is 100% LIVE on port ${PORT}!`);
+    console.log(`🚀 Patliputra Vidyapeeth Server LIVE on port ${PORT}`);
     console.log(`===================================================`);
 });
