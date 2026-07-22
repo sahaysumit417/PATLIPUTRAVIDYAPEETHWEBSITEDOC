@@ -18,7 +18,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Express Session
+// Express Session Config
 app.use(session({
     secret: (process.env.SESSION_SECRET || 'default_secret_key').trim(),
     resave: false,
@@ -73,13 +73,13 @@ const upload = multer({ storage: storageStrategy });
 // Helper to read local data
 function getLocalData() {
     if (!fs.existsSync(DATA_FILE)) {
-        return { notices: [], events: [], documents: [] };
+        return { notices: [], events: [], enquiries: [], documents: [] };
     }
     try {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-        return raw ? JSON.parse(raw) : { notices: [], events: [], documents: [] };
+        return raw ? JSON.parse(raw) : { notices: [], events: [], enquiries: [], documents: [] };
     } catch (e) {
-        return { notices: [], events: [], documents: [] };
+        return { notices: [], events: [], enquiries: [], documents: [] };
     }
 }
 
@@ -159,168 +159,234 @@ function saveAndSyncData(data) {
     syncDatabaseToGitHub(data);
 }
 
-// ==========================================
-// ROUTES & APIS
-// ==========================================
+// --- SECURITY MIDDLEWARE ---
+function isAdminAuthenticated(req, res, next) {
+    if (req.session && (req.session.isAdmin || req.session.isAuthorized)) {
+        return next();
+    } else {
+        res.send('<script>alert("Access Denied! Please login first."); window.location.href="/login";</script>');
+    }
+}
 
-// 🏠 HOME PAGE ROUTE (Fix for "Cannot GET /")
-app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'views', 'index.html'));
+// ==================================================================================
+// 🚀 1. BEYOND ACADEMICS VIEW ROUTE
+// ==================================================================================
+app.get('/beyond-academics/:type', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'activity.html'));
 });
 
-// CORE VIEW ROUTES
+// --- CORE VIEW ROUTES ---
+app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'index.html')); });
 app.get('/campus', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 app.get('/about', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'about.html')); });
 app.get('/faculty', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'faculty.html')); });
 app.get('/contact', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'contact.html')); });
 app.get('/gallery', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'gallery.html')); });
 app.get('/login', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'login.html')); });
+app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
+app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 
-app.get('/api/data', (req, res) => {
-    res.json(getLocalData());
+app.get('/admin', isAdminAuthenticated, (req, res) => { 
+    res.sendFile(path.resolve(__dirname, 'views', 'admin.html')); 
 });
 
-app.post('/api/admin/login', (req, res) => {
-    const { username, password } = req.body;
-    const adminUser = process.env.ADMIN_USERNAME || 'admin';
-    const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
-
-    if (username === adminUser && password === adminPass) {
-        req.session.isAuthorized = true;
-        return res.json({ success: true, redirect: '/admin' });
-    }
-    res.status(401).json({ success: false, message: 'Invalid credentials!' });
-});
-
-app.get('/admin', (req, res) => {
-    if (!req.session.isAuthorized) {
-        return res.redirect('/login');
-    }
-    res.sendFile(path.resolve(__dirname, 'views', 'admin.html'));
-});
-
-app.get('/api/admin/logout', (req, res) => {
+app.get('/admin/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
-// 📌 ADD NOTICE
-app.post('/api/admin/add-notice', (req, res) => {
-    if (!req.session.isAuthorized) return res.status(403).json({ message: "Unauthorized" });
-
-    const { title, date, pdfUrl } = req.body;
-    let localData = getLocalData();
-
-    const newNotice = {
-        id: Date.now(),
-        title: title.trim(),
-        date: date || new Date().toISOString().split('T')[0],
-        pdfUrl: pdfUrl || ''
+// ==================================================================================
+// 🚀 2. BEYOND ACADEMICS DATA API GATEWAY
+// ==================================================================================
+app.get('/api/beyond-academics/:type', (req, res) => {
+    const type = req.params.type;
+    const dataMatrix = {
+        'sports': {
+            title: "Sports & Athletics Arena",
+            description: "At Patliputra Vidyapeeth, we ensure robust physical development through state-of-the-art sports ecosystems including Football, Cricket, Badminton, and Athletic Tracks.",
+            image: "/images/Outdoor game.png"
+        },
+        'music': {
+            title: "Music & Performing Arts Club",
+            description: "Nurturing creative expression and rhythmic brilliance. Our specialized music rooms train students in classical, contemporary vocals, and instruments like Keyboard, Guitar, and Drums.",
+            image: "/images/music 2.jpeg"
+        },
+        'arts': {
+            title: "Fine Arts & Creative Crafts Studio",
+            description: "Fostering visual creativity and aesthetic expression. Students explore painting, origami, sculpture making, and structural designing under seasoned craft curators.",
+            image: "/images/Art & Craft.png"
+        },
+        'indoor-games': {
+            title: "Strategic Indoor Intelligence Games",
+            description: "Enhancing cognitive capacity, mental calculations, and tactical agility through specialized arenas for Chess, Table Tennis, Carrom, and analytical board layouts.",
+            image: "/images/indoor game.png"
+        }
     };
 
-    if (!localData.notices) localData.notices = [];
-    localData.notices.push(newNotice);
-
-    saveAndSyncData(localData);
-
-    res.json({ success: true, message: "Notice Added and Synced!" });
-});
-
-// 📌 PUBLISH GALLERY/HERO EVENT
-app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
-    if (!req.session.isAuthorized) return res.status(403).send("Unauthorized access");
-
-    try {
-        const { eventTitle, eventDate, eventCategory } = req.body;
-        let localData = getLocalData();
-
-        const photoUrls = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
-
-        const newEvent = {
-            id: 'evt_' + Date.now(),
-            title: eventTitle.trim(),
-            date: eventDate,
-            category: eventCategory || 'general',
-            photos: photoUrls
-        };
-
-        if (!localData.events) localData.events = [];
-        localData.events.push(newEvent);
-
-        saveAndSyncData(localData);
-
-        res.send('<script>alert("Event published & Synced to Cloudinary!"); window.location.href="/admin";</script>');
-    } catch (err) {
-        console.error("Upload Error:", err);
-        res.status(500).send("Upload Error");
+    const result = dataMatrix[type];
+    if (result) {
+        return res.json(result);
+    } else {
+        return res.status(404).json({ error: "Activity not found" });
     }
 });
 
-// 📌 UPLOAD DISCLOSURE DOCUMENT
-app.post('/api/admin/upload-disclosure', upload.single('docFile'), (req, res) => {
-    if (!req.session.isAuthorized) return res.status(403).send("Unauthorized access");
+// --- GENERAL DATA & POST ROUTES ---
+app.get('/api/data', (req, res) => {
+    res.json(getLocalData());
+});
+
+// 🔐 ORIGINAL ADMIN LOGIN ROUTE (Bcrypt Hash + Alert Script Redirect)
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    const correctUsername = process.env.ADMIN_USERNAME;
+    
+    if (username !== correctUsername) {
+        return res.send('<script>alert("Invalid Username!"); window.location.href="/login";</script>');
+    }
+
+    // Bcrypt Hash Comparison
+    const isPasswordCorrect = bcrypt.compareSync(password, process.env.ADMIN_PASSWORD || '');
+
+    if (isPasswordCorrect) {
+        req.session.isAdmin = true; 
+        req.session.isAuthorized = true;
+        res.redirect('/admin'); 
+    } else {
+        res.send('<script>alert("Invalid Password! Try again."); window.location.href="/login";</script>');
+    }
+});
+
+// 📌 UPLOAD / SAVE NOTICE
+app.post('/api/admin/upload-notice', isAdminAuthenticated, (req, res) => {
+    const { noticeId, title, description } = req.body;
+    let localData = getLocalData();
+
+    if (noticeId) {
+        let existingNotice = localData.notices.find(n => n.id === parseInt(noticeId));
+        if (existingNotice) {
+            existingNotice.title = title;
+            existingNotice.description = description;
+            existingNotice.date = new Date().toLocaleDateString('en-GB') + ' (Updated)';
+        }
+    } else {
+        if (!localData.notices) localData.notices = [];
+        localData.notices.push({
+            id: Date.now(),
+            title: title.trim(),
+            description: description ? description.trim() : "",
+            date: new Date().toLocaleDateString('en-GB')
+        });
+    }
+
+    saveAndSyncData(localData);
+    res.send('<script>alert("Notice Saved Successfully!"); window.location.href="/admin";</script>');
+});
+
+// 📌 UPLOAD / PUBLISH EVENT (Cloudinary Enabled)
+app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 15), (req, res) => {
+    const { eventId, eventTitle, eventDescription } = req.body;
+    const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
+
+    let localData = getLocalData();
+
+    if (eventId) {
+        let existingEvent = localData.events.find(e => e.id === parseInt(eventId));
+        if (existingEvent) {
+            existingEvent.title = eventTitle.trim();
+            existingEvent.description = eventDescription;
+            if (uploadedFiles.length > 0) {
+                existingEvent.images = existingEvent.images.concat(uploadedFiles);
+                existingEvent.coverImage = uploadedFiles[0];
+            }
+        }
+    } else {
+        if (!localData.events) localData.events = [];
+        localData.events.push({
+            id: Date.now(),
+            title: eventTitle.trim(),
+            description: eventDescription,
+            coverImage: uploadedFiles[0] || '/uploads/default-event.jpg',
+            images: uploadedFiles
+        });
+    }
+
+    saveAndSyncData(localData);
+    res.send('<script>alert("Gallery Data Updated Successfully!"); window.location.href="/admin";</script>');
+});
+
+// 📌 ENQUIRY SUBMISSION
+app.post('/api/enquiry/submit', (req, res) => {
+    const { parentName, studentName, targetClass, phone, message } = req.body;
+    let localData = getLocalData();
+    if (!localData.enquiries) { localData.enquiries = []; }
+
+    localData.enquiries.push({
+        id: Date.now(),
+        parentName: parentName.trim(),
+        studentName: studentName.trim(),
+        targetClass: targetClass.trim(),
+        phone: phone.trim(),
+        message: message ? message.trim() : "",
+        date: new Date().toLocaleString('en-GB')
+    });
+
+    saveAndSyncData(localData);
+    res.send('<script>alert("Thank you! Enquiry submitted successfully."); window.location.href = "/";</script>');
+});
+
+// 📌 UPLOAD SCHOOL DOCUMENT
+app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded. Kripya sahi PDF file chune.');
+    }
+
+    const { category, title } = req.body;
+    const fileUrl = req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`;
 
     try {
-        const { category, title } = req.body;
         let localData = getLocalData();
+        if (!localData.documents) localData.documents = [];
 
-        const fileUrl = req.file ? (req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`) : '';
-
-        const newDoc = {
+        localData.documents.push({
             id: Date.now(),
             category: category,
             title: title.trim(),
             fileUrl: fileUrl
-        };
-
-        if (!localData.documents) localData.documents = [];
-        localData.documents.push(newDoc);
+        });
 
         saveAndSyncData(localData);
-
-        res.send('<script>alert("Document Uploaded & Synced!"); window.location.href="/admin";</script>');
+        res.send('<script>alert("Document Published Successfully!"); window.location.href="/admin";</script>');
     } catch (err) {
-        console.error("Doc Error:", err);
-        res.status(500).send("Document Upload Error");
+        console.error("Database Write Error:", err);
+        res.status(500).send("Database transaction crash!");
     }
 });
 
-// 📌 DELETE NOTICE
-app.delete('/api/admin/delete-notice/:id', (req, res) => {
-    if (!req.session.isAuthorized) return res.status(403).json({ message: "Unauthorized" });
-
-    const id = parseInt(req.params.id);
+// 🗑️ DELETE API ENGINE
+app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, (req, res) => {
+    const { type, id } = req.params;
     let localData = getLocalData();
+    const itemId = parseInt(id);
 
-    if (localData.notices) {
-        localData.notices = localData.notices.filter(n => n.id !== id);
+    if (type === 'notice') {
+        if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
+    } else if (type === 'enquiry') {
+        if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
+    } else if (type === 'event') {
+        if (localData.events) localData.events = localData.events.filter(e => e.id !== itemId);
+    } else if (type === 'document') {
+        if (localData.documents) localData.documents = localData.documents.filter(d => d.id !== itemId);
+    } else {
+        return res.status(400).json({ message: "Invalid type requested" });
     }
 
     saveAndSyncData(localData);
-
-    res.json({ success: true, message: "Notice deleted!" });
+    res.json({ success: true, message: `Successfully terminated requested ${type}!` });
 });
 
-// 📌 DELETE ALBUM
-app.delete('/api/admin/terminate-album/:id', (req, res) => {
-    if (!req.session.isAuthorized) return res.status(403).json({ message: "Unauthorized" });
-
-    const albumId = req.params.id;
-    let localData = getLocalData();
-
-    if (localData.events) {
-        localData.events = localData.events.filter(e => e.id !== albumId);
-    }
-
-    saveAndSyncData(localData);
-
-    res.json({ success: true, message: "Album deleted!" });
-});
-
-// Static Pages
-app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
-app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
-
+// SERVER LISTEN
 app.listen(PORT, () => {
     console.log(`===================================================`);
     console.log(`🚀 Patliputra Vidyapeeth Server LIVE on port ${PORT}`);
