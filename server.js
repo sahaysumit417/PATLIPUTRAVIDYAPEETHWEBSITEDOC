@@ -26,7 +26,7 @@ app.use(session({
     cookie: { maxAge: 60 * 60 * 1000 } 
 }));
 
-// ☁️ CLOUDINARY CONFIGURATION (ENV Fallback Match)
+// ☁️ CLOUDINARY CONFIGURATION
 const cloudName = (process.env.CLOUDINARY_NAME || process.env.CLOUDINARY_CLOUD_NAME || '').trim();
 const apiKey = (process.env.CLOUDINARY_API_KEY || '').trim();
 const apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim();
@@ -163,6 +163,19 @@ function saveAndSyncData(data) {
 // ROUTES & APIS
 // ==========================================
 
+// 🏠 HOME PAGE ROUTE (Fix for "Cannot GET /")
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'index.html'));
+});
+
+// CORE VIEW ROUTES
+app.get('/campus', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
+app.get('/about', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'about.html')); });
+app.get('/faculty', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'faculty.html')); });
+app.get('/contact', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'contact.html')); });
+app.get('/gallery', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'gallery.html')); });
+app.get('/login', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'login.html')); });
+
 app.get('/api/data', (req, res) => {
     res.json(getLocalData());
 });
@@ -181,7 +194,7 @@ app.post('/api/admin/login', (req, res) => {
 
 app.get('/admin', (req, res) => {
     if (!req.session.isAuthorized) {
-        return res.redirect('/login.html');
+        return res.redirect('/login');
     }
     res.sendFile(path.resolve(__dirname, 'views', 'admin.html'));
 });
@@ -213,7 +226,7 @@ app.post('/api/admin/add-notice', (req, res) => {
     res.json({ success: true, message: "Notice Added and Synced!" });
 });
 
-// 📌 PUBLISH GALLERY/HERO EVENT (Cloudinary Upload Support)
+// 📌 PUBLISH GALLERY/HERO EVENT
 app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
     if (!req.session.isAuthorized) return res.status(403).send("Unauthorized access");
 
@@ -221,7 +234,6 @@ app.post('/api/admin/publish-event', upload.array('photos', 10), (req, res) => {
         const { eventTitle, eventDate, eventCategory } = req.body;
         let localData = getLocalData();
 
-        // Cloudinary URL extracted cleanly
         const photoUrls = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
 
         const newEvent = {
