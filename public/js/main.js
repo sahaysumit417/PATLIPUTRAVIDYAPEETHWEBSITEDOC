@@ -106,28 +106,61 @@ function loadWebsiteData() {
         });
 }
 
-function renderEventCards() {
-    const galleryGrid = document.getElementById("gallery-grid");
-    if (!galleryGrid) return;
+// function renderEventCards() {
+//     const galleryGrid = document.getElementById("gallery-grid");
+//     if (!galleryGrid) return;
 
-    if (allEventsData.length === 0) {
-        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
+//     if (allEventsData.length === 0) {
+//         galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
+//         return;
+//     }
+
+//     galleryGrid.innerHTML = "";
+//     allEventsData.forEach(event => {
+//         const eventCard = document.createElement("div");
+//         eventCard.className = "gallery-card";
+//         eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+//         eventCard.innerHTML = `
+//             <img src="${event.coverImage}" alt="${event.title}">
+//             <div class="gallery-overlay" style="opacity: 1;">
+//                 <h3>🎉 ${event.title}</h3>
+//                 <p>${event.description} (${event.images.length} Photos)</p>
+//             </div>
+//         `;
+//         galleryGrid.appendChild(eventCard);
+//     });
+// }
+function renderEventCards() {
+    const grid = document.getElementById('events-gallery-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (!allEventsData || allEventsData.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:#666;">No recent gallery events available.</p>';
         return;
     }
 
-    galleryGrid.innerHTML = "";
-    allEventsData.forEach(event => {
-        const eventCard = document.createElement("div");
-        eventCard.className = "gallery-card";
-        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
-        eventCard.innerHTML = `
-            <img src="${event.coverImage}" alt="${event.title}">
-            <div class="gallery-overlay" style="opacity: 1;">
-                <h3>🎉 ${event.title}</h3>
-                <p>${event.description} (${event.images.length} Photos)</p>
+    // 🎯 REVERSE (Latest Pehle) + SLICE(0, 4) (Sirf top 4 recent albums)
+    const recent4Events = [...allEventsData].reverse().slice(0, 4);
+
+    recent4Events.forEach(event => {
+        const coverImg = event.coverImage || (event.images && event.images[0]) || '/uploads/default-event.jpg';
+        
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        card.setAttribute('onclick', `openEventModal(${event.id})`);
+
+        card.innerHTML = `
+            <div class="gallery-card-img-wrapper">
+                <img src="${coverImg}" alt="${event.title}" loading="lazy">
+            </div>
+            <div class="gallery-card-content">
+                <h3 class="album-title">${event.title}</h3>
+                <p class="album-desc">${event.description || ''}</p>
             </div>
         `;
-        galleryGrid.appendChild(eventCard);
+        grid.appendChild(card);
     });
 }
 
