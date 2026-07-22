@@ -132,12 +132,12 @@ function loadWebsiteData() {
 // }
 function renderEventCards() {
     const grid = document.getElementById('events-gallery-grid');
-    if (!grid) return;
+    if (!galleryGrid) return;
 
-    grid.innerHTML = '';
+    galleryGrid.innerHTML = '';
 
     if (!allEventsData || allEventsData.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; color:#666;">No recent gallery events available.</p>';
+        galleryGrid.innerHTML = '<p style="text-align:center; color:#666;">No recent gallery events available.</p>';
         return;
     }
 
@@ -160,7 +160,7 @@ function renderEventCards() {
                 <p class="album-desc">${event.description || ''}</p>
             </div>
         `;
-        grid.appendChild(card);
+        galleryGrid.appendChild(card);
     });
 }
 
