@@ -132,20 +132,20 @@ function loadWebsiteData() {
 // }
 function renderEventCards() {
     const grid = document.getElementById('events-gallery-grid');
-    if (!galleryGrid) return;
+    if (!grid) return;
 
-    galleryGrid.innerHTML = '';
+    grid.innerHTML = '';
 
-    if (!allEventsData || allEventsData.length === 0) {
-        galleryGrid.innerHTML = '<p style="text-align:center; color:#666;">No recent gallery events available.</p>';
+    if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1/-1;">No recent gallery events available.</p>';
         return;
     }
 
-    // 🎯 REVERSE (Latest Pehle) + SLICE(0, 4) (Sirf top 4 recent albums)
+    // 🎯 REVERSE (Latest albums pehle) + SLICE(0, 4) (Maximum Top 4 Recent Albums)
     const recent4Events = [...allEventsData].reverse().slice(0, 4);
 
     recent4Events.forEach(event => {
-        const coverImg = event.coverImage || (event.images && event.images[0]) || '/uploads/default-event.jpg';
+        const coverImg = event.coverImage || (event.images && event.images[0]) || (event.photos && event.photos[0]) || '/uploads/default-event.jpg';
         
         const card = document.createElement('div');
         card.className = 'gallery-card';
@@ -153,17 +153,16 @@ function renderEventCards() {
 
         card.innerHTML = `
             <div class="gallery-card-img-wrapper">
-                <img src="${coverImg}" alt="${event.title}" loading="lazy">
+                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy">
             </div>
             <div class="gallery-card-content">
-                <h3 class="album-title">${event.title}</h3>
+                <h3 class="album-title">${event.title || 'Untitled Event'}</h3>
                 <p class="album-desc">${event.description || ''}</p>
             </div>
         `;
-        galleryGrid.appendChild(card);
+        grid.appendChild(card);
     });
 }
-
 function openEventGallery(eventId) {
     const galleryGrid = document.getElementById("gallery-grid");
     const selectedEvent = allEventsData.find(e => e.id === eventId);
