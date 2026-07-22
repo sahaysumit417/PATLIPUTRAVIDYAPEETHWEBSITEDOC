@@ -131,32 +131,38 @@ function loadWebsiteData() {
 //     });
 // }
 function renderEventCards() {
-    // 1. Grid container ID check
-    const grid = document.getElementById('events-gallery-grid') || document.getElementById('recent-gallery-grid');
-    if (!grid) return;
-
-    grid.innerHTML = '';
-
-    // 2. Failsafe array guard
-    if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; color:#666; width:100%; grid-column: 1/-1;">No recent gallery events available.</p>';
+    const grid = document.getElementById('events-gallery-grid');
+    if (!grid) {
+        console.error("Gallery grid container #events-gallery-grid nahi mila!");
         return;
     }
 
-    // 3. SAFE REVERSE & SLICE (Bina original array ko modify kiye top 4 items extract karna)
-    const recent4Events = [...allEventsData].slice().reverse().slice(0, 4);
+    grid.innerHTML = '';
+
+    if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1/-1;">No recent gallery events available.</p>';
+        return;
+    }
+
+    // Safely copy array, reverse to show latest first, and take max 4 items
+    const recent4Events = [...allEventsData].reverse().slice(0, 4);
 
     recent4Events.forEach(event => {
-        // Image path extract engine (Cloudinary + Local Relative Fallback)
-        const coverImg = event.coverImage || 
-                         (event.images && event.images.length > 0 ? event.images[0] : null) || 
-                         (event.photos && event.photos.length > 0 ? event.photos[0] : null) || 
-                         '/uploads/default-event.jpg';
-        
+        // Extract cover image or first image from array
+        let coverImg = '/uploads/default-event.jpg';
+        if (event.coverImage) {
+            coverImg = event.coverImage;
+        } else if (event.images && event.images.length > 0) {
+            coverImg = event.images[0];
+        } else if (event.photos && event.photos.length > 0) {
+            coverImg = event.photos[0];
+        }
+
         const card = document.createElement('div');
         card.className = 'gallery-card';
+        card.style.cursor = 'pointer';
 
-        // Modal opener binding
+        // Modal click binding
         card.onclick = function() {
             if (typeof openEventModal === 'function') {
                 openEventModal(event.id);
@@ -167,10 +173,10 @@ function renderEventCards() {
 
         card.innerHTML = `
             <div class="gallery-card-img-wrapper" style="overflow:hidden; border-radius:8px;">
-                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy" style="width:100%; height:220px; object-fit:cover;">
+                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy" style="width:100%; height:200px; object-fit:cover;">
             </div>
             <div class="gallery-card-content" style="padding: 12px 5px;">
-                <h3 class="album-title" style="margin:5px 0; font-size:1.1rem;">${event.title || 'Untitled Event'}</h3>
+                <h3 class="album-title" style="margin:5px 0; font-size:1.1rem; color: #0a3d62;">${event.title || 'Untitled Event'}</h3>
                 <p class="album-desc" style="font-size:0.85rem; color:#555;">${event.description || ''}</p>
             </div>
         `;
