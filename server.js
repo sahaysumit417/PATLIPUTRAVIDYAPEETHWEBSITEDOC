@@ -5,7 +5,6 @@ const fs = require('fs');
 const multer = require('multer');
 const session = require('express-session'); 
 const bcrypt = require('bcryptjs');
-const https = require('https');
 
 // ☁️ CLOUDINARY STORAGE PACKAGES
 const cloudinary = require('cloudinary').v2;
@@ -70,11 +69,27 @@ if (cloudName && apiKey && apiSecret) {
 
 const upload = multer({ storage: storageStrategy });
 
-// Helper to read local data
-function getLocalData() {
-    if (!fs.existsSync(DATA_FILE)) {
-        return { notices: [], events: [], enquiries: [], documents: [] };
+// 📥 1. JSONBIN / LOCAL DATA READER (PERSISTENT DATA ENGINE)
+async function getLocalData() {
+    const binId = process.env.JSONBIN_BIN_ID;
+    const apiKey = process.env.JSONBIN_KEY;
+
+    if (binId && apiKey) {
+        try {
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                headers: { 'X-Master-Key': apiKey }
+            });
+            if (response.ok) {
+                const resData = await response.json();
+                return resData.record || { notices: [], events: [], enquiries: [], documents: [] };
+            }
+        } catch (err) {
+            console.error("❌ Cloud DB Read Error:", err.message);
+        }
     }
+
+    // Fallback to local file if JSONBin is unconfigured or fails
+    if (!fs.existsSync(DATA_FILE)) return { notices: [], events: [], enquiries: [], documents: [] };
     try {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
         return raw ? JSON.parse(raw) : { notices: [], events: [], enquiries: [], documents: [] };
@@ -83,80 +98,38 @@ function getLocalData() {
     }
 }
 
-// 🔄 GITHUB API AUTO-SYNC ENGINE
-async function syncDatabaseToGitHub(updatedData) {
-    const token = (process.env.GITHUB_TOKEN || '').trim();
-    const repo = (process.env.GITHUB_REPO || '').trim(); 
-    const filePath = "data/database.json"; 
-
-    if (!token || !repo) {
-        console.log("⚠️ GITHUB_TOKEN ya GITHUB_REPO missing. Git Sync Skipped.");
-        return;
+// 📤 2. JSONBIN / LOCAL DATA SAVER
+async function saveAndSyncData(data) {
+    // Local JSON disk backup save
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    } catch (e) {
+        console.error("Local disk save notice:", e.message);
     }
+
+    const binId = process.env.JSONBIN_BIN_ID;
+    const apiKey = process.env.JSONBIN_KEY;
+
+    if (!binId || !apiKey) return;
 
     try {
-        const getShaOptions = {
-            hostname: 'api.github.com',
-            path: `/repos/${repo}/contents/${filePath}`,
-            method: 'GET',
-            headers: {
-                'User-Agent': 'NodeJS-Render-Server',
-                'Authorization': `token ${token}`
-            }
-        };
-
-        const shaRes = await new Promise((resolve) => {
-            https.get(getShaOptions, (res) => {
-                let body = '';
-                res.on('data', chunk => body += chunk);
-                res.on('end', () => resolve(JSON.parse(body)));
-            });
-        });
-
-        if (!shaRes.sha) {
-            console.error("❌ GitHub SHA Fetch Error:", shaRes.message || "File path missing in repository");
-            return;
-        }
-
-        const contentBase64 = Buffer.from(JSON.stringify(updatedData, null, 2)).toString('base64');
-
-        const putData = JSON.stringify({
-            message: "Auto-sync database.json via Admin Panel [skip ci]",
-            content: contentBase64,
-            sha: shaRes.sha
-        });
-
-        const putOptions = {
-            hostname: 'api.github.com',
-            path: `/repos/${repo}/contents/${filePath}`,
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
             method: 'PUT',
             headers: {
-                'User-Agent': 'NodeJS-Render-Server',
-                'Authorization': `token ${token}`,
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(putData)
-            }
-        };
-
-        const req = https.request(putOptions, (res) => {
-            if (res.statusCode === 200 || res.statusCode === 201) {
-                console.log("🎉 Database.json successfully committed & synced to GitHub!");
-            } else {
-                console.error("❌ GitHub API Sync Failed! Status:", res.statusCode);
-            }
+                'X-Master-Key': apiKey
+            },
+            body: JSON.stringify(data)
         });
 
-        req.write(putData);
-        req.end();
-
+        if (response.ok) {
+            console.log("🎉 Data Cloud DB (JSONBin) par 100% Permanently Save Ho Gaya!");
+        } else {
+            console.error("❌ JSONBin Sync Fail:", response.statusText);
+        }
     } catch (err) {
-        console.error("❌ Git Sync Error:", err.message);
+        console.error("❌ Cloud DB Save Error:", err.message);
     }
-}
-
-function saveAndSyncData(data) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-    syncDatabaseToGitHub(data);
 }
 
 // --- SECURITY MIDDLEWARE ---
@@ -169,13 +142,10 @@ function isAdminAuthenticated(req, res, next) {
 }
 
 // ==================================================================================
-// 🚀 1. BEYOND ACADEMICS VIEW ROUTE
+// 🚀 ROUTES & APIS
 // ==================================================================================
-app.get('/beyond-academics/:type', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'views', 'activity.html'));
-});
 
-// --- CORE VIEW ROUTES ---
+// 🏠 CORE VIEW ROUTES
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'index.html')); });
 app.get('/campus', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 app.get('/about', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'about.html')); });
@@ -186,6 +156,10 @@ app.get('/login', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 
 app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
 app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 
+app.get('/beyond-academics/:type', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'activity.html'));
+});
+
 app.get('/admin', isAdminAuthenticated, (req, res) => { 
     res.sendFile(path.resolve(__dirname, 'views', 'admin.html')); 
 });
@@ -195,9 +169,6 @@ app.get('/admin/logout', (req, res) => {
     res.redirect('/');
 });
 
-// ==================================================================================
-// 🚀 2. BEYOND ACADEMICS DATA API GATEWAY
-// ==================================================================================
 app.get('/api/beyond-academics/:type', (req, res) => {
     const type = req.params.type;
     const dataMatrix = {
@@ -231,23 +202,28 @@ app.get('/api/beyond-academics/:type', (req, res) => {
     }
 });
 
-// --- GENERAL DATA & POST ROUTES ---
-app.get('/api/data', (req, res) => {
-    res.json(getLocalData());
+// GET Dynamic Data (from JSONBin)
+app.get('/api/data', async (req, res) => {
+    const data = await getLocalData();
+    res.json(data);
 });
 
-// 🔐 ORIGINAL ADMIN LOGIN ROUTE (Bcrypt Hash + Alert Script Redirect)
+// 🔐 ADMIN LOGIN ROUTE (Bcrypt + Plain Fallback Support)
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
-    
-    const correctUsername = process.env.ADMIN_USERNAME;
+    const correctUsername = process.env.ADMIN_USERNAME || 'admin';
+    const envPass = process.env.ADMIN_PASSWORD || 'admin123';
     
     if (username !== correctUsername) {
         return res.send('<script>alert("Invalid Username!"); window.location.href="/login";</script>');
     }
 
-    // Bcrypt Hash Comparison
-    const isPasswordCorrect = bcrypt.compareSync(password, process.env.ADMIN_PASSWORD || '');
+    let isPasswordCorrect = false;
+    if (envPass.startsWith('$2b$')) {
+        isPasswordCorrect = bcrypt.compareSync(password, envPass);
+    } else {
+        isPasswordCorrect = (password === envPass);
+    }
 
     if (isPasswordCorrect) {
         req.session.isAdmin = true; 
@@ -259,9 +235,9 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 // 📌 UPLOAD / SAVE NOTICE
-app.post('/api/admin/upload-notice', isAdminAuthenticated, (req, res) => {
+app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     const { noticeId, title, description } = req.body;
-    let localData = getLocalData();
+    let localData = await getLocalData();
 
     if (noticeId) {
         let existingNotice = localData.notices.find(n => n.id === parseInt(noticeId));
@@ -280,16 +256,16 @@ app.post('/api/admin/upload-notice', isAdminAuthenticated, (req, res) => {
         });
     }
 
-    saveAndSyncData(localData);
+    await saveAndSyncData(localData);
     res.send('<script>alert("Notice Saved Successfully!"); window.location.href="/admin";</script>');
 });
 
-// 📌 UPLOAD / PUBLISH EVENT (Cloudinary Enabled)
-app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 15), (req, res) => {
+// 📌 UPLOAD / PUBLISH EVENT
+app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 15), async (req, res) => {
     const { eventId, eventTitle, eventDescription } = req.body;
     const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
 
-    let localData = getLocalData();
+    let localData = await getLocalData();
 
     if (eventId) {
         let existingEvent = localData.events.find(e => e.id === parseInt(eventId));
@@ -312,14 +288,14 @@ app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPho
         });
     }
 
-    saveAndSyncData(localData);
+    await saveAndSyncData(localData);
     res.send('<script>alert("Gallery Data Updated Successfully!"); window.location.href="/admin";</script>');
 });
 
 // 📌 ENQUIRY SUBMISSION
-app.post('/api/enquiry/submit', (req, res) => {
+app.post('/api/enquiry/submit', async (req, res) => {
     const { parentName, studentName, targetClass, phone, message } = req.body;
-    let localData = getLocalData();
+    let localData = await getLocalData();
     if (!localData.enquiries) { localData.enquiries = []; }
 
     localData.enquiries.push({
@@ -332,12 +308,12 @@ app.post('/api/enquiry/submit', (req, res) => {
         date: new Date().toLocaleString('en-GB')
     });
 
-    saveAndSyncData(localData);
+    await saveAndSyncData(localData);
     res.send('<script>alert("Thank you! Enquiry submitted successfully."); window.location.href = "/";</script>');
 });
 
 // 📌 UPLOAD SCHOOL DOCUMENT
-app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), (req, res) => {
+app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded. Kripya sahi PDF file chune.');
     }
@@ -346,7 +322,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
     const fileUrl = req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`;
 
     try {
-        let localData = getLocalData();
+        let localData = await getLocalData();
         if (!localData.documents) localData.documents = [];
 
         localData.documents.push({
@@ -356,7 +332,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
             fileUrl: fileUrl
         });
 
-        saveAndSyncData(localData);
+        await saveAndSyncData(localData);
         res.send('<script>alert("Document Published Successfully!"); window.location.href="/admin";</script>');
     } catch (err) {
         console.error("Database Write Error:", err);
@@ -365,9 +341,9 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
 });
 
 // 🗑️ DELETE API ENGINE
-app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, (req, res) => {
+app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
     const { type, id } = req.params;
-    let localData = getLocalData();
+    let localData = await getLocalData();
     const itemId = parseInt(id);
 
     if (type === 'notice') {
@@ -382,7 +358,7 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, (req, res) => {
         return res.status(400).json({ message: "Invalid type requested" });
     }
 
-    saveAndSyncData(localData);
+    await saveAndSyncData(localData);
     res.json({ success: true, message: `Successfully terminated requested ${type}!` });
 });
 
