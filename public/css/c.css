@@ -2027,12 +2027,21 @@ body {
     .header-admin-portal-btn { width: 100% !important; max-width: 400px !important; justify-content: center !important; margin-left: 0 !important; margin-top: 5px !important; }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     #dynamic-header { height: 80px !important; padding: 10px 4% !important; }
     .logo-main-brand-text { font-size: 1rem !important; }
     .logo-board-subtext { font-size: 0.65rem !important; }
     .logo-postal-address { display: none !important; }
     .logo-container-circle { width: 48px !important; height: 48px !important; padding: 2px !important; }
+    .header-logo-box { gap: 10px !important; }
+    .hero { margin-top: 80px !important; }
+} */
+ @media (max-width: 1024px) {
+    #dynamic-header { height: 80px !important; padding: 10px 3% !important; }
+    .logo-main-brand-text { font-size: 1.15rem !important; white-space: nowrap !important; }
+    .logo-board-subtext { font-size: 0.7rem !important; white-space: nowrap !important; }
+    .logo-postal-address { display: none !important; } /* Postal address hide hone se text misalign nahi hoga */
+    .logo-container-circle { width: 50px !important; height: 50px !important; padding: 2px !important; }
     .header-logo-box { gap: 10px !important; }
     .hero { margin-top: 80px !important; }
 }
@@ -2092,5 +2101,86 @@ body {
     .nav-dropdown-item.mobile-active .dropdown-caret-icon {
         transform: rotate(180deg) !important;
         color: #c5a059 !important;
+    }
+}
+/* ===================================================
+   COMPACT NAV LINKS & COMPACT HEADER SPACING
+   =================================================== */
+
+/* Desktop & Laptop Views (Badi screens par nav links ko compact karna) */
+.header-menu-navigation {
+    gap: 8px !important; /* Items ke beech ka gap kam kiya */
+}
+
+.header-menu-navigation .nav-item-link {
+    padding: 6px 10px !important; /* Extra padding kam ki */
+    font-size: 0.88rem !important; /* Text size thoda compact kiya */
+}
+
+/* Mid-Size Screens / Laptops (1024px se 1280px ke beech) */
+@media screen and (max-width: 1280px) {
+    .logo-postal-address {
+        display: none !important; /* Address ko hide kar diya taaki nav bar ko jagah mile */
+    }
+
+    .header-menu-navigation {
+        gap: 4px !important;
+    }
+
+    .header-menu-navigation .nav-item-link {
+        padding: 5px 8px !important;
+        font-size: 0.82rem !important; /* Text aur chota kiya taaki fit aaye */
+    }
+
+    .logo-main-brand-text {
+        font-size: 1.2rem !important;
+    }
+
+    .logo-board-subtext {
+        font-size: 0.7rem !important;
+    }
+}
+/* ===================================================
+   HEADER RIGHT-SIDE BUTTON & TOGGLE SPACING FIX
+   =================================================== */
+
+/* 1. Dynamic Header Container Padding Fix */
+#dynamic-header {
+    padding-left: 20px !important;
+    padding-right: 25px !important; /* Right edge se safe space banega */
+    box-sizing: border-box !important;
+}
+
+/* 2. Admin Button and Action Buttons Spacing */
+.header-action-group,
+.nav-action-button,
+.nav-admin-btn,
+.admin-login-btn {
+    margin-right: 15px !important; /* Right border se margin */
+    margin-left: 10px !important;
+}
+
+/* 3. Mobile Hamburger Toggle Button Spacing */
+#mobile-toggle-btn,
+.header-nav-toggle {
+    margin-right: 15px !important; /* Screen edge se distance */
+    margin-left: 10px !important;
+}
+
+/* 4. Navigation Menu Padding Adjustment */
+.header-menu-navigation {
+    padding-right: 15px !important; /* Items right border se nahi chipkengay */
+}
+
+/* Tablet & Mobile Screens Special Safe Padding */
+@media screen and (max-width: 1024px) {
+    #dynamic-header {
+        padding-left: 15px !important;
+        padding-right: 20px !important;
+    }
+    
+    #mobile-toggle-btn,
+    .header-nav-toggle {
+        margin-right: 10px !important;
     }
 }
