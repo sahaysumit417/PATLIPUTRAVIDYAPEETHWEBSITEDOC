@@ -131,33 +131,47 @@ function loadWebsiteData() {
 //     });
 // }
 function renderEventCards() {
-    const grid = document.getElementById('events-gallery-grid');
+    // 1. Grid container ID check
+    const grid = document.getElementById('events-gallery-grid') || document.getElementById('recent-gallery-grid');
     if (!grid) return;
 
     grid.innerHTML = '';
 
+    // 2. Failsafe array guard
     if (!allEventsData || !Array.isArray(allEventsData) || allEventsData.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1/-1;">No recent gallery events available.</p>';
+        grid.innerHTML = '<p style="text-align:center; color:#666; width:100%; grid-column: 1/-1;">No recent gallery events available.</p>';
         return;
     }
 
-    // 🎯 REVERSE (Latest albums pehle) + SLICE(0, 4) (Maximum Top 4 Recent Albums)
-    const recent4Events = [...allEventsData].reverse().slice(0, 4);
+    // 3. SAFE REVERSE & SLICE (Bina original array ko modify kiye top 4 items extract karna)
+    const recent4Events = [...allEventsData].slice().reverse().slice(0, 4);
 
     recent4Events.forEach(event => {
-        const coverImg = event.coverImage || (event.images && event.images[0]) || (event.photos && event.photos[0]) || '/uploads/default-event.jpg';
+        // Image path extract engine (Cloudinary + Local Relative Fallback)
+        const coverImg = event.coverImage || 
+                         (event.images && event.images.length > 0 ? event.images[0] : null) || 
+                         (event.photos && event.photos.length > 0 ? event.photos[0] : null) || 
+                         '/uploads/default-event.jpg';
         
         const card = document.createElement('div');
         card.className = 'gallery-card';
-        card.setAttribute('onclick', `openEventModal(${event.id})`);
+
+        // Modal opener binding
+        card.onclick = function() {
+            if (typeof openEventModal === 'function') {
+                openEventModal(event.id);
+            } else if (typeof openAlbumModal === 'function') {
+                openAlbumModal(event.id);
+            }
+        };
 
         card.innerHTML = `
-            <div class="gallery-card-img-wrapper">
-                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy">
+            <div class="gallery-card-img-wrapper" style="overflow:hidden; border-radius:8px;">
+                <img src="${coverImg}" alt="${event.title || 'Gallery Event'}" loading="lazy" style="width:100%; height:220px; object-fit:cover;">
             </div>
-            <div class="gallery-card-content">
-                <h3 class="album-title">${event.title || 'Untitled Event'}</h3>
-                <p class="album-desc">${event.description || ''}</p>
+            <div class="gallery-card-content" style="padding: 12px 5px;">
+                <h3 class="album-title" style="margin:5px 0; font-size:1.1rem;">${event.title || 'Untitled Event'}</h3>
+                <p class="album-desc" style="font-size:0.85rem; color:#555;">${event.description || ''}</p>
             </div>
         `;
         grid.appendChild(card);
