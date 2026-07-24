@@ -591,30 +591,7 @@
 
             renderSidebar();
         })
-        .catch(err => console.error("Error loading admin data:", err));
-}
-        // function fetchSidebarData() {
-        //     fetch('/api/data')
-        //         .then(res => res.json())
-        //         .then(data => {
-        //             globalNotices = data.notices || [];
-        //             globalEnquiries = data.enquiries || [];
-        //             globalDocuments = data.documents || [];
-        //             globalRecentPosts = data.recentPosts || [];
-
-        //             // Gallery reads from 'events' array where gallery upload stores images
-        //             globalGallery = (data.events && data.events.length > 0) ? data.events : (data.gallery || []);
-
-        //             document.getElementById("cnt-enquiries").innerText = globalEnquiries.length;
-        //             document.getElementById("cnt-notices").innerText = globalNotices.length;
-        //             document.getElementById("cnt-gallery").innerText = globalGallery.length;
-        //             document.getElementById("cnt-events").innerText = globalRecentPosts.length;
-
-        //             renderSidebar();
-        //         })
-        //         .catch(err => console.error("Error loading admin data:", err));
-        // }
-
+        .catch(err => console.error("Error loading admin data:", err));}
         function renderSidebar() {
             const noticeContainer = document.getElementById("sidebar-notices");
             const eventContainer = document.getElementById("sidebar-recent-events");

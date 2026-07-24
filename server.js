@@ -393,7 +393,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
     }
 });
 
-// 🗑️ 6. DELETE API ENGINE (FIXED FOR ALL TYPES INCLUDING 'gallery')
+// // 🗑️ DELETE API ENGINE
 // app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
 //     const { type, id } = req.params;
 //     let localData = await getLocalData();
@@ -405,7 +405,8 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
 //         if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
 //     } else if (type === 'recentPost') {
 //         if (localData.recentPosts) localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
-//     } else if (type === 'gallery' || type === 'event') {
+//     } else if (type === 'gallery' || type === 'event' || type === 'events') {
+//         // गैलरी और इवेंट्स दोनों Arrays से डिलीट करें
 //         if (localData.events) localData.events = localData.events.filter(g => g.id !== itemId);
 //         if (localData.gallery) localData.gallery = localData.gallery.filter(g => g.id !== itemId);
 //     } else if (type === 'document') {
@@ -417,7 +418,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
 //     await saveAndSyncData(localData);
 //     res.json({ success: true, message: `Successfully deleted ${type}!` });
 // });
-// 🗑️ DELETE API ENGINE
+// 🗑️ DELETE API ENGINE (WITH CLOUDINARY CLEANUP)
 app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
     const { type, id } = req.params;
     let localData = await getLocalData();
@@ -425,23 +426,79 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
 
     if (type === 'notice') {
         if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
+    
     } else if (type === 'enquiry') {
         if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
+    
     } else if (type === 'recentPost') {
-        if (localData.recentPosts) localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
+        if (localData.recentPosts) {
+            const post = localData.recentPosts.find(e => e.id === itemId);
+            if (post && post.images) {
+                // पोस्ट की सभी इमेजेस डिलीट करें
+                for (let imgUrl of post.images) {
+                    await deleteFromCloudinary(imgUrl);
+                }
+            }
+            localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
+        }
+
     } else if (type === 'gallery' || type === 'event' || type === 'events') {
-        // गैलरी और इवेंट्स दोनों Arrays से डिलीट करें
+        const album = (localData.events || []).find(g => g.id === itemId) || (localData.gallery || []).find(g => g.id === itemId);
+        if (album && album.images) {
+            // गैलरी एलबम की सभी इमेजेस डिलीट करें
+            for (let imgUrl of album.images) {
+                await deleteFromCloudinary(imgUrl);
+            }
+        }
         if (localData.events) localData.events = localData.events.filter(g => g.id !== itemId);
         if (localData.gallery) localData.gallery = localData.gallery.filter(g => g.id !== itemId);
+
     } else if (type === 'document') {
-        if (localData.documents) localData.documents = localData.documents.filter(d => d.id !== itemId);
+        if (localData.documents) {
+            const doc = localData.documents.find(d => d.id === itemId);
+            if (doc && doc.fileUrl) {
+                // PDF फ़ाइल डिलीट करें
+                await deleteFromCloudinary(doc.fileUrl);
+            }
+            localData.documents = localData.documents.filter(d => d.id !== itemId);
+        }
+
     } else {
         return res.status(400).json({ message: "Invalid type requested" });
     }
 
     await saveAndSyncData(localData);
-    res.json({ success: true, message: `Successfully deleted ${type}!` });
+    res.json({ success: true, message: `Successfully deleted ${type} and cleaned Cloudinary storage!` });
 });
+// 🗑️ Helper: Cloudinary से फ़ाइल डिलीट करने का फ़ंक्शन
+async function deleteFromCloudinary(fileUrl) {
+    if (!fileUrl || !fileUrl.includes('cloudinary.com')) return;
+
+    try {
+        // Cloudinary URL से Public ID निकालना
+        // Example URL: https://res.cloudinary.com/demo/image/upload/v1234567/folder/sample.jpg
+        const parts = fileUrl.split('/');
+        const uploadIndex = parts.indexOf('upload');
+        
+        if (uploadIndex === -1) return;
+
+        // Version (v123456) को छोड़कर पब्लिक आईडी और फ़ाइल एक्सटेंशन निकालना
+        const publicIdWithExt = parts.slice(uploadIndex + 2).join('/'); // "folder/sample.jpg"
+        const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.')); // "folder/sample"
+        
+        // अगर PDF है तो resource_type 'raw' या 'image' हो सकता है
+        const isPdf = fileUrl.endsWith('.pdf');
+        const resourceType = isPdf ? 'raw' : 'image';
+
+        const result = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+        console.log(`☁️ Cloudinary Deletion Status (${publicId}):`, result);
+    } catch (err) {
+        console.error("❌ Cloudinary Delete Error:", err.message);
+    }
+}
+
+
+
 // SERVER LISTEN
 app.listen(PORT, () => {
     console.log(`===================================================`);
