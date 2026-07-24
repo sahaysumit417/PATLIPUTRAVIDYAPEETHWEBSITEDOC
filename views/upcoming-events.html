@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events | Patliputra Vidyapeeth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+</head>
+<body>
+
+    <!-- 🎯 DYNAMIC HEADER INJECTION CONTAINER -->
+       <nav id="dynamic-header"></nav>
+
+    <section class="page-banner" style="background: var(--primary-brand, #0a3d62); color: white; padding: 50px 20px; text-align: center;">
+        <h1>Upcoming Events</h1>
+        <p>Stay tuned for our upcoming school activities and announcements</p>
+    </section>
+
+    <section class="container" style="padding: 40px 20px; min-height: 400px;">
+        <div id="upcoming-events-list" class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading upcoming events...</p>
+        </div>
+    </section>
+
+    <!-- 🎯 DYNAMIC FOOTER INJECTION CONTAINER -->
+    <footer id="dynamic-footer"></footer>
+
+    <!-- 🎯 MAIN JS ENGINE (Injects Header & Footer Automatically) -->
+  
+    <script>
+        fetch('/api/data')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('upcoming-events-list');
+                const upcoming = (data.events || []).filter(e => e.type === 'upcoming' || e.isUpcoming === true);
+
+                if (!upcoming || upcoming.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; grid-column: 1/-1; width:100%; padding:30px;"><h3 style="color:#0a3d62;">🎉 Abhi koi upcoming event scheduled nahi hai.</h3></div>';
+                    return;
+                }
+
+                container.innerHTML = upcoming.map(event => `
+                    <div class="gallery-card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff;">
+                        <img src="${event.coverImage || '/uploads/default-event.jpg'}" style="width:100%; height:200px; object-fit:cover;">
+                        <div style="padding:15px;">
+                            <h3 style="margin:0 0 10px 0; color:var(--primary-brand, #0a3d62);">${event.title}</h3>
+                            <p style="margin:0 0 10px 0; color:#555; font-size:0.9rem;">${event.description || ''}</p>
+                            <small style="color:#888;"><b>Date:</b> ${event.date || 'To be announced'}</small>
+                        </div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => console.error("Upcoming events fetch error:", err));
+    </script>
+      <script src="/js/main.js"></script>
+</body>
+</html>

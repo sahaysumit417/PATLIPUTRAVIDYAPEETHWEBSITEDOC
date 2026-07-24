@@ -69,10 +69,11 @@ if (cloudName && apiKey && apiSecret) {
 
 const upload = multer({ storage: storageStrategy });
 
-// 📥 1. JSONBIN / LOCAL DATA READER (PERSISTENT DATA ENGINE)
+// 📥 DATA READER
 async function getLocalData() {
     const binId = process.env.JSONBIN_BIN_ID;
     const apiKey = process.env.JSONBIN_KEY;
+    let baseData = { notices: [], events: [], gallery: [], enquiries: [], documents: [], recentPosts: [] };
 
     if (binId && apiKey) {
         try {
@@ -81,26 +82,24 @@ async function getLocalData() {
             });
             if (response.ok) {
                 const resData = await response.json();
-                return resData.record || { notices: [], events: [], enquiries: [], documents: [] };
+                return Object.assign(baseData, resData.record || {});
             }
         } catch (err) {
             console.error("❌ Cloud DB Read Error:", err.message);
         }
     }
 
-    // Fallback to local file if JSONBin is unconfigured or fails
-    if (!fs.existsSync(DATA_FILE)) return { notices: [], events: [], enquiries: [], documents: [] };
+    if (!fs.existsSync(DATA_FILE)) return baseData;
     try {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-        return raw ? JSON.parse(raw) : { notices: [], events: [], enquiries: [], documents: [] };
+        return raw ? Object.assign(baseData, JSON.parse(raw)) : baseData;
     } catch (e) {
-        return { notices: [], events: [], enquiries: [], documents: [] };
+        return baseData;
     }
 }
 
-// 📤 2. JSONBIN / LOCAL DATA SAVER
+// 📤 DATA SAVER
 async function saveAndSyncData(data) {
-    // Local JSON disk backup save
     try {
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     } catch (e) {
@@ -123,7 +122,7 @@ async function saveAndSyncData(data) {
         });
 
         if (response.ok) {
-            console.log("🎉 Data Cloud DB (JSONBin) par 100% Permanently Save Ho Gaya!");
+            console.log("🎉 Data Cloud DB (JSONBin) Sync Successful!");
         } else {
             console.error("❌ JSONBin Sync Fail:", response.statusText);
         }
@@ -141,10 +140,6 @@ function isAdminAuthenticated(req, res, next) {
     }
 }
 
-// ==================================================================================
-// 🚀 ROUTES & APIS
-// ==================================================================================
-
 // 🏠 CORE VIEW ROUTES
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'index.html')); });
 app.get('/campus', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
@@ -156,59 +151,32 @@ app.get('/login', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 
 app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
 app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
 
-app.get('/beyond-academics/:type', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'views', 'activity.html'));
+app.get(['/upcoming-events', '/upcoming-events.html'], (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'upcoming-events.html'));
 });
 
-app.get('/admin', isAdminAuthenticated, (req, res) => { 
-    res.sendFile(path.resolve(__dirname, 'views', 'admin.html')); 
+app.get(['/recent-events', '/recent-events.html'], (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'recent-events.html'));
 });
 
-app.get('/admin/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
+app.get('/beyond-academics/:type', (req, res) => {res.sendFile(path.resolve(__dirname, 'views', 'activity.html'));});
 
-app.get('/api/beyond-academics/:type', (req, res) => {
-    const type = req.params.type;
-    const dataMatrix = {
-        'sports': {
-            title: "Sports & Athletics Arena",
-            description: "At Patliputra Vidyapeeth, we ensure robust physical development through state-of-the-art sports ecosystems including Football, Cricket, Badminton, and Athletic Tracks.",
-            image: "/images/Outdoor game.png"
-        },
-        'music': {
-            title: "Music & Performing Arts Club",
-            description: "Nurturing creative expression and rhythmic brilliance. Our specialized music rooms train students in classical, contemporary vocals, and instruments like Keyboard, Guitar, and Drums.",
-            image: "/images/music 2.jpeg"
-        },
-        'arts': {
-            title: "Fine Arts & Creative Crafts Studio",
-            description: "Fostering visual creativity and aesthetic expression. Students explore painting, origami, sculpture making, and structural designing under seasoned craft curators.",
-            image: "/images/Art & Craft.png"
-        },
-        'indoor-games': {
-            title: "Strategic Indoor Intelligence Games",
-            description: "Enhancing cognitive capacity, mental calculations, and tactical agility through specialized arenas for Chess, Table Tennis, Carrom, and analytical board layouts.",
-            image: "/images/indoor game.png"
-        }
-    };
+app.get('/admin', isAdminAuthenticated, (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'admin.html')); });
+app.get('/admin/logout', (req, res) => {req.session.destroy();res.redirect('/');});
 
-    const result = dataMatrix[type];
-    if (result) {
-        return res.json(result);
-    } else {
-        return res.status(404).json({ error: "Activity not found" });
-    }
-});
-
-// GET Dynamic Data (from JSONBin)
+// GET Dynamic Data API
 app.get('/api/data', async (req, res) => {
     const data = await getLocalData();
+    if (!data.notices) data.notices = [];
+    if (!data.events) data.events = [];
+    if (!data.gallery) data.gallery = [];
+    if (!data.enquiries) data.enquiries = [];
+    if (!data.documents) data.documents = [];
+    if (!data.recentPosts) data.recentPosts = [];
     res.json(data);
 });
 
-// 🔐 ADMIN LOGIN ROUTE (Bcrypt + Plain Fallback Support)
+// 🔐 ADMIN LOGIN
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     const correctUsername = process.env.ADMIN_USERNAME || 'admin';
@@ -234,7 +202,7 @@ app.post('/api/admin/login', (req, res) => {
     }
 });
 
-// 📌 UPLOAD / SAVE NOTICE
+// 📌 1. UPLOAD / SAVE NOTICE
 app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     const { noticeId, title, description } = req.body;
     let localData = await getLocalData();
@@ -242,8 +210,8 @@ app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     if (noticeId) {
         let existingNotice = localData.notices.find(n => n.id === parseInt(noticeId));
         if (existingNotice) {
-            existingNotice.title = title;
-            existingNotice.description = description;
+            existingNotice.title = title.trim();
+            existingNotice.description = description.trim();
             existingNotice.date = new Date().toLocaleDateString('en-GB') + ' (Updated)';
         }
     } else {
@@ -260,43 +228,128 @@ app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     res.send('<script>alert("Notice Saved Successfully!"); window.location.href="/admin";</script>');
 });
 
-// 📌 UPLOAD / PUBLISH EVENT
-app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 15), async (req, res) => {
-    const { eventId, eventTitle, eventDescription } = req.body;
-    const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
+// 📰 2. RECENT EVENT POSTS (SIRF RECENT EVENTS PAGE KE LIYE)
+app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 2), async (req, res) => {
+    try {
+        const { eventId, eventTitle, eventDescription } = req.body;
+        const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
 
-    let localData = await getLocalData();
+        let localData = await getLocalData();
+        if (!localData.recentPosts) localData.recentPosts = [];
 
-    if (eventId) {
-        let existingEvent = localData.events.find(e => e.id === parseInt(eventId));
-        if (existingEvent) {
-            existingEvent.title = eventTitle.trim();
-            existingEvent.description = eventDescription;
-            if (uploadedFiles.length > 0) {
-                existingEvent.images = existingEvent.images.concat(uploadedFiles);
-                existingEvent.coverImage = uploadedFiles[0];
+        if (eventId) {
+            let existingPost = localData.recentPosts.find(p => p.id === parseInt(eventId));
+            if (existingPost) {
+                existingPost.title = eventTitle.trim();
+                existingPost.description = eventDescription.trim();
+                if (uploadedFiles.length > 0) {
+                    existingPost.images = uploadedFiles;
+                }
             }
+        } else {
+            localData.recentPosts.push({
+                id: Date.now(),
+                title: eventTitle.trim(),
+                description: eventDescription.trim(),
+                images: uploadedFiles,
+                date: new Date().toLocaleDateString('en-GB')
+            });
         }
-    } else {
-        if (!localData.events) localData.events = [];
-        localData.events.push({
-            id: Date.now(),
-            title: eventTitle.trim(),
-            description: eventDescription,
-            coverImage: uploadedFiles[0] || '/uploads/default-event.jpg',
-            images: uploadedFiles
-        });
-    }
 
-    await saveAndSyncData(localData);
-    res.send('<script>alert("Gallery Data Updated Successfully!"); window.location.href="/admin";</script>');
+        await saveAndSyncData(localData);
+        res.send('<script>alert("Recent Event Post Published Successfully!"); window.location.href="/admin";</script>');
+    } catch (err) {
+        console.error("Post Error:", err);
+        res.status(500).send("Failed to save recent post.");
+    }
 });
 
-// 📌 ENQUIRY SUBMISSION
+// 📸 3. GALLERY ALBUMS UPLOAD (SAVED IN 'events' ARRAY FOR gallery.html)
+// app.post('/api/admin/upload-gallery', isAdminAuthenticated, upload.any(), async (req, res) => {
+//     try {
+//         const galleryId = req.body.galleryId || req.body.eventId;
+//         const albumTitle = req.body.albumTitle || req.body.eventTitle || "Gallery Album";
+//         const albumDescription = req.body.albumDescription || req.body.eventDescription || "";
+        
+//         const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
+
+//         let localData = await getLocalData();
+//         if (!localData.events) localData.events = [];
+
+//         if (galleryId) {
+//             let existingAlbum = localData.events.find(g => g.id === parseInt(galleryId));
+//             if (existingAlbum) {
+//                 existingAlbum.title = albumTitle.trim();
+//                 existingAlbum.description = albumDescription.trim();
+//                 if (uploadedFiles.length > 0) {
+//                     existingAlbum.images = existingAlbum.images.concat(uploadedFiles);
+//                     existingAlbum.coverImage = uploadedFiles[0];
+//                 }
+//             }
+//         } else {
+//             localData.events.push({
+//                 id: Date.now(),
+//                 title: albumTitle.trim(),
+//                 description: albumDescription.trim(),
+//                 coverImage: uploadedFiles.length > 0 ? uploadedFiles[0] : '/uploads/default-event.jpg',
+//                 images: uploadedFiles,
+//                 date: new Date().toLocaleDateString('en-GB')
+//             });
+//         }
+
+//         await saveAndSyncData(localData);
+//         res.send('<script>alert("Gallery Photo Album Uploaded Successfully!"); window.location.href="/admin";</script>');
+//     } catch (err) {
+//         console.error("Gallery Upload Error:", err);
+//         res.status(500).send("Failed to upload gallery album.");
+//     }
+// });
+// 📸 3. GALLERY ALBUMS UPLOAD
+app.post('/api/admin/upload-gallery', isAdminAuthenticated, upload.any(), async (req, res) => {
+    try {
+        const galleryId = req.body.galleryId || req.body.eventId;
+        const albumTitle = req.body.albumTitle || req.body.eventTitle || "Gallery Album";
+        const albumDescription = req.body.albumDescription || req.body.eventDescription || "";
+        
+        const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
+
+        let localData = await getLocalData();
+        if (!localData.events) localData.events = [];
+
+        if (galleryId) {
+            let existingAlbum = localData.events.find(g => g.id === parseInt(galleryId));
+            if (existingAlbum) {
+                existingAlbum.title = albumTitle.trim();
+                existingAlbum.description = albumDescription.trim();
+                if (uploadedFiles.length > 0) {
+                    existingAlbum.images = existingAlbum.images ? existingAlbum.images.concat(uploadedFiles) : uploadedFiles;
+                    existingAlbum.coverImage = uploadedFiles[0];
+                }
+            }
+        } else {
+            localData.events.push({
+                id: Date.now(),
+                title: albumTitle.trim(),
+                description: albumDescription.trim(),
+                coverImage: uploadedFiles.length > 0 ? uploadedFiles[0] : '/uploads/default-event.jpg',
+                images: uploadedFiles,
+                date: new Date().toLocaleDateString('en-GB')
+            });
+        }
+
+        await saveAndSyncData(localData);
+        res.send('<script>alert("Gallery Photo Album Uploaded Successfully!"); window.location.href="/admin";</script>');
+    } catch (err) {
+        console.error("Gallery Upload Error:", err);
+        res.status(500).send("Failed to upload gallery album.");
+    }
+});
+
+// 📌 4. ENQUIRIES
 app.post('/api/enquiry/submit', async (req, res) => {
     const { parentName, studentName, targetClass, phone, message } = req.body;
     let localData = await getLocalData();
-    if (!localData.enquiries) { localData.enquiries = []; }
+    if (!localData.enquiries) localData.enquiries = [];
 
     localData.enquiries.push({
         id: Date.now(),
@@ -312,10 +365,10 @@ app.post('/api/enquiry/submit', async (req, res) => {
     res.send('<script>alert("Thank you! Enquiry submitted successfully."); window.location.href = "/";</script>');
 });
 
-// 📌 UPLOAD SCHOOL DOCUMENT
+// 📌 5. DOCUMENTS
 app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), async (req, res) => {
     if (!req.file) {
-        return res.status(400).send('No file uploaded. Kripya sahi PDF file chune.');
+        return res.status(400).send('No file uploaded.');
     }
 
     const { category, title } = req.body;
@@ -340,6 +393,30 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
     }
 });
 
+// 🗑️ 6. DELETE API ENGINE (FIXED FOR ALL TYPES INCLUDING 'gallery')
+// app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
+//     const { type, id } = req.params;
+//     let localData = await getLocalData();
+//     const itemId = parseInt(id);
+
+//     if (type === 'notice') {
+//         if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
+//     } else if (type === 'enquiry') {
+//         if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
+//     } else if (type === 'recentPost') {
+//         if (localData.recentPosts) localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
+//     } else if (type === 'gallery' || type === 'event') {
+//         if (localData.events) localData.events = localData.events.filter(g => g.id !== itemId);
+//         if (localData.gallery) localData.gallery = localData.gallery.filter(g => g.id !== itemId);
+//     } else if (type === 'document') {
+//         if (localData.documents) localData.documents = localData.documents.filter(d => d.id !== itemId);
+//     } else {
+//         return res.status(400).json({ message: "Invalid type requested" });
+//     }
+
+//     await saveAndSyncData(localData);
+//     res.json({ success: true, message: `Successfully deleted ${type}!` });
+// });
 // 🗑️ DELETE API ENGINE
 app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
     const { type, id } = req.params;
@@ -350,8 +427,12 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
         if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
     } else if (type === 'enquiry') {
         if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
-    } else if (type === 'event') {
-        if (localData.events) localData.events = localData.events.filter(e => e.id !== itemId);
+    } else if (type === 'recentPost') {
+        if (localData.recentPosts) localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
+    } else if (type === 'gallery' || type === 'event' || type === 'events') {
+        // गैलरी और इवेंट्स दोनों Arrays से डिलीट करें
+        if (localData.events) localData.events = localData.events.filter(g => g.id !== itemId);
+        if (localData.gallery) localData.gallery = localData.gallery.filter(g => g.id !== itemId);
     } else if (type === 'document') {
         if (localData.documents) localData.documents = localData.documents.filter(d => d.id !== itemId);
     } else {
@@ -359,9 +440,8 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
     }
 
     await saveAndSyncData(localData);
-    res.json({ success: true, message: `Successfully terminated requested ${type}!` });
+    res.json({ success: true, message: `Successfully deleted ${type}!` });
 });
-
 // SERVER LISTEN
 app.listen(PORT, () => {
     console.log(`===================================================`);
