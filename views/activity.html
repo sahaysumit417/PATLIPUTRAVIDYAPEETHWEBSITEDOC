@@ -3,63 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity View | Patliputra Vidyapeeth</title>
-    <!-- Browser Tab Icon (Favicon) -->
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" type="image/png" href="/images/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Co-Curricular Activities | Patliputra Vidyapeeth</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/c.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+
+        .activity-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .back-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #064e3b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .back-nav-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Pure Text Header Block */
+        .activity-header-block {
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #064e3b;
+        }
+
+        .activity-header-block h1 {
+            color: #064e3b;
+            font-size: 2.3rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+
+        .activity-header-block p {
+            color: #475569;
+            margin: 8px 0 0 0;
+            font-size: 1.1rem;
+        }
+
+        /* Main Split Row (No Cards, Clean Images & Typography) */
+        .activity-main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .activity-image-wrapper img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .activity-text-section h2 {
+            color: #064e3b;
+            font-size: 1.5rem;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+        }
+
+        .activity-text-section p {
+            color: #334155;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin: 0 0 25px 0;
+        }
+
+        .features-subtitle {
+            color: #064e3b;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+        }
+
+        .feature-item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item-list li {
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .feature-item-list li i {
+            color: #16a34a;
+            font-size: 1.1rem;
+        }
+
+        /* Full Width Text Content Sections */
+        .full-text-block {
+            margin-bottom: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .full-text-block h3 {
+            color: #064e3b;
+            font-size: 1.4rem;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .full-text-block p {
+            color: #334155;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin: 0 0 15px 0;
+        }
+
+        .outcome-tags-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .outcome-badge {
+            background: #f1f5f9;
+            color: #064e3b;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 850px) {
+            .activity-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .activity-image-wrapper img {
+                height: 260px;
+            }
+
+            .activity-header-block h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Dynamic Main Header Sync -->
     <nav id="dynamic-header"></nav>
 
-    <main class="main-content-limiter" style="margin-top: 120px;">
-        <div class="back-home-wrapper" style="text-align: left; margin-bottom: 25px;">
-            <a href="/" class="btn-secondary" style="background: var(--primary-brand); padding: 8px 16px; font-size: 0.9rem; text-decoration: none; border-radius: 6px;"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <div class="activity-wrapper">
+        <a href="/" class="back-nav-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <!-- Header -->
+        <div class="activity-header-block">
+            <h1 id="act-title"><i class="fas fa-running"></i> Activity Details</h1>
+            <p id="act-subtitle">Co-curricular development at Patliputra Vidyapeeth</p>
         </div>
 
-        <div class="full-width-card-panel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; flex-wrap: wrap;">
-            <div>
-                <h1 id="activity-title" class="page-title-main" style="margin-top: 0; text-align: left; font-size: 2.2rem; color: var(--primary-brand);">Loading Title...</h1>
-                <div class="title-separator" style="margin: 0 0 20px 0;"></div>
-                <p id="activity-desc" class="paragraph-lead" style="color: var(--text-muted);">Synchronizing sector nodes with server data...</p>
+        <!-- Main Image & Overview Row -->
+        <div class="activity-main-grid">
+            <div class="activity-image-wrapper">
+                <img id="act-image" src="" alt="Activity Image" onerror="this.src='https://placehold.co/800x500?text=Activity+Image'">
             </div>
-            <div>
-                <img id="activity-img" src="" alt="Activity Frame" style="width: 100%; height: 350px; object-fit: cover; border-radius: 12px; box-shadow: var(--green-shadow); border: 2px solid rgba(15,46,30,0.08);">
+
+            <div class="activity-text-section">
+                <h2>Overview & Program Vision</h2>
+                <p id="act-description">Loading details...</p>
+                
+                <div class="features-subtitle">Key Facilities & Infrastructure:</div>
+                <ul id="act-features" class="feature-item-list">
+                    <!-- Dynamic List Items -->
+                </ul>
             </div>
         </div>
-    </main>
 
-    
+        <!-- Full Width Text Section 1: Training Routine -->
+        <div class="full-text-block">
+            <h3><i class="fas fa-calendar-check" style="color: #16a34a;"></i> Training Schedule & Practice Routine</h3>
+            <p id="act-routine">
+                Sessions are seamlessly integrated into our weekly timetable. Regular practice rounds and internal evaluations take place on Saturdays to prepare students for inter-school competitions and annual talent exhibitions.
+            </p>
+            <p>
+                Specialized coaches and faculty mentors provide step-by-step guidance, ensuring balanced attention to both beginners and advanced level performers across all age groups.
+            </p>
+        </div>
 
-    <!-- Script to Fetch content dynamically -->
+        <!-- Full Width Text Section 2: Outcomes -->
+        <div class="full-text-block">
+            <h3><i class="fas fa-seedling" style="color: #2563eb;"></i> Skill Development & Learning Outcomes</h3>
+            <p>
+                Active engagement in co-curricular disciplines helps nurture essential life skills beyond traditional textbooks. Students build confidence, emotional resilience, strategic decision-making, and constructive peer collaboration through continuous participation.
+            </p>
+            <div class="outcome-tags-group" id="act-tags">
+                <span class="outcome-badge">Teamwork</span>
+                <span class="outcome-badge">Discipline</span>
+                <span class="outcome-badge">Confidence</span>
+                <span class="outcome-badge">Leadership</span>
+            </div>
+        </div>
+
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // URL से एक्टिविटी का प्रकार (sports, music आदि) निकालना
-            const pathParts = window.location.pathname.split('/');
-            const activityType = pathParts[pathParts.length - 1];
+        const activityData = {
+            'sports': {
+                title: 'Sports & Athletics',
+                icon: 'fas fa-futbol',
+                subtitle: 'Building endurance, teamwork, physical agility, and athletic excellence.',
+                image: '/images/Outdoor game.png',
+                description: 'Our physical education program encourages every student to participate in outdoor sports like Football, Cricket, Volleyball, and Track Athletics under certified sports instructors. We prioritize physical health alongside academic learning.',
+                features: [
+                    'Spacious sports grounds with dedicated pitches',
+                    'Annual Sports Championship & Inter-house matches',
+                    'Physical fitness, agility, and stamina drills',
+                    'Certified coaches for specialized tournament training'
+                ],
+                routine: 'Daily physical training sessions are held during morning slots, with dedicated 2-hour intensive coaching every Friday and Saturday afternoon for school teams.',
+                tags: ['Physical Fitness', 'Team Dynamics', 'Competitive Spirit', 'Leadership']
+            },
+            'music': {
+                title: 'Music & Performing Arts',
+                icon: 'fas fa-music',
+                subtitle: 'Expressing rhythm, melody, stage confidence, and creative performance.',
+                image: '/images/music 2.jpeg',
+                description: 'Students learn vocal training along with classical and modern musical instruments. Our music department cultivates artistic expression, ear training, and stage presence for school events and regional competitions.',
+                features: [
+                    'Vocal training in Classical, Folk, and Light music',
+                    'Instruments (Keyboard, Harmonium, Tabla & Drums)',
+                    'School choir for daily assemblies & annual functions',
+                    'Acoustically designed music practice studio'
+                ],
+                routine: 'Music periods are scheduled bi-weekly for all classes, with special choir rehearsals organized prior to major national and school celebrations.',
+                tags: ['Vocal Control', 'Stage Presence', 'Rhythmic Sense', 'Creative Expression']
+            },
+            'arts': {
+                title: 'Fine Arts & Crafts',
+                icon: 'fas fa-palette',
+                subtitle: 'Unleashing imagination through colors, sketch, sculpture, and craftwork.',
+                image: '/images/Art & Craft.png',
+                description: 'The fine arts studio allows students to experiment with sketch, watercolor, acrylics, clay modeling, and craftwork to nurture artistic talent, patience, and visual thinking.',
+                features: [
+                    'Drawing, Pencil Sketching, and Oil Pastel Painting',
+                    'Craftwork, Origami, and Recycled Art Creation',
+                    'Annual Art Exhibitions & Regional Competitions',
+                    'Guidance from experienced art faculty members'
+                ],
+                routine: 'Weekly hands-on art workshops encourage students to submit creative projects for display on campus bulletin boards and exhibition galleries.',
+                tags: ['Visual Thinking', 'Creativity', 'Fine Motor Skills', 'Patience']
+            },
+            'indoor-games': {
+                title: 'Strategic Indoor Games',
+                icon: 'fas fa-chess',
+                subtitle: 'Enhancing concentration, mental agility, logic, and tactical thinking.',
+                image: '/images/indoor game.png',
+                description: 'Indoor gaming facilities include Chess, Carrom, Table Tennis, and strategic board games designed to sharpen analytical minds, patience, and strategic decision-making in a climate-controlled hall.',
+                features: [
+                    'Dedicated Chess & Table Tennis arenas',
+                    'Mental agility, focus, and memory enhancement',
+                    'Regular internal leagues and ladder tournaments',
+                    'Guided coaching for state and district level tournaments'
+                ],
+                routine: 'Indoor gaming rooms are accessible during activity hours and break periods under the supervision of game coordinators.',
+                tags: ['Strategic Planning', 'Mental Focus', 'Analytical Logic', 'Sportsmanship']
+            }
+        };
 
-            // API से उस एक्टिविटी का डेटा उठाना
-            fetch(`/api/beyond-academics/${activityType}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error) {
-                        document.getElementById('activity-title').innerText = "Not Found";
-                        document.getElementById('activity-desc').innerText = "The requested activity does not exist.";
-                    } else {
-                        document.getElementById('activity-title').innerText = data.title;
-                        document.getElementById('activity-desc').innerText = data.description;
-                        document.getElementById('activity-img').src = data.image;
-                        document.title = `${data.title} | Patliputra Vidyapeeth`;
-                    }
-                })
-                .catch(err => console.error("Error loading activity telemetry:", err));
+        document.addEventListener("DOMContentLoaded", () => {
+            const pathSegments = window.location.pathname.split('/');
+            const type = pathSegments[pathSegments.length - 1].toLowerCase();
+
+            const data = activityData[type] || activityData['sports'];
+
+            document.getElementById('act-title').innerHTML = `<i class="${data.icon}"></i> ${data.title}`;
+            document.getElementById('act-subtitle').innerText = data.subtitle;
+            document.getElementById('act-image').src = data.image;
+            document.getElementById('act-description').innerText = data.description;
+            document.getElementById('act-routine').innerText = data.routine;
+
+            const featuresContainer = document.getElementById('act-features');
+            featuresContainer.innerHTML = '';
+            data.features.forEach(feat => {
+                featuresContainer.innerHTML += `<li><i class="fas fa-check-circle"></i> ${feat}</li>`;
+            });
+
+            const tagsContainer = document.getElementById('act-tags');
+            if (tagsContainer && data.tags) {
+                tagsContainer.innerHTML = '';
+                data.tags.forEach(tag => {
+                    tagsContainer.innerHTML += `<span class="outcome-badge">${tag}</span>`;
+                });
+            }
         });
     </script>
     <script src="/js/main.js"></script>
-    <footer id="dynamic-footer"></footer>
 </body>
 </html>
