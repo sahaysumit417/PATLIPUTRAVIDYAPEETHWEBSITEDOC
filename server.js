@@ -358,7 +358,6 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
     }
 });
 
-
 app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
     const { type, id } = req.params;
     let localData = await getLocalData();
@@ -374,7 +373,6 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
         if (localData.recentPosts) {
             const post = localData.recentPosts.find(e => e.id === itemId);
             if (post && post.images) {
-                // पोस्ट की सभी इमेजेस डिलीट करें
                 for (let imgUrl of post.images) {
                     await deleteFromCloudinary(imgUrl);
                 }
@@ -385,7 +383,6 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
     } else if (type === 'gallery' || type === 'event' || type === 'events') {
         const album = (localData.events || []).find(g => g.id === itemId) || (localData.gallery || []).find(g => g.id === itemId);
         if (album && album.images) {
-            // गैलरी एलबम की सभी इमेजेस डिलीट करें
             for (let imgUrl of album.images) {
                 await deleteFromCloudinary(imgUrl);
             }
@@ -397,10 +394,29 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
         if (localData.documents) {
             const doc = localData.documents.find(d => d.id === itemId);
             if (doc && doc.fileUrl) {
-                // PDF फ़ाइल डिलीट करें
                 await deleteFromCloudinary(doc.fileUrl);
             }
             localData.documents = localData.documents.filter(d => d.id !== itemId);
+        }
+
+    // 🏆 Achievements Deletion (Fix)
+    } else if (type === 'achievement') {
+        if (localData.achievements) {
+            const ach = localData.achievements.find(a => a.id === itemId);
+            if (ach && ach.photo) {
+                await deleteFromCloudinary(ach.photo); 
+            }
+            localData.achievements = localData.achievements.filter(a => a.id !== itemId);
+        }
+
+    // 📅 Upcoming Events Deletion (Fix)
+    } else if (type === 'upcomingEvent') {
+        if (localData.upcomingEvents) {
+            const upEvent = localData.upcomingEvents.find(u => u.id === itemId);
+            if (upEvent && upEvent.banner) {
+                await deleteFromCloudinary(upEvent.banner); 
+            }
+            localData.upcomingEvents = localData.upcomingEvents.filter(u => u.id !== itemId);
         }
 
     } else {
@@ -408,8 +424,9 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
     }
 
     await saveAndSyncData(localData);
-    res.json({ success: true, message: `Successfully deleted ${type} and cleaned Cloudinary storage!` });
+    res.json({ success: true, message: `Successfully deleted ${type} and cleaned storage!` });
 });
+
 // 🗑️ Helper: Cloudinary से फ़ाइल डिलीट करने का फ़ंक्शन
 async function deleteFromCloudinary(fileUrl) {
     if (!fileUrl || !fileUrl.includes('cloudinary.com')) return;
