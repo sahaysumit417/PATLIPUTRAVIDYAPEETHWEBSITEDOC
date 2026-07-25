@@ -479,28 +479,73 @@ app.post('/api/admin/upload-upcoming-event', isAdminAuthenticated, upload.single
 });
 
 // 🏆 ACHIEVEMENTS UPLOAD ROUTE
-app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.single('achievementPhoto'), async (req, res) => {
+// 🏆 MULTIPLE ACHIEVEMENTS UPLOAD ROUTE (Multer Error Fix)
+app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), async (req, res) => {
     try {
-        const { category, title, description } = req.body;
-        const photoUrl = req.file ? (req.file.path || req.file.secure_url) : '';
+        const { category, titles, subtitles, descriptions } = req.body;
+        // req.files me saari uploaded photos mil jayengi
+        const uploadedFiles = req.files || [];
 
         let localData = await getLocalData();
         if (!localData.achievements) localData.achievements = [];
 
-        localData.achievements.push({
-            id: Date.now(),
-            category: category, // class-x, class-xii, or awards
-            title: title.trim(),
-            description: description ? description.trim() : '',
-            photo: photoUrl
-        });
+        if (Array.isArray(titles)) {
+            titles.forEach((title, index) => {
+                const photoFile = uploadedFiles[index];
+                const photoPath = photoFile ? (photoFile.path || photoFile.secure_url || `/uploads/${photoFile.filename}`) : '';
+
+                localData.achievements.push({
+                    id: Date.now() + index,
+                    category: category,
+                    title: title.trim(),
+                    subtitle: subtitles && subtitles[index] ? subtitles[index].trim() : '',
+                    description: descriptions && descriptions[index] ? descriptions[index].trim() : '',
+                    photo: photoPath
+                });
+            });
+        } else if (titles) {
+            const photoFile = uploadedFiles[0];
+            const photoPath = photoFile ? (photoFile.path || photoFile.secure_url || `/uploads/${photoFile.filename}`) : '';
+
+            localData.achievements.push({
+                id: Date.now(),
+                category: category,
+                title: titles.trim(),
+                subtitle: subtitles ? subtitles.trim() : '',
+                description: descriptions ? descriptions.trim() : '',
+                photo: photoPath
+            });
+        }
 
         await saveAndSyncData(localData);
-        res.send('<script>alert("Achievement Saved Successfully!"); window.location.href="/admin";</script>');
+        res.send('<script>alert("Achievements Saved Successfully!"); window.location.href="/admin";</script>');
     } catch (err) {
-        res.status(500).send("Error saving achievement.");
+        console.error("Achievement Upload Error:", err);
+        res.status(500).send("Server Error processing achievements");
     }
 });
+// app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.single('achievementPhoto'), async (req, res) => {
+//     try {
+//         const { category, title, description } = req.body;
+//         const photoUrl = req.file ? (req.file.path || req.file.secure_url) : '';
+
+//         let localData = await getLocalData();
+//         if (!localData.achievements) localData.achievements = [];
+
+//         localData.achievements.push({
+//             id: Date.now(),
+//             category: category, // class-x, class-xii, or awards
+//             title: title.trim(),
+//             description: description ? description.trim() : '',
+//             photo: photoUrl
+//         });
+
+//         await saveAndSyncData(localData);
+//         res.send('<script>alert("Achievement Saved Successfully!"); window.location.href="/admin";</script>');
+//     } catch (err) {
+//         res.status(500).send("Error saving achievement.");
+//     }
+// });
 
 
 // SERVER LISTEN

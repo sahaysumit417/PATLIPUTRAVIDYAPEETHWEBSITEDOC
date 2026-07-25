@@ -181,6 +181,61 @@
             width: 100%;
         }
 
+        /* ➕ DYNAMIC ROW CONTAINER STYLES FOR ACHIEVEMENTS */
+        .dynamic-entry-row {
+            background: rgba(9, 13, 22, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .btn-remove-row {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .btn-add-more {
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--info);
+            border: 1px dashed var(--info);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add-more:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
         .data-card {
             background: var(--bg-card);
             padding: 16px;
@@ -222,7 +277,6 @@
 
 <body>
 
-    <!-- 🏢 TOP NAV -->
     <nav class="top-navbar">
         <div class="navbar-brand">
             <i class="fas fa-shield-halved"></i>
@@ -233,7 +287,6 @@
         </a>
     </nav>
 
-    <!-- 📊 MINI METRICS STRIP -->
     <div class="metrics-ribbon">
         <div class="metric-mini-item">
             <i class="fas fa-envelope-open-text" style="color:var(--warning);"></i>
@@ -261,10 +314,8 @@
         </div>
     </div>
 
-    <!-- 🎛️ WORKSPACE CONTAINER -->
     <div class="workspace-layout">
 
-        <!-- 🛠️ LEFT MENU TOOLS -->
         <div class="sidebar-tools">
             <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
                 Control Panel Tools
@@ -278,7 +329,6 @@
                 <i class="fas fa-pen-to-square"></i> Notice Board Manager
             </button>
 
-            <!-- 🎯 EVENTS MENU ITEMS -->
             <button class="tool-nav-btn" onclick="switchToolTab('tab-upcoming-events', this)">
                 <i class="fas fa-calendar-plus"></i> Upcoming Events
             </button>
@@ -287,7 +337,6 @@
                 <i class="fas fa-history"></i> Recent Events (Posts)
             </button>
 
-            <!-- 🎯 ACHIEVEMENTS MENU ITEM -->
             <button class="tool-nav-btn" onclick="switchToolTab('tab-achievements', this)">
                 <i class="fas fa-trophy"></i> Achievements Manager
             </button>
@@ -301,10 +350,8 @@
             </button>
         </div>
 
-        <!-- 🖥️ RIGHT INTERFACE -->
         <div class="interface-screen">
 
-            <!-- TOOL 1: ENQUIRIES -->
             <div id="tab-enquiries" class="tab-panel active-panel">
                 <div class="list-panel-header">
                     <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs</h2>
@@ -312,7 +359,6 @@
                 <div id="sidebar-enquiries" style="max-width: 850px;">Loading database records...</div>
             </div>
 
-            <!-- TOOL 2: NOTICES -->
             <div id="tab-notices" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -335,7 +381,6 @@
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 3: UPCOMING EVENTS -->
             <div id="tab-upcoming-events" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -372,7 +417,6 @@
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 4: RECENT POSTS (EVENTS) -->
             <div id="tab-recent-events" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -404,32 +448,28 @@
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 5: ACHIEVEMENTS MANAGER -->
             <div id="tab-achievements" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2><i class="fas fa-trophy" style="color:var(--accent-lime);"></i> Add Achievement Record</h2>
+                        <h2><i class="fas fa-trophy" style="color:var(--accent-lime);"></i> Add Achievements Record</h2>
+                        
                         <form id="achievement-form" action="/api/admin/upload-achievement" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" id="achievement-id" name="achievementId" value="">
-
-                            <label>Achievement Category</label>
-                            <select id="achievement-category" name="category" required>
-                                <option value="class-x">Class X Result (#class-x)</option>
-                                <option value="class-xii">Class XII Result (#class-xii)</option>
-                                <option value="awards">School Awards (#awards)</option>
+                            <label>Select Achievement Category</label>
+                            <select id="achieve-category" name="category" onchange="handleAchieveCategoryChange(this.value)" required>
+                                <option value="class-x">Class 10 Board Result</option>
+                                <option value="class-xii">Class 12 Board Result</option>
+                                <option value="awards">School Awards & Recognitions</option>
                             </select>
 
-                            <label>Title / Student Name / Award Name</label>
-                            <input type="text" id="achievement-title" name="title" placeholder="e.g. Rahul Kumar (98%) / Best CBSE School Award" required>
+                            <div id="achieve-entries-list">
+                                </div>
 
-                            <label>Details / Highlights</label>
-                            <textarea id="achievement-desc" name="description" rows="3" placeholder="e.g. School Topper in Class 10 Science Stream or District Level Winner"></textarea>
+                            <button type="button" class="btn-add-more" onclick="addNewAchievementRow()">
+                                <i class="fas fa-plus-circle" style="font-size:1.1rem;"></i> Add More Student / Award Item
+                            </button>
 
-                            <label>Student Photo / Award Image</label>
-                            <input type="file" name="achievementPhoto" accept="image/*" style="padding:8px;">
-
-                            <button type="submit" class="btn-prime">
-                                <i class="fas fa-award"></i> Save Achievement
+                            <button type="submit" class="btn-prime" style="background: var(--accent-lime); color: var(--bg-main);">
+                                <i class="fas fa-check-circle"></i> Save All Achievements
                             </button>
                         </form>
                     </div>
@@ -442,7 +482,6 @@
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 6: GALLERY MANAGER -->
             <div id="tab-gallery" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -475,7 +514,6 @@
                 </div>
             </div>
 
-            <!-- TOOL 7: DOCUMENTS -->
             <div id="tab-documents" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -543,7 +581,67 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", fetchSidebarData);
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchSidebarData();
+            addNewAchievementRow(); // Add 1st student row by default
+        });
+
+        // 🎯 DYNAMIC ROW GENERATOR FOR MULTIPLE STUDENTS / AWARDS
+        let achievementRowCount = 0;
+        function addNewAchievementRow() {
+            achievementRowCount++;
+            const categorySelect = document.getElementById("achieve-category");
+            const category = categorySelect ? categorySelect.value : 'class-x';
+            const container = document.getElementById("achieve-entries-list");
+
+            if (!container) return;
+
+            const row = document.createElement("div");
+            row.className = "dynamic-entry-row";
+            row.id = `achieve-row-${achievementRowCount}`;
+
+            const isAward = category === 'awards';
+
+            row.innerHTML = `
+                ${achievementRowCount > 1 ? `<button type="button" class="btn-remove-row" onclick="removeAchievementRow(${achievementRowCount})"><i class="fas fa-times"></i></button>` : ''}
+                
+                <div class="grid-2col">
+                    <div>
+                        <label>${isAward ? 'Award / Title Name' : 'Student Full Name'}</label>
+                        <input type="text" name="titles[]" placeholder="${isAward ? 'e.g., Best Eco-School Award' : 'e.g., Rahul Kumar'}" required>
+                    </div>
+                    <div>
+                        <label>${isAward ? 'Year' : 'Percentage / Marks (%)'}</label>
+                        <input type="text" name="subtitles[]" placeholder="${isAward ? 'e.g., 2026' : 'e.g., 96.4%'}" required>
+                    </div>
+                </div>
+
+                <div class="grid-2col">
+                    <div>
+                        <label>${isAward ? 'Award Info / Details' : 'Passing Year'}</label>
+                        <input type="text" name="descriptions[]" placeholder="${isAward ? 'Awarded by Education Dept.' : 'e.g., 2025-2026'}" required>
+                    </div>
+                    <div>
+                        <label>${isAward ? 'Award Image' : 'Student Photo'}</label>
+                        <input type="file" name="photos[]" accept="image/*" style="padding:8px;">
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(row);
+        }
+
+        function removeAchievementRow(rowId) {
+            const row = document.getElementById(`achieve-row-${rowId}`);
+            if (row) row.remove();
+        }
+
+        function handleAchieveCategoryChange(category) {
+            const list = document.getElementById("achieve-entries-list");
+            if (list) list.innerHTML = "";
+            achievementRowCount = 0;
+            addNewAchievementRow();
+        }
 
         function fetchSidebarData() {
             fetch('/api/data')
@@ -620,7 +718,7 @@
                 });
             }
 
-            // 3. UPCOMING EVENTS
+            // 3. UPCOMING EVENTS (ORIGINAL PRESERVED)
             if (globalUpcomingEvents.length === 0) {
                 upcomingContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No upcoming events found.</p>";
             } else {
@@ -630,7 +728,7 @@
                     <div class="data-card" style="border-left: 3px solid var(--info);">
                         <div class="data-meta">
                             <strong>📅 ${up.title}</strong>
-                            <small><i class="fas fa-clock"></i> ${up.eventDate}</small>
+                            <small><i class="fas fa-clock"></i> ${up.eventDate || up.date || ''}</small>
                             <small><i class="fas fa-location-dot"></i> ${up.venue || 'School Campus'}</small>
                         </div>
                         <div class="crud-actions">
@@ -682,7 +780,7 @@
                     achievementContainer.innerHTML += `
                     <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
                         <div class="data-meta">
-                            <strong>🏆 ${ach.title}</strong>
+                            <strong>🏆 ${ach.title} (${ach.subtitle || ''})</strong>
                             <span class="badge" style="background:rgba(174,234,0,0.1); color:var(--accent-lime);">${ach.category}</span>
                             <small>${ach.description || ''}</small>
                         </div>
