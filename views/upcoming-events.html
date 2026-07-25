@@ -4,31 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upcoming Events | Patliputra Vidyapeeth</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/c.css">
+    
     <style>
-        .events-container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
-        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 30px; }
-        .event-card { background: #131c2e; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; color: #fff; }
-        .event-card img { width: 100%; height: 200px; object-fit: cover; }
-        .event-card-body { padding: 20px; }
-        .event-card-body h3 { margin: 0 0 10px 0; color: #aeea00; font-size: 1.2rem; }
-        .event-meta { font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .event-desc { font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-top: 10px; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #ffffff; 
+            color: #222222; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 130px auto 50px; 
+            padding: 0 20px; 
+        }
+
+        .page-title { 
+            font-size: 1.5rem; 
+            color: #064e3b; 
+            margin-bottom: 25px; 
+            font-weight: 600; 
+            border-bottom: 2px solid #064e3b; 
+            padding-bottom: 8px; 
+        }
+
+        /* 📄 ULTRA SIMPLE LIST LAYOUT */
+        .event-item { 
+            display: flex; 
+            gap: 20px; 
+            padding: 20px 0; 
+            border-bottom: 1px solid #e5e7eb; 
+            align-items: flex-start; 
+        }
+
+        .event-item img { 
+            width: 180px; 
+            height: 110px; 
+            object-fit: cover; 
+            border-radius: 4px; 
+            flex-shrink: 0; 
+        }
+
+        .event-details h3 { 
+            margin: 0 0 6px 0; 
+            font-size: 1.1rem; 
+            color: #111111; 
+            font-weight: 600; 
+        }
+
+        .event-meta { 
+            font-size: 0.85rem; 
+            color: #555555; 
+            margin-bottom: 6px; 
+        }
+
+        .event-desc { 
+            font-size: 0.9rem; 
+            color: #444444; 
+            margin: 6px 0 0 0; 
+            line-height: 1.5; 
+        }
+
+        @media (max-width: 600px) {
+            .event-item { 
+                flex-direction: column; 
+            }
+            .event-item img { 
+                width: 100%; 
+                height: 160px; 
+            }
+        }
     </style>
 </head>
 <body>
 
     <nav id="dynamic-header"></nav>
 
-    <div class="events-container">
-        <h2 style="font-size: 2rem; border-bottom: 3px solid #aeea00; display: inline-block; padding-bottom: 5px;">
-            📅 Upcoming Events & Programs
-        </h2>
+    <div class="container">
+        <h1 class="page-title">Upcoming Events</h1>
         
-        <div id="upcoming-events-grid" class="events-grid">
-            <p style="color:#94a3b8;">Loading upcoming events...</p>
+        <div id="upcoming-events-list">
+            <p style="color:#666;">Loading events...</p>
         </div>
     </div>
 
@@ -40,30 +104,31 @@
             fetch('/api/data')
                 .then(res => res.json())
                 .then(data => {
-                    const grid = document.getElementById("upcoming-events-grid");
+                    const list = document.getElementById("upcoming-events-list");
                     const events = data.upcomingEvents || [];
 
                     if (events.length === 0) {
-                        grid.innerHTML = "<p style='grid-column: 1/-1; color:#94a3b8;'>फिलहाल कोई आगामी कार्यक्रम तय नहीं है।</p>";
+                        list.innerHTML = "<p style='color:#666; padding: 15px 0;'>फिलहाल कोई आगामी कार्यक्रम तय नहीं है।</p>";
                         return;
                     }
 
-                    grid.innerHTML = "";
+                    list.innerHTML = "";
                     [...events].reverse().forEach(ev => {
-                        grid.innerHTML += `
-                            <div class="event-card">
+                        list.innerHTML += `
+                            <div class="event-item">
                                 ${ev.banner ? `<img src="${ev.banner}" alt="${ev.title}">` : ''}
-                                <div class="event-card-body">
+                                <div class="event-details">
                                     <h3>${ev.title}</h3>
-                                    <div class="event-meta"><i class="fas fa-calendar-alt" style="color:#aeea00;"></i> ${ev.eventDate}</div>
-                                    <div class="event-meta"><i class="fas fa-map-marker-alt" style="color:#f59e0b;"></i> ${ev.venue}</div>
+                                    <div class="event-meta">
+                                        <strong>Date:</strong> ${ev.eventDate || 'TBA'} | <strong>Venue:</strong> ${ev.venue || 'School Campus'}
+                                    </div>
                                     ${ev.description ? `<p class="event-desc">${ev.description}</p>` : ''}
                                 </div>
                             </div>
                         `;
                     });
                 })
-                .catch(err => console.error("Error loading upcoming events:", err));
+                .catch(err => console.error("Error loading events:", err));
         });
     </script>
 </body>

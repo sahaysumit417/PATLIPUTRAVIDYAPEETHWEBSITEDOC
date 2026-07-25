@@ -6,29 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Admin Dashboard | Patliputra Vidyapeeth</title>
     <!-- Browser Tab Icon (Favicon) -->
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" type="image/png" href="/images/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+     <meta name="robots" content="noindex, nofollow, noarchive">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --bg-card: #131c2e;
-            --bg-input: #090d16;
-            --border-color: rgba(255, 255, 255, 0.06);
-            --accent-lime: #aeea00;
-            --text-muted: #94a3b8;
-            --text-main: #f8fafc;
+            /* 🌟 BALANCED EYE-FRIENDLY PALETTE */
+            --brand-green: #064e3b;
+            --brand-hover: #04382a;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-card: rgba(255, 255, 255, 0.90);
+            --glass-input: rgba(248, 250, 252, 0.95);
+            --glass-border: rgba(6, 78, 59, 0.18);
+            --text-main: #0f172a;
+            --text-muted: #475569;
             --danger: #ef4444;
             --success: #10b981;
             --info: #0ea5e9;
-            --warning: #f59e0b;
+            --warning: #d97706;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-main);
+            font-family: 'Poppins', sans-serif;
+            /* 🎯 BALANCED BACKGROUND OVERLAY */
+            background: linear-gradient(rgba(30, 41, 59, 0.35), rgba(51, 65, 85, 0.45)), 
+                        url('/images/IMG_1303.jpg') no-repeat center center/cover fixed;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             margin: 0;
             padding: 0;
             color: var(--text-main);
@@ -36,15 +43,19 @@
             overflow: hidden;
         }
 
+        /* 🔷 TOP NAVBAR */
         .top-navbar {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 2px solid var(--brand-green);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 70px;
             box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         .navbar-brand {
@@ -54,28 +65,30 @@
         }
 
         .navbar-brand i {
-            color: var(--accent-lime);
+            color: var(--brand-green);
             font-size: 1.4rem;
         }
 
         .navbar-brand h1 {
             margin: 0;
             font-size: 1.15rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--brand-green);
         }
 
         .btn-logout {
             background: rgba(239, 68, 68, 0.1);
             color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            padding: 6px 16px;
-            border-radius: 6px;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 7px 16px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s ease;
         }
 
         .btn-logout:hover {
@@ -83,9 +96,12 @@
             color: white;
         }
 
+        /* METRICS RIBBON (TEXT BRIGHT WHITE) */
         .metrics-ribbon {
-            background: rgba(19, 28, 46, 0.4);
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             padding: 10px 30px;
             display: flex;
             gap: 30px;
@@ -99,10 +115,12 @@
             gap: 8px;
             font-size: 0.85rem;
             white-space: nowrap;
+            font-weight: 500;
+            color: #ffffff; /* ⚪ WHITE TEXT */
         }
 
         .metric-mini-item span {
-            color: var(--text-muted);
+            color: #e2e8f0; /* Soft Light White */
         }
 
         .metric-mini-item strong {
@@ -116,26 +134,30 @@
             height: calc(100vh - 116px);
         }
 
+        /* SIDEBAR TOOLS */
         .sidebar-tools {
-            background: var(--bg-card);
-            border-right: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--glass-border);
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
             gap: 6px;
             overflow-y: auto;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
         }
 
         .tool-nav-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 11px 14px;
+            border-radius: 10px;
             cursor: pointer;
             font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.88rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -145,21 +167,24 @@
         }
 
         .tool-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-main);
+            background: rgba(6, 78, 59, 0.08);
+            color: var(--brand-green);
         }
 
         .tool-nav-btn.active {
-            background: rgba(174, 234, 0, 0.08);
-            color: var(--accent-lime);
-            border: 1px solid rgba(174, 234, 0, 0.15);
+            background: var(--brand-green);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(6, 78, 59, 0.25);
+        }
+
+        .tool-nav-btn.active i {
+            color: #ffffff !important;
         }
 
         .interface-screen {
             padding: 30px;
             overflow-y: auto;
             box-sizing: border-box;
-            background: var(--bg-main);
         }
 
         .tool-split-grid {
@@ -169,18 +194,33 @@
             align-items: start;
         }
 
-        .form-card {
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+        /* ⚪ DIRECT BACKGROUND HEADINGS / TITLES - WHITE COLOR APPLIED */
+        .list-panel-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff !important; /* 🎯 WHITE HEADING */
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); /* SHARP SHADOW FOR READABILITY */
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .form-card h2,
-        .list-panel-header h2 {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-main);
+        /* FORM CARD */
+        .form-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-card h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--brand-green);
             margin: 0 0 20px 0;
             display: flex;
             align-items: center;
@@ -188,11 +228,13 @@
         }
 
         label {
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: var(--text-main);
             display: block;
             margin-top: 15px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         input,
@@ -202,43 +244,54 @@
             margin-top: 6px;
             padding: 12px 16px;
             box-sizing: border-box;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(6, 78, 59, 0.2);
             border-radius: 8px;
             font-family: inherit;
-            background: var(--bg-input);
-            color: white;
+            background: var(--glass-input);
+            color: var(--text-main);
             font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
         input:focus,
         textarea:focus,
         select:focus {
-            border-color: var(--accent-lime);
+            border-color: var(--brand-green);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.15);
             outline: none;
         }
 
         .btn-prime {
-            background: var(--accent-lime);
-            color: var(--bg-main);
+            background: var(--brand-green);
+            color: #ffffff;
             border: none;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 600;
             margin-top: 20px;
-            padding: 12px;
+            padding: 13px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);
+        }
+
+        .btn-prime:hover {
+            background: var(--brand-hover);
+            transform: translateY(-1px);
         }
 
         .dynamic-entry-row {
-            background: rgba(9, 13, 22, 0.6);
-            border: 1px solid var(--border-color);
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid var(--glass-border);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-top: 15px;
             position: relative;
         }
@@ -247,9 +300,9 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.1);
             color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.2);
             border-radius: 50%;
             width: 28px;
             height: 28px;
@@ -261,7 +314,7 @@
         }
 
         .btn-add-more {
-            background: rgba(14, 165, 233, 0.12);
+            background: rgba(14, 165, 233, 0.08);
             color: var(--info);
             border: 1px dashed var(--info);
             padding: 10px;
@@ -288,23 +341,27 @@
             gap: 12px;
         }
 
+        /* LIST CARDS */
         .data-card {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 16px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 12px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             font-size: 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
         }
 
         .data-meta strong {
             display: block;
             color: var(--text-main);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .data-meta small {
@@ -323,8 +380,8 @@
         }
 
         .badge-enq {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
+            background: rgba(245, 158, 11, 0.12);
+            color: #d97706;
         }
 
         .crud-actions {
@@ -336,14 +393,14 @@
             border: none;
             padding: 6px 12px;
             font-size: 0.75rem;
-            font-weight: 500;
-            border-radius: 4px;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
         }
 
         .btn-crud-edit {
             background: rgba(245, 158, 11, 0.12);
-            color: var(--warning);
+            color: #d97706;
         }
 
         .btn-crud-del {
@@ -377,7 +434,7 @@
             height: 50px;
             object-fit: cover;
             border-radius: 6px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
         }
     </style>
 </head>
@@ -387,7 +444,7 @@
     <nav class="top-navbar">
         <div class="navbar-brand">
             <i class="fas fa-shield-halved"></i>
-            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span>
+            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 400; font-size: 0.9rem;">| Control Console</span>
             </h1>
         </div>
         <a href="/admin/logout" class="btn-logout">
@@ -397,32 +454,32 @@
 
     <div class="metrics-ribbon">
         <div class="metric-mini-item">
-            <i class="fas fa-scroll" style="color:var(--accent-lime);"></i>
-            <span>Ticker Items:</span> <strong id="cnt-ticker" style="color:var(--accent-lime);">0</strong>
+            <i class="fas fa-scroll" style="color:#aeea00;"></i>
+            <span>Ticker Items:</span> <strong id="cnt-ticker" style="color:#aeea00;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-envelope-open-text" style="color:var(--warning);"></i>
-            <span>Enquiries:</span> <strong id="cnt-enquiries" style="color:var(--warning);">0</strong>
+            <i class="fas fa-envelope-open-text" style="color:#f59e0b;"></i>
+            <span>Enquiries:</span> <strong id="cnt-enquiries" style="color:#f59e0b;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-bullhorn" style="color:var(--success);"></i>
-            <span>Notices:</span> <strong id="cnt-notices" style="color:var(--success);">0</strong>
+            <i class="fas fa-bullhorn" style="color:#34d399;"></i>
+            <span>Notices:</span> <strong id="cnt-notices" style="color:#34d399;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-calendar-plus" style="color:var(--info);"></i>
-            <span>Upcoming Events:</span> <strong id="cnt-upcoming" style="color:var(--info);">0</strong>
+            <i class="fas fa-calendar-plus" style="color:#38bdf8;"></i>
+            <span>Upcoming Events:</span> <strong id="cnt-upcoming" style="color:#38bdf8;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-newspaper" style="color:var(--info);"></i>
-            <span>Recent Posts:</span> <strong id="cnt-events" style="color:var(--info);">0</strong>
+            <i class="fas fa-newspaper" style="color:#38bdf8;"></i>
+            <span>Recent Posts:</span> <strong id="cnt-events" style="color:#38bdf8;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-trophy" style="color:var(--accent-lime);"></i>
-            <span>Achievements:</span> <strong id="cnt-achievements" style="color:var(--accent-lime);">0</strong>
+            <i class="fas fa-trophy" style="color:#aeea00;"></i>
+            <span>Achievements:</span> <strong id="cnt-achievements" style="color:#aeea00;">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-images" style="color:var(--warning);"></i>
-            <span>Gallery:</span> <strong id="cnt-gallery" style="color:var(--warning);">0</strong>
+            <i class="fas fa-images" style="color:#f59e0b;"></i>
+            <span>Gallery:</span> <strong id="cnt-gallery" style="color:#f59e0b;">0</strong>
         </div>
     </div>
 
@@ -430,40 +487,40 @@
 
         <div class="sidebar-tools">
             <div
-                style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
+                style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
                 Control Panel Tools
             </div>
 
             <button class="tool-nav-btn active" onclick="switchToolTab('tab-ticker', this)">
-                <i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Marquee Ticker Manager
+                <i class="fas fa-scroll" style="color:var(--brand-green);"></i> Marquee Ticker Manager
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-enquiries', this)">
-                <i class="fas fa-inbox"></i> Admission Enquiries
+                <i class="fas fa-inbox" style="color:var(--warning);"></i> Admission Enquiries
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-notices', this)">
-                <i class="fas fa-pen-to-square"></i> Notice Board Manager
+                <i class="fas fa-pen-to-square" style="color:var(--success);"></i> Notice Board Manager
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-upcoming-events', this)">
-                <i class="fas fa-calendar-plus"></i> Upcoming Events
+                <i class="fas fa-calendar-plus" style="color:var(--info);"></i> Upcoming Events
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-recent-events', this)">
-                <i class="fas fa-history"></i> Recent Events (Posts)
+                <i class="fas fa-history" style="color:var(--info);"></i> Recent Events (Posts)
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-achievements', this)">
-                <i class="fas fa-trophy"></i> Achievements Manager
+                <i class="fas fa-trophy" style="color:var(--brand-green);"></i> Achievements Manager
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-gallery', this)">
-                <i class="fas fa-images"></i> Gallery Manager
+                <i class="fas fa-images" style="color:var(--warning);"></i> Gallery Manager
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-documents', this)">
-                <i class="fas fa-file-pdf"></i> School Documents
+                <i class="fas fa-file-pdf" style="color:var(--danger);"></i> School Documents
             </button>
         </div>
 
@@ -472,7 +529,7 @@
             <div id="tab-ticker" class="tab-panel active-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="ticker-form-title"><i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Add /
+                        <h2 id="ticker-form-title"><i class="fas fa-scroll" style="color:var(--brand-green);"></i> Add /
                             Update Marquee Ticker</h2>
                         <form id="ticker-form" action="/api/admin/upload-ticker" method="POST">
                             <input type="hidden" id="ticker-id" name="tickerId" value="">
@@ -485,15 +542,14 @@
                             <p class="info-text">💡 Ye text Home Page (`index.html`) ke top scrolling marquee bar par
                                 LIVE chalega.</p>
 
-                            <button type="submit" id="ticker-btn" class="btn-prime"
-                                style="background: var(--accent-lime); color: var(--bg-main);">
+                            <button type="submit" id="ticker-btn" class="btn-prime">
                                 <i class="fas fa-paper-plane"></i> Publish To Marquee Ticker
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-bullhorn" style="color:var(--accent-lime);"></i> Active Ticker
+                            <h2><i class="fas fa-bullhorn" style="color:#aeea00;"></i> Active Ticker
                                 Announcements</h2>
                         </div>
                         <div id="sidebar-ticker">Loading ticker records...</div>
@@ -503,7 +559,7 @@
 
             <div id="tab-enquiries" class="tab-panel">
                 <div class="list-panel-header">
-                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs
+                    <h2><i class="fas fa-envelope-open-text" style="color:#f59e0b;"></i> Parent Enquiries Logs
                     </h2>
                 </div>
                 <div id="sidebar-enquiries" style="max-width: 850px;">Loading database records...</div>
@@ -520,13 +576,13 @@
                             <input type="text" id="notice-title" name="title" required>
                             <label>Notice Content Body</label>
                             <textarea id="notice-desc" name="description" rows="5" required></textarea>
-                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i>
+                            <button type="submit" id="notice-btn" class="btn-prime" style="background: var(--success);"><i class="fas fa-paper-plane"></i>
                                 Publish Notice</button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-circle-nodes" style="color:var(--success);"></i> Active Notices</h2>
+                            <h2><i class="fas fa-circle-nodes" style="color:#34d399;"></i> Active Notices</h2>
                         </div>
                         <div id="sidebar-notices">Loading logs...</div>
                     </div>
@@ -560,12 +616,12 @@
                             <label>Banner Image (Optional)</label>
                             <input type="file" name="eventBanner" accept="image/*" style="padding:8px;">
 
-                            <!-- 🚩 SHOW IN MARQUEE CHECKBOX FOR UPCOMING EVENTS FORM -->
+                            <!-- SHOW IN MARQUEE CHECKBOX -->
                             <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
                                 <input type="checkbox" name="showInMarquee" value="true" id="upcoming-marquee-check"
                                     style="width: auto; margin: 0;">
                                 <label for="upcoming-marquee-check"
-                                    style="margin: 0; font-size: 0.82rem; color: var(--accent-lime); cursor: pointer;">
+                                    style="margin: 0; font-size: 0.82rem; color: var(--brand-green); cursor: pointer;">
                                     🚩 Display on Home Page Marquee Ticker
                                 </label>
                             </div>
@@ -577,7 +633,7 @@
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-clock" style="color:var(--info);"></i> Scheduled Upcoming Events</h2>
+                            <h2><i class="fas fa-clock" style="color:#38bdf8;"></i> Scheduled Upcoming Events</h2>
                         </div>
                         <div id="sidebar-upcoming-events">Loading events...</div>
                     </div>
@@ -614,7 +670,7 @@
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-clock-rotate-left" style="color:var(--info);"></i> Active Recent Posts
+                            <h2><i class="fas fa-clock-rotate-left" style="color:#38bdf8;"></i> Active Recent Posts
                             </h2>
                         </div>
                         <div id="sidebar-recent-events">Loading posts...</div>
@@ -625,7 +681,7 @@
             <div id="tab-achievements" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2><i class="fas fa-trophy" style="color:var(--accent-lime);"></i> Add Achievements Record</h2>
+                        <h2><i class="fas fa-trophy" style="color:var(--brand-green);"></i> Add Achievements Record</h2>
 
                         <form id="achievement-form" action="/api/admin/upload-achievement" method="POST"
                             enctype="multipart/form-data">
@@ -644,15 +700,14 @@
                                 Item
                             </button>
 
-                            <button type="submit" class="btn-prime"
-                                style="background: var(--accent-lime); color: var(--bg-main);">
+                            <button type="submit" class="btn-prime">
                                 <i class="fas fa-check-circle"></i> Save All Achievements
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-medal" style="color:var(--accent-lime);"></i> Published Achievements
+                            <h2><i class="fas fa-medal" style="color:#aeea00;"></i> Published Achievements
                             </h2>
                         </div>
                         <div id="sidebar-achievements">Loading records...</div>
@@ -684,21 +739,21 @@
                             <p class="info-text">💡 Ye albums Hero Slider, Home Page aur <b>/gallery.html</b> sabhi
                                 jagah dikhenge.</p>
 
-                            <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
+                            <button type="submit" class="btn-prime" style="background: var(--warning); color: white;">
                                 <i class="fas fa-cloud-arrow-up"></i> Upload Album To Gallery
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Gallery Albums
+                            <h2><i class="fas fa-folder-open" style="color:#f59e0b;"></i> Active Gallery Albums
                             </h2>
                         </div>
                         <div id="sidebar-gallery">Loading gallery...</div>
                     </div>
                 </div>
             </div>
-            <!-- views/admin.html me tab-documents form section -->
+
             <div id="tab-documents" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
@@ -715,27 +770,25 @@
                                 <option value="disclosure">CBSE Affiliation</option>
                                 <option value="mandatory">Mandatory Disclosure</option>
                                 <option value="tc">Transfer Certificate (TC)</option>
-                                <!-- 🎯 Yahan value="fee" set karein -->
                                 <option value="fee">Fee Structure</option>
                             </select>
 
-                            <!-- 🎯 CLASS SELECTION DROPDOWN -->
                             <label>Select Class (Only for Syllabus/Routine/Rules)</label>
                             <select id="doc-class" name="targetClass">
                                 <option value="All Classes">All Classes (General / Common)</option>
                                 <option value="Nursery">Nursery</option>
                                 <option value="LKG">LKG</option>
-                                <option value="LKG">UKG</option>
+                                <option value="UKG">UKG</option>
                                 <option value="Class 1">Class 1st</option>
-                                <option value="Class 2">Class 6th</option>
-                                <option value="Class 3">Class 9th</option>
+                                <option value="Class 2">Class 2nd</option>
+                                <option value="Class 3">Class 3rd</option>
                                 <option value="Class 4">Class 4th</option>
                                 <option value="Class 5">Class 5th</option>
                                 <option value="Class 6">Class 6th</option>
-                                <option value="Class 7">Class 9th</option>
-                                <option value="Class 8">Class 4th</option>
-                                <option value="Class 9">Class 5th</option>
-                                <option value="Class 10">Class 6th</option>
+                                <option value="Class 7">Class 7th</option>
+                                <option value="Class 8">Class 8th</option>
+                                <option value="Class 9">Class 9th</option>
+                                <option value="Class 10">Class 10th</option>
                             </select>
 
                             <label>Document Title</label>
@@ -746,58 +799,19 @@
                             <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
                                 style="padding:8px;">
 
-                            <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
+                            <button type="submit" class="btn-prime" style="background: var(--warning); color: white;">
                                 <i class="fas fa-upload"></i> Publish Document
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Documents</h2>
+                            <h2><i class="fas fa-folder-open" style="color:#f59e0b;"></i> Active Documents</h2>
                         </div>
                         <div id="sidebar-documents">Loading documents...</div>
                     </div>
                 </div>
             </div>
-            <!-- 
-            <div id="tab-documents" class="tab-panel">
-                <div class="tool-split-grid">
-                    <div class="form-card">
-                        <h2><i class="fas fa-file-shield" style="color:var(--warning);"></i> Document Upload</h2>
-                        <form id="document-form" action="/api/admin/upload-document" method="POST"
-                            enctype="multipart/form-data">
-                            <label>Document Category</label>
-                            <select id="doc-category" name="category" required>
-                                <option value="routine">Class Routine / Schedule PDF</option>
-                                <option value="syllabus">Syllabus PDF</option>
-                                <option value="rules">School Rules & Regulations</option>
-                                <option value="calendar">Academic Calendar</option>
-                                <option value="disclosure">CBSE Affiliation</option>
-                                <option value="mandatory">Mandatory Disclosure</option>
-                                <option value="tc">Transfer Certificate (TC)</option>
-                                <option value="report">Annual Academic Report</option>
-                            </select>
-
-                            <label>Document Title</label>
-                            <input type="text" id="doc-title" name="title" required>
-
-                            <label>Select PDF File</label>
-                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
-                                style="padding:8px;">
-
-                            <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
-                                <i class="fas fa-upload"></i> Publish Document
-                            </button>
-                        </form>
-                    </div>
-                    <div>
-                        <div class="list-panel-header">
-                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Documents</h2>
-                        </div>
-                        <div id="sidebar-documents">Loading documents...</div>
-                    </div>
-                </div>
-            </div> -->
 
         </div>
     </div>
@@ -877,10 +891,9 @@
                     </div>
                 </div>
 
-                <!-- 🚩 SHOW IN MARQUEE CHECKBOX FOR ACHIEVEMENTS FORM ROW -->
                 <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
                     <input type="checkbox" name="showInMarquee[]" value="true" id="achieve-marquee-${achievementRowCount}" style="width: auto; margin: 0;">
-                    <label for="achieve-marquee-${achievementRowCount}" style="margin: 0; font-size: 0.8rem; color: var(--accent-lime); cursor: pointer;">
+                    <label for="achieve-marquee-${achievementRowCount}" style="margin: 0; font-size: 0.8rem; color: var(--brand-green); cursor: pointer;">
                         🚩 Display on Home Page Marquee Ticker
                     </label>
                 </div>
@@ -927,7 +940,6 @@
                 .catch(err => console.error("Error loading admin data:", err));
         }
 
-        // 🚩 REAL-TIME TOGGLE MARQUEE FUNCTION
         function toggleMarqueeFeature(type, id, isChecked) {
             fetch('/api/admin/toggle-marquee', {
                 method: 'POST',
@@ -955,12 +967,12 @@
 
             // 0. TICKERS
             if (globalTickers.length === 0) {
-                tickerContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No marquee ticker records found.</p>";
+                tickerContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No marquee ticker records found.</p>";
             } else {
                 tickerContainer.innerHTML = "";
                 [...globalTickers].reverse().forEach(t => {
                     tickerContainer.innerHTML += `
-                    <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
+                    <div class="data-card" style="border-left: 3px solid var(--brand-green);">
                         <div class="data-meta">
                             <strong>📢 ${t.text}</strong>
                             <small>Date: ${t.date || 'Recent'}</small>
@@ -975,7 +987,7 @@
 
             // 1. ENQUIRIES
             if (globalEnquiries.length === 0) {
-                enquiryContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No submissions found.</p>";
+                enquiryContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No submissions found.</p>";
             } else {
                 enquiryContainer.innerHTML = "";
                 [...globalEnquiries].reverse().forEach(enq => {
@@ -996,7 +1008,7 @@
 
             // 2. NOTICES
             if (globalNotices.length === 0) {
-                noticeContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No notices found.</p>";
+                noticeContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No notices found.</p>";
             } else {
                 noticeContainer.innerHTML = "";
                 globalNotices.forEach(n => {
@@ -1014,9 +1026,9 @@
                 });
             }
 
-            // 3. UPCOMING EVENTS (WITH MARQUEE CHECKBOX)
+            // 3. UPCOMING EVENTS
             if (globalUpcomingEvents.length === 0) {
-                upcomingContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No upcoming events found.</p>";
+                upcomingContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No upcoming events found.</p>";
             } else {
                 upcomingContainer.innerHTML = "";
                 [...globalUpcomingEvents].reverse().forEach(up => {
@@ -1027,7 +1039,7 @@
                             <strong>📅 ${up.title}</strong>
                             <small><i class="fas fa-clock"></i> ${up.eventDate || up.date || ''}</small>
                             <small><i class="fas fa-location-dot"></i> ${up.venue || 'School Campus'}</small>
-                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--accent-lime); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--brand-green); display: flex; align-items: center; gap: 6px; cursor: pointer;">
                                 <input type="checkbox" ${isChecked} onchange="toggleMarqueeFeature('upcomingEvents', ${up.id}, this.checked)" style="width: auto; margin: 0;">
                                 Show on Marquee Ticker
                             </label>
@@ -1041,7 +1053,7 @@
 
             // 4. RECENT POSTS
             if (globalRecentPosts.length === 0) {
-                eventContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No recent posts found.</p>";
+                eventContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No recent posts found.</p>";
             } else {
                 eventContainer.innerHTML = "";
                 [...globalRecentPosts].reverse().forEach(e => {
@@ -1072,20 +1084,20 @@
                 });
             }
 
-            // 5. ACHIEVEMENTS (WITH MARQUEE CHECKBOX)
+            // 5. ACHIEVEMENTS
             if (globalAchievements.length === 0) {
-                achievementContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No achievements records found.</p>";
+                achievementContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No achievements records found.</p>";
             } else {
                 achievementContainer.innerHTML = "";
                 [...globalAchievements].reverse().forEach(ach => {
                     const isChecked = ach.showInMarquee ? 'checked' : '';
                     achievementContainer.innerHTML += `
-                    <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
+                    <div class="data-card" style="border-left: 3px solid var(--brand-green);">
                         <div class="data-meta">
                             <strong>🏆 ${ach.title} (${ach.subtitle || ''})</strong>
-                            <span class="badge" style="background:rgba(174,234,0,0.1); color:var(--accent-lime);">${ach.category}</span>
+                            <span class="badge" style="background:rgba(6,78,59,0.1); color:var(--brand-green);">${ach.category}</span>
                             <small>${ach.description || ''}</small>
-                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--accent-lime); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--brand-green); display: flex; align-items: center; gap: 6px; cursor: pointer;">
                                 <input type="checkbox" ${isChecked} onchange="toggleMarqueeFeature('achievements', ${ach.id}, this.checked)" style="width: auto; margin: 0;">
                                 Show on Marquee Ticker
                             </label>
@@ -1099,7 +1111,7 @@
 
             // 6. GALLERY ALBUMS
             if (globalGallery.length === 0) {
-                galleryContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No gallery albums found.</p>";
+                galleryContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No gallery albums found.</p>";
             } else {
                 galleryContainer.innerHTML = "";
                 [...globalGallery].reverse().forEach(g => {
@@ -1131,7 +1143,7 @@
 
             // 7. DOCUMENTS
             if (globalDocuments.length === 0) {
-                docContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No documents found.</p>";
+                docContainer.innerHTML = "<p style='color:#cbd5e1; font-size:13px;'>No documents found.</p>";
             } else {
                 docContainer.innerHTML = "";
                 globalDocuments.forEach(d => {

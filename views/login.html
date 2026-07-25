@@ -3,115 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Authentication | Patliputra Vidyapeeth</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>Admin Portal Login | Patliputra Vidyapeeth</title>
     <!-- Browser Tab Icon (Favicon) -->
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" type="image/png" href="/images/logo.png">
-    <!-- Premium Fonts & Security Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-card: rgba(19, 28, 46, 0.75); /* ट्रांसपेरेंट डार्क ग्लासमोर्फिज्म */
-            --bg-input: #090d16;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-lime: #aeea00;
-            --text-muted: #94a3b8;
-            --text-main: #f8fafc;
-            --bg-main: #0b0f19;
+            --brand-green: #064e3b;
+            --brand-hover: #04382a;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.95);
+            --input-bg: #f8fafc;
+            --input-border: #cbd5e1;
         }
 
         body { 
-            font-family: 'Inter', sans-serif; 
-            /* 🎯 आपकी भेजी हुई WhatsApp Image 2026-06-29 at 10.37.35 PM (1).jpeg को बैकग्राउंड बनाया */
-            background: linear-gradient(rgba(11, 15, 25, 0.65), rgba(11, 15, 25, 0.75)), url('/images/Cam.jpeg') no-repeat center center/cover;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
+            font-family: 'Poppins', sans-serif; 
+            /* Light Clean Campus Background with Blur */
+            background: linear-gradient(rgba(6, 78, 59, 0.45), rgba(15, 23, 42, 0.55)), 
+                        url('/images/IMG_1303.jpg') no-repeat center center/cover;
+            backdrop-filter: blur(6px); 
+            -webkit-backdrop-filter: blur(6px);
+            min-height: 100vh; 
             margin: 0; 
-            color: var(--text-main); 
+            color: var(--text-dark); 
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
-            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
         }
 
-        /* 🔒 MODERN SECURE GATEWAY BOX */
-        .login-box { 
-            background: var(--bg-card); 
-            padding: 45px 40px; 
-            border-radius: 16px; 
-            box-shadow: 0px 25px 60px rgba(0, 0, 0, 0.65); 
-            border: 1px solid var(--border-color); 
-            width: 100%; 
-            max-width: 420px; 
-            text-align: center; 
+        /* 📐 SPLIT SCREEN CONTAINER */
+        .login-split-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 50px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
             box-sizing: border-box;
+        }
+
+        /* 🚀 LEFT SIDE ANIMATED MOTIVATIONAL SECTION */
+        .left-motivation-side {
+            flex: 1;
+            color: #ffffff;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .left-motivation-side h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.25;
+            margin: 0 0 15px 0;
+            color: #ffffff;
+        }
+
+        /* 🦘 CHARACTER-BY-CHARACTER JUMPING WAVE EFFECT */
+        .wave-text-container {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .wave-text-container span {
+            display: inline-block;
+            animation: letterJumpWave 1.8s infinite ease-in-out;
+            animation-delay: calc(0.08s * var(--i));
+        }
+
+        /* Highlighted Word (Vidyapeeth) Color */
+        .wave-text-container .highlight-word {
+            color: #aeea00;
+        }
+
+        /* 💥 Keyframes for Single Character Jumping */
+        @keyframes letterJumpWave {
+            0%, 100% {
+                transform: translateY(0);
+                text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            30% {
+                transform: translateY(-16px) scale(1.1); /* Peak Upward Jump */
+                text-shadow: 0 15px 20px rgba(174, 234, 0, 0.6);
+            }
+            50% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Animated Quote Box */
+        .animated-quote-container {
+            min-height: 120px;
+            margin-top: 25px;
             position: relative;
-            backdrop-filter: blur(14px); /* 🌟 बैकग्राउंड इमेज को बॉक्स के पीछे से ब्लर करने का प्रीमियम इफेक्ट */
-            -webkit-backdrop-filter: blur(14px);
-            animation: boxSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) ease;
         }
 
-        @keyframes boxSlideIn {
-            0% { transform: translateY(20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .login-box::before {
-            content: '';
+        .quote-slide {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.7;
+            color: #f8fafc;
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.8s ease-in-out;
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-lime);
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
+            width: 100%;
         }
 
-        .auth-icon-shield {
-            width: 60px;
-            height: 60px;
-            background: rgba(174, 234, 0, 0.08);
-            border: 1px solid rgba(174, 234, 0, 0.2);
+        .quote-slide.active-quote {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .quote-author {
+            display: block;
+            margin-top: 10px;
+            font-style: normal;
+            font-weight: 700;
+            color: #aeea00;
+            font-size: 0.95rem;
+        }
+
+        /* 🔒 RIGHT SIDE BRIGHT WHITE GLASS CARD */
+        .right-login-side {
+            width: 100%;
+            max-width: 410px;
+            flex-shrink: 0;
+        }
+
+        .login-box { 
+            background: var(--glass-bg); 
+            padding: 40px 35px; 
+            border-radius: 20px; 
+            box-shadow: 0px 25px 50px rgba(0, 0, 0, 0.35); 
+            border: 1px solid var(--glass-border); 
+            width: 100%; 
+            text-align: center; 
+            box-sizing: border-box;
+            position: relative;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1) ease;
+        }
+
+        @keyframes cardAppear {
+            0% { transform: translateX(30px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        /* 🎓 TOP SCHOOL LOGO BADGE */
+        .school-logo-badge {
+            width: 85px;
+            height: 85px;
+            background: #ffffff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px auto;
-            color: var(--accent-lime);
-            font-size: 1.6rem;
+            margin: -75px auto 20px auto;
+            box-shadow: 0 8px 20px rgba(6, 78, 59, 0.2);
+            padding: 5px;
+            border: 3px solid var(--brand-green);
+        }
+
+        .school-logo-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         h2 { 
-            color: var(--text-main); 
-            margin: 0 0 6px 0; 
-            font-size: 1.4rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            color: var(--brand-green); 
+            margin: 0 0 4px 0; 
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
         
-        p { 
+        p.subtitle { 
             color: var(--text-muted); 
             font-size: 0.85rem; 
-            margin: 0 0 35px 0; 
+            margin: 0 0 30px 0; 
+            font-weight: 500;
         }
 
         .input-group {
             text-align: left;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         label { 
             display: block; 
-            color: var(--text-muted); 
-            font-weight: 500; 
+            color: var(--text-dark); 
+            font-weight: 600; 
             font-size: 0.8rem; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .input-wrapper {
@@ -122,112 +224,183 @@
 
         .input-wrapper i {
             position: absolute;
-            left: 16px;
-            color: var(--text-muted);
+            left: 14px;
+            color: var(--brand-green);
             font-size: 0.95rem;
-            transition: color 0.2s ease;
         }
 
         input { 
             width: 100%; 
-            padding: 14px 16px 14px 45px; 
+            padding: 12px 14px 12px 42px; 
             box-sizing: border-box; 
-            background: var(--bg-input); 
-            border: 1px solid var(--border-color); 
+            background: var(--input-bg); 
+            border: 1px solid var(--input-border); 
             border-radius: 8px; 
-            color: white; 
+            color: var(--text-dark); 
             font-family: inherit; 
             font-size: 0.9rem; 
+            font-weight: 500;
             transition: all 0.2s ease;
         }
 
         input:focus { 
-            border-color: var(--accent-lime); 
-            box-shadow: 0 0 0 3px rgba(174, 234, 0, 0.15);
+            border-color: var(--brand-green); 
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.12);
             outline: none; 
-        }
-
-        input:focus + i {
-            color: var(--accent-lime);
         }
 
         button { 
             width: 100%; 
-            background: var(--accent-lime); 
-            color: var(--bg-main); 
+            background: var(--brand-green); 
+            color: #ffffff; 
             font-weight: 600; 
-            padding: 14px; 
+            padding: 13px; 
             border: none; 
             border-radius: 8px; 
-            margin-top: 15px; 
+            margin-top: 10px; 
             cursor: pointer; 
             font-size: 0.95rem; 
             font-family: inherit; 
-            transition: all 0.2s ease; 
+            transition: all 0.25s ease; 
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);
         }
 
         button:hover { 
+            background: var(--brand-hover);
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(174, 234, 0, 0.3);
+            box-shadow: 0 6px 16px rgba(6, 78, 59, 0.3);
         }
 
         .back-link { 
             display: inline-flex; 
             align-items: center;
-            gap: 8px;
-            margin-top: 25px; 
-            color: var(--text-muted); 
+            gap: 6px;
+            margin-top: 22px; 
+            color: var(--brand-green); 
             text-decoration: none; 
             font-size: 0.85rem; 
-            transition: color 0.2s ease;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .back-link:hover { 
-            color: var(--text-main); 
+            text-decoration: underline;
+        }
+
+        /* 📱 MOBILE RESPONSIVE BREAKPOINT */
+        @media (max-width: 900px) {
+            .login-split-wrapper {
+                flex-direction: column;
+                justify-content: center;
+                padding: 30px 20px;
+            }
+            .left-motivation-side {
+                display: none; 
+            }
+            .right-login-side {
+                margin: 40px auto 0 auto;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔒 CONTROL INTERFACE BOX -->
-<div class="login-box">
-    <div class="auth-icon-shield">
-        <i class="fas fa-lock"></i>
+<div class="login-split-wrapper">
+
+    <!-- 🚀 LEFT SIDE: ANIMATED MOTIVATION SECTION WITH CHARACTER JUMPING -->
+    <div class="left-motivation-side">
+        
+        <!-- 🦘 CHARACTER JUMPING WAVE CONTAINER -->
+        <h1>
+            <span class="wave-text-container">
+                <span style="--i:1">P</span><span style="--i:2">a</span><span style="--i:3">t</span><span style="--i:4">l</span><span style="--i:5">i</span><span style="--i:6">p</span><span style="--i:7">u</span><span style="--i:8">t</span><span style="--i:9">r</span><span style="--i:10">a</span>
+                &nbsp;
+                <span style="--i:11" class="highlight-word">V</span><span style="--i:12" class="highlight-word">i</span><span style="--i:13" class="highlight-word">d</span><span style="--i:14" class="highlight-word">y</span><span style="--i:15" class="highlight-word">a</span><span style="--i:16" class="highlight-word">p</span><span style="--i:17" class="highlight-word">e</span><span style="--i:18" class="highlight-word">e</span><span style="--i:19" class="highlight-word">t</span><span style="--i:20" class="highlight-word">h</span>
+            </span>
+        </h1>
+
+        <h1 style="font-size: 2.2rem; font-weight: 700; margin-top: 5px;">Shaping Future Leaders</h1>
+        <p style="font-size: 1.05rem; opacity: 0.9; margin: 0;">Play, Learn and Grow Together in an Environment of Excellence.</p>
+
+        <div class="animated-quote-container">
+            <div class="quote-slide active-quote">
+                "Education is the most powerful weapon which you can use to change the world."
+                <span class="quote-author">— Nelson Mandela</span>
+            </div>
+            <div class="quote-slide">
+                "The mind is not a vessel to be filled, but a fire to be kindled."
+                <span class="quote-author">— Plutarch</span>
+            </div>
+            <div class="quote-slide">
+                "Teachers open the door, but you must enter by yourself."
+                <span class="quote-author">— Chinese Proverb</span>
+            </div>
+            <div class="quote-slide">
+                "Real education enhances the dignity of a human being and increases his self-respect."
+                <span class="quote-author">— Dr. A.P.J. Abdul Kalam</span>
+            </div>
+        </div>
     </div>
-    
-    <h2>Console Gateway</h2>
-    <p>Patliputra Vidyapeeth Admin Authentication</p>
-    
-    <form action="/api/admin/login" method="POST">
-        <div class="input-group">
-            <label>Admin ID / Username</label>
-            <div class="input-wrapper">
-                <input type="text" name="username" placeholder="Enter admin username" required autocomplete="off">
-                <i class="fas fa-user-shield"></i>
-            </div>
-        </div>
 
-        <div class="input-group">
-            <label>Secret Password</label>
-            <div class="input-wrapper">
-                <input type="password" name="password" placeholder="Enter secret password" required>
-                <i class="fas fa-key"></i>
+    <!-- 🔒 RIGHT SIDE: BRIGHT WHITE GLASS LOGIN CARD -->
+    <div class="right-login-side">
+        <div class="login-box">
+            
+            <div class="school-logo-badge">
+                <img src="/images/logo.png" alt="Patliputra Vidyapeeth Logo" onerror="this.src='https://via.placeholder.com/80?text=PV+Logo'">
             </div>
-        </div>
+            
+            <h2>Admin Console</h2>
+            <p class="subtitle">Patliputra Vidyapeeth Authentication</p>
+            
+            <form action="/api/admin/login" method="POST">
+                <div class="input-group">
+                    <label>Admin Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="username" placeholder="Enter admin username" required autocomplete="off">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
 
-        <button type="submit">
-            <span>Verify & Authenticate</span> <i class="fas fa-arrow-right"></i>
-        </button>
-    </form>
-    
-    <a href="/" class="back-link">
-        <i class="fas fa-arrow-left-long"></i> Return to Website
-    </a>
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" name="password" placeholder="Enter secret password" required>
+                        <i class="fas fa-key"></i>
+                    </div>
+                </div>
+
+                <button type="submit">
+                    <span>Sign In to Console</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i> Return to Main Website
+            </a>
+        </div>
+    </div>
+
 </div>
+
+<!-- 🔄 SCRIPT FOR ROTATING MOTIVATIONAL QUOTES -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const quotes = document.querySelectorAll('.quote-slide');
+        let currentIdx = 0;
+
+        setInterval(() => {
+            quotes[currentIdx].classList.remove('active-quote');
+            currentIdx = (currentIdx + 1) % quotes.length;
+            quotes[currentIdx].classList.add('active-quote');
+        }, 4500); 
+    });
+</script>
 
 </body>
 </html>

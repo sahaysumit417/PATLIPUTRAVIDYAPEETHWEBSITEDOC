@@ -5,32 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recent Events & Updates | Patliputra Vidyapeeth</title>
     <!-- Browser Tab Icon (Favicon) -->
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" type="image/png" href="/images/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/c.css">
 
     <style>
-        .event-post-box {
+        body {
+            font-family: 'Poppins', sans-serif;
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-            display: flex;
-            gap: 25px;
-            align-items: center;
+            color: #222222;
+            margin: 0;
+            padding: 0;
         }
 
-        /* 🔄 ALTERNATING LAYOUT CLASSES */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+        }
+
+        /* PURE & SIMPLE HEADING (NO GREEN, NO BORDER, NO SHADOW) */
+        .page-title {
+            font-size: 1.6rem;
+            color: #111111;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        /* SIMPLE FEED ITEM */
+        .event-post-box {
+            background: transparent;
+            padding: 25px 0;
+            border-bottom: 1px solid #eeeeee;
+            margin: 0;
+            display: flex;
+            gap: 35px;
+            align-items: flex-start;
+        }
+
+        .event-post-box:last-child {
+            border-bottom: none;
+        }
+
         .layout-row {
-            flex-direction: row; /* Text Left, Image Right */
+            flex-direction: row;
         }
 
         .layout-row-reverse {
-            flex-direction: row-reverse; /* Image Left, Text Right */
+            flex-direction: row-reverse;
         }
 
         .post-content-side {
@@ -38,7 +62,7 @@
         }
 
         .post-image-side {
-            flex: 1;
+            flex: 1.1;
             width: 100%;
         }
 
@@ -48,43 +72,59 @@
             width: 100%;
         }
 
+        /* LARGE IMAGE SIZE */
         .post-image-grid img {
             width: 100%;
-            height: 250px;
+            height: 300px;
             object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 4px;
         }
 
-        /* 📱 Mobile Responsive View: Stack vertically on small screens */
+        .post-date-tag {
+            font-size: 0.85rem;
+            color: #666666;
+            margin-bottom: 6px;
+        }
+
+        .post-title {
+            margin: 0 0 10px 0;
+            color: #111111;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .post-desc {
+            color: #444444;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+            white-space: pre-line;
+        }
+
         @media (max-width: 768px) {
             .event-post-box {
                 flex-direction: column !important;
+                gap: 15px;
             }
             .post-image-grid img {
-                height: 200px;
+                height: 220px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🌐 DYNAMIC HEADER -->
     <nav id="dynamic-header"></nav>
 
-    <section class="page-banner" style="background: var(--primary-brand, #0a3d62); color: white; padding: 50px 20px; text-align: center; margin-top: 110px;">
-        <h1>Recent Events & Updates</h1>
-        <p>Latest posts and updates from school activities</p>
-    </section>
+    <div class="main-container">
+        <h1 class="page-title">Recent Events & Updates</h1>
 
-    <section class="container" style="padding: 40px 20px; max-width: 1000px; margin: 0 auto; min-height: 400px;">
         <div id="recent-events-feed">
-            <p style="text-align: center; color: #666;">Loading recent posts...</p>
+            <p style="text-align: center; color: #666666; padding: 30px 0;">Loading recent posts...</p>
         </div>
-    </section>
+    </div>
 
-    <!-- 🌐 DYNAMIC FOOTER -->
     <footer id="dynamic-footer"></footer>
 
     <script src="/js/main.js"></script>
@@ -103,7 +143,7 @@
                     const posts = [...rawPosts].reverse();
 
                     if (posts.length === 0) {
-                        feed.innerHTML = '<p style="text-align:center; color:#666; padding: 40px 0;">Abhi koi recent post nahi hai. Admin panel se nayi post publish karein.</p>';
+                        feed.innerHTML = '<p style="text-align:center; color:#666666; padding: 30px 0;">Abhi koi recent post nahi hai.</p>';
                         return;
                     }
 
@@ -112,15 +152,11 @@
                     posts.forEach((post, idx) => {
                         const postCard = document.createElement("div");
                         
-                        // 🎯 ALTERNATING LOGIC:
-                        // idx = 0 (Post 1): layout-row (Text Left, Image Right)
-                        // idx = 1 (Post 2): layout-row-reverse (Image Left, Text Right)
                         const layoutClass = (idx % 2 === 0) ? 'layout-row' : 'layout-row-reverse';
                         postCard.className = `event-post-box ${layoutClass}`;
 
-                        // Images markup
                         let imgHTML = '';
-                        const imgs = post.images || [];
+                        const imgs = post.images || post.photos || [];
                         const top2Imgs = Array.isArray(imgs) ? imgs.slice(0, 2) : []; 
 
                         if (top2Imgs.length > 0) {
@@ -128,26 +164,22 @@
                             imgHTML = `
                                 <div class="post-image-side">
                                     <div class="post-image-grid" style="grid-template-columns: ${gridCols};">
-                                        ${top2Imgs.map(src => `<img src="${src}" alt="Event photo">`).join('')}
+                                        ${top2Imgs.map(src => `<img src="${src}" alt="Event photo" loading="lazy">`).join('')}
                                     </div>
                                 </div>
                             `;
                         }
 
-                        // Text Content markup
                         const textHTML = `
                             <div class="post-content-side">
-                                <div style="display:flex; align-items:center; margin-bottom: 10px;">
-                                    <span style="font-size:0.85rem; color:#0a3d62; font-weight:600; background:#e0f2fe; padding:4px 12px; border-radius:20px;">
-                                        <i class="far fa-calendar-alt"></i> ${post.date || 'Recent Update'}
-                                    </span>
+                                <div class="post-date-tag">
+                                    <i class="far fa-calendar-alt"></i> ${post.date || 'Recent Update'}
                                 </div>
-                                <h2 style="margin: 8px 0 12px 0; color: #0a3d62; font-size: 1.45rem; font-weight:700;">${post.title}</h2>
-                                <p style="color: #444; line-height: 1.7; margin: 0; font-size:0.98rem; white-space: pre-line;">${post.description}</p>
+                                <h2 class="post-title">${post.title || post.eventTitle || 'School Activity'}</h2>
+                                <p class="post-desc">${post.description || post.eventDescription || ''}</p>
                             </div>
                         `;
 
-                        // If image exists, render both sides, else only text full width
                         if (top2Imgs.length > 0) {
                             postCard.innerHTML = textHTML + imgHTML;
                         } else {
@@ -159,7 +191,7 @@
                 })
                 .catch(err => {
                     console.error("Error loading posts:", err);
-                    document.getElementById('recent-events-feed').innerHTML = '<p style="text-align:center; color:red;">Posts load karne me koi dikkat aayi hai.</p>';
+                    document.getElementById('recent-events-feed').innerHTML = '<p style="text-align:center; color:#666666;">Posts load karne me koi dikkat aayi hai.</p>';
                 });
         }
     </script>

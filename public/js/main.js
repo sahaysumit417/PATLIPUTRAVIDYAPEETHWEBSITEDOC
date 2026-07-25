@@ -6,7 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let allEventsData = [];
 
-// 🎬 HERO SECTION VIDEO + CLOUDINARY SLIDER ENGINE
+// ⚡ AUTO OPTIMIZE CLOUDINARY URLS FOR WEBP & FAST LCP
+function optimizeImageUrl(url) {
+    if (!url) return '/images/logo.png';
+    if (url.includes('cloudinary.com') && !url.includes('f_auto')) {
+        return url.replace('/upload/', '/upload/f_auto,q_auto,w_800/');
+    }
+    return url;
+}
+
+// 🎬 HERO SECTION VIDEO + CLOUDINARY SLIDER ENGINE WITH SMOOTH TRANSITION
 function renderHeroSliderImages(events) {
     const sliderContainer = document.getElementById("hero-image-slider");
     const videoElement = document.getElementById("hero-video");
@@ -16,11 +25,11 @@ function renderHeroSliderImages(events) {
     let heroImages = [];
 
     events.forEach(event => {
-        if (event.coverImage) heroImages.push(event.coverImage);
+        if (event.coverImage) heroImages.push(optimizeImageUrl(event.coverImage));
         if (event.images && Array.isArray(event.images)) {
-            heroImages = heroImages.concat(event.images);
+            heroImages = heroImages.concat(event.images.map(img => optimizeImageUrl(img)));
         } else if (event.photos && Array.isArray(event.photos)) {
-            heroImages = heroImages.concat(event.photos);
+            heroImages = heroImages.concat(event.photos.map(p => optimizeImageUrl(p)));
         }
     });
 
@@ -28,17 +37,12 @@ function renderHeroSliderImages(events) {
 
     if (heroImages.length === 0) return;
 
-    if (videoElement) {
-        videoElement.style.opacity = "0.35";
-    }
-
     let currentIndex = 0;
     sliderContainer.style.backgroundImage = `url('${heroImages[0]}')`;
-    sliderContainer.style.opacity = "1";
 
     setInterval(() => {
         currentIndex = (currentIndex + 1) % heroImages.length;
-        sliderContainer.style.transition = "background-image 1s ease-in-out, opacity 1s ease-in-out";
+        sliderContainer.style.transition = "background-image 1.2s ease-in-out, opacity 1.2s ease-in-out, transform 1.2s ease-in-out";
         sliderContainer.style.backgroundImage = `url('${heroImages[currentIndex]}')`;
     }, 4000);
 }
@@ -78,7 +82,8 @@ function loadWebsiteData() {
                 });
             }
 
-            allEventsData = data.events || [];
+            allEventsData = data.events || data.gallery || [];
+            
             renderEventCards();
 
             if (document.getElementById('hero-video') && document.getElementById('hero-image-slider')) {
@@ -103,14 +108,12 @@ function fetchMarqueeTicker() {
 
             let tickerItems = [];
 
-            // 1. Dedicated Admin Tickers
             if (data.tickers && data.tickers.length > 0) {
                 [...data.tickers].reverse().forEach(t => {
                     tickerItems.push(`🚩 <b>Update:</b> ${t.text}`);
                 });
             }
 
-            // 2. Checked Achievements (Class 10th / 12th / Awards)
             if (data.achievements && data.achievements.length > 0) {
                 data.achievements.filter(a => a.showInMarquee).forEach(a => {
                     const catLabel = a.category === 'class-xii' ? 'Class XII' : (a.category === 'class-x' ? 'Class X' : 'Award');
@@ -118,18 +121,15 @@ function fetchMarqueeTicker() {
                 });
             }
 
-            // 3. Checked Upcoming Events
             if (data.upcomingEvents && data.upcomingEvents.length > 0) {
                 data.upcomingEvents.filter(u => u.showInMarquee).forEach(u => {
                     tickerItems.push(`📅 <b>Upcoming Event:</b> ${u.title} on ${u.eventDate} (${u.venue})`);
                 });
             }
 
-            // Render output
             if (tickerItems.length > 0) {
                 marqueeElement.innerHTML = tickerItems.join(' &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ');
             } else if (data.notices && data.notices.length > 0) {
-                // Fallback to Latest Notices if nothing selected
                 const noticeText = [...data.notices].reverse().map(n => `📢 <b>${n.title}:</b> ${n.description}`).join(' &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ');
                 marqueeElement.innerHTML = noticeText;
             } else {
@@ -141,63 +141,49 @@ function fetchMarqueeTicker() {
         });
 }
 
+/* 🎯 RENDER EXACTLY 5 RECENT GALLERIES ON INDEX PAGE WITH WEBP OPTIMIZATION */
 function renderEventCards() {
     const galleryGrid = document.getElementById("gallery-grid");
     if (!galleryGrid) return;
 
     if (!allEventsData || allEventsData.length === 0) {
-        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#bbb;'>गैलरी अभी खाली है।</p>";
+        galleryGrid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#64748b;'>गैलरी अभी खाली है।</p>";
         return;
     }
 
     galleryGrid.innerHTML = "";
 
-    const recent4Events = [...allEventsData].reverse().slice(0, 4);
+    const recent5Events = [...allEventsData].reverse().slice(0, 5);
 
-    recent4Events.forEach(event => {
-        const coverImg = event.coverImage || (event.images && event.images[0]) || '/uploads/default-event.jpg';
+    recent5Events.forEach(event => {
+        const rawCover = event.coverImage || (event.images && event.images[0]) || '/images/logo.png';
+        const coverImg = optimizeImageUrl(rawCover);
+        
+        const rawList = (Array.isArray(event.images) && event.images.length > 0) ? event.images : [rawCover];
+        const imgList = rawList.map(img => optimizeImageUrl(img));
+        
+        const eventTitle = event.title || event.albumTitle || 'School Event';
+
         const eventCard = document.createElement("div");
         eventCard.className = "gallery-card";
         
-        eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
+        eventCard.onclick = () => {
+            if (typeof openFullscreenModal === "function") {
+                openFullscreenModal(imgList, 0, eventTitle);
+            }
+        };
         
         eventCard.innerHTML = `
-            <img src="${coverImg}" alt="${event.title}">
-            <div class="gallery-overlay" style="opacity: 1;">
-                <h3>🎉 ${event.title}</h3>
-                <p>${event.description} (${event.images ? event.images.length : 0} Photos)</p>
+            <img src="${coverImg}" alt="${eventTitle}" loading="lazy">
+            <span class="gallery-photo-badge">
+                <i class="fas fa-images"></i> ${imgList.length} ${imgList.length === 1 ? 'Photo' : 'Photos'}
+            </span>
+            <div class="gallery-card-overlay">
+                <h3 class="gallery-card-title">${eventTitle}</h3>
             </div>
         `;
         galleryGrid.appendChild(eventCard);
     });
-}
-
-function openEventGallery(eventId) {
-    const galleryGrid = document.getElementById("gallery-grid");
-    const selectedEvent = allEventsData.find(e => e.id === eventId);
-
-    if (!selectedEvent) return;
-
-    galleryGrid.innerHTML = `
-        <div style="grid-column: 1/-1; margin-bottom: 20px; text-align: left;">
-            <button onclick="renderEventCards()" style="background: #aeea00; color: #111827; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-family: inherit;">
-                ← Back to Albums
-            </button>
-            <h2 style="color: white; margin-top: 15px; font-size: 1.8rem;">${selectedEvent.title} Album</h2>
-            <p style="color: #bbb;">${selectedEvent.description}</p>
-        </div>
-    `;
-
-    if (selectedEvent.images && Array.isArray(selectedEvent.images)) {
-        selectedEvent.images.forEach(imgUrl => {
-            const imgCard = document.createElement("div");
-            imgCard.className = "gallery-card";
-            imgCard.innerHTML = `<img src="${imgUrl}" alt="Event Photo">`;
-            galleryGrid.appendChild(imgCard);
-        });
-    }
-
-    galleryGrid.scrollIntoView({ behavior: 'smooth' });
 }
 
 function initScrollCounter() {
@@ -270,7 +256,7 @@ function openLabModal(facilityType) {
     imagesArray.forEach((imgUrl, idx) => {
         const slideDiv = document.createElement("div");
         slideDiv.className = `lab-slide-item ${idx === 0 ? 'active' : ''}`;
-        slideDiv.innerHTML = `<img src="${imgUrl}" alt="Slide ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800'">`;
+        slideDiv.innerHTML = `<img src="${optimizeImageUrl(imgUrl)}" alt="Slide ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800'">`;
         container.appendChild(slideDiv);
 
         if (dotsContainer) {
@@ -348,51 +334,91 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// 🎬 SEAMLESS DUAL-LAYER CROSS-FADE & ZOOM HERO ENGINE WITH WEBP OPTIMIZATION
 function startHeroDynamicLoop(events) {
     const video = document.getElementById('hero-video');
-    const slider = document.getElementById('hero-image-slider');
-    if (!video || !slider) return;
+    const slider1 = document.getElementById('hero-image-slider');
+    const slider2 = document.getElementById('hero-image-slider-next');
+
+    if (!video || !slider1) return;
 
     let recentImages = [];
     if (events && Array.isArray(events)) {
         events.forEach(event => {
             if (event && event.images && Array.isArray(event.images)) {
-                recentImages = recentImages.concat(event.images);
+                recentImages = recentImages.concat(event.images.map(img => optimizeImageUrl(img)));
+            } else if (event && event.coverImage) {
+                recentImages.push(optimizeImageUrl(event.coverImage));
             }
         });
     }
 
     if (recentImages.length < 4) {
         recentImages = [
-            'https://placehold.co/1200x600?text=Campus+Life+1',
-            'https://placehold.co/1200x600?text=Science+Lab+2',
-            'https://placehold.co/1200x600?text=Sports+Day+3',
-            'https://placehold.co/1200x600?text=Smart+Class+4'
+            'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200',
+            'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200',
+            'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?q=80&w=1200',
+            'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1200'
         ];
     }
 
+    recentImages = [...new Set(recentImages)].filter(url => url && url.length > 5);
     recentImages.sort(() => 0.5 - Math.random());
     let selectedImages = recentImages.slice(0, 4);
-    let currentStep = 0;
+
+    let activeLayer = 1; 
+    let currentImgIdx = 0;
+    let isVideoPhase = true;
 
     if (window.heroSliderInterval) clearInterval(window.heroSliderInterval);
 
+    slider1.style.backgroundImage = `url('${selectedImages[0]}')`;
+
     window.heroSliderInterval = setInterval(() => {
-        if (currentStep === 0) {
+        if (isVideoPhase) {
+            slider1.style.opacity = '1';
+            slider1.style.transform = 'scale(1.03)';
             video.style.opacity = '0';
-            slider.style.opacity = '1';
-            slider.style.backgroundImage = `url('${selectedImages[0]}')`;
-            currentStep = 1;
-        } else if (currentStep < selectedImages.length) {
-            slider.style.backgroundImage = `url('${selectedImages[currentStep]}')`;
-            currentStep++;
+            video.style.transform = 'scale(1.05)';
+            isVideoPhase = false;
+            activeLayer = 1;
+            currentImgIdx = 0;
         } else {
-            slider.style.opacity = '0';
-            video.style.opacity = '1';
-            currentStep = 0;
-            selectedImages.sort(() => 0.5 - Math.random());
+            currentImgIdx++;
+
+            if (currentImgIdx < selectedImages.length) {
+                const nextImg = selectedImages[currentImgIdx];
+
+                if (activeLayer === 1) {
+                    slider2.style.backgroundImage = `url('${nextImg}')`;
+                    slider2.style.opacity = '1';
+                    slider2.style.transform = 'scale(1.03)';
+                    slider1.style.opacity = '0';
+                    slider1.style.transform = 'scale(1)';
+                    activeLayer = 2;
+                } else {
+                    slider1.style.backgroundImage = `url('${nextImg}')`;
+                    slider1.style.opacity = '1';
+                    slider1.style.transform = 'scale(1.03)';
+                    slider2.style.opacity = '0';
+                    slider2.style.transform = 'scale(1)';
+                    activeLayer = 1;
+                }
+            } else {
+                slider1.style.opacity = '0';
+                slider1.style.transform = 'scale(1)';
+                if (slider2) {
+                    slider2.style.opacity = '0';
+                    slider2.style.transform = 'scale(1)';
+                }
+                video.style.opacity = '1';
+                video.style.transform = 'scale(1)';
+                
+                isVideoPhase = true;
+                selectedImages.sort(() => 0.5 - Math.random());
+            }
         }
-    }, 6000);
+    }, 5500);
 }
 
 function initializeMobileNav() {

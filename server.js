@@ -47,14 +47,15 @@ if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// ☁️ MULTER STORAGE STRATEGY
+// ☁️ MULTER STORAGE STRATEGY WITH AUTOMATIC WEBP & LCP COMPRESSION
 let storageStrategy;
 if (cloudName && apiKey && apiSecret) {
     storageStrategy = new CloudinaryStorage({
         cloudinary: cloudinary,
         params: {
             folder: 'patliputra_vidyapeeth_uploads',
-            allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf'],
+            transformation: [{ fetch_format: "auto", quality: "auto", width: 1200, crop: "limit" }], // ⚡ AUTO WEBP + FAST LCP
             resource_type: 'auto'
         }
     });
@@ -150,7 +151,7 @@ app.get('/gallery', (req, res) => { res.sendFile(path.resolve(__dirname, 'views'
 app.get('/login', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'login.html')); });
 app.get('/mandatory-disclosure', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'mandatory-disclosure.html')); });
 app.get('/campus.html', (req, res) => { res.sendFile(path.resolve(__dirname, 'views', 'campus.html')); });
-// server.js me dynamic route timing aur syllabus access ke liye
+
 app.get('/api/school-timing', async (req, res) => {
     const data = await getLocalData();
     const timingDocs = (data.documents || []).filter(d => d.category === 'routine' || d.category === 'syllabus');
@@ -159,18 +160,15 @@ app.get('/api/school-timing', async (req, res) => {
 app.get(['/upcoming-events', '/upcoming-events.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'upcoming-events.html'));
 });
-// server.js me add karein
 app.get(['/school-timing', '/school-timing.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'school-timing.html'));
 });
 app.get(['/achievements', '/achievements.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'achievements.html'));
 });
-
 app.get(['/recent-events', '/recent-events.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'recent-events.html'));
 });
-// server.js me add karein
 app.get('/team', (req, res) => { 
     res.sendFile(path.resolve(__dirname, 'views', 'team.html')); 
 });
@@ -192,35 +190,6 @@ app.get('/api/data', async (req, res) => {
     if (!data.upcomingEvents) data.upcomingEvents = [];
     if (!data.achievements) data.achievements = [];
     res.json(data);
-});
-// server.js me upload-document API handler
-app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docFile'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-    }
-
-    const { category, title, targetClass } = req.body;
-    const fileUrl = req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`;
-
-    try {
-        let localData = await getLocalData();
-        if (!localData.documents) localData.documents = [];
-
-        localData.documents.push({
-            id: Date.now(),
-            category: category,
-            title: title.trim(),
-            targetClass: targetClass || 'All Classes',
-            fileUrl: fileUrl,
-            date: new Date().toLocaleDateString('en-GB')
-        });
-
-        await saveAndSyncData(localData);
-        res.send('<script>alert("Document Published Successfully!"); window.location.href="/admin";</script>');
-    } catch (err) {
-        console.error("Database Write Error:", err);
-        res.status(500).send("Database transaction crash!");
-    }
 });
 
 // 🔐 ADMIN LOGIN
@@ -436,7 +405,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
         return res.status(400).send('No file uploaded.');
     }
 
-    const { category, title } = req.body;
+    const { category, title, targetClass } = req.body;
     const fileUrl = req.file.path || req.file.secure_url || `/uploads/${req.file.filename}`;
 
     try {
@@ -447,7 +416,9 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
             id: Date.now(),
             category: category,
             title: title.trim(),
-            fileUrl: fileUrl
+            targetClass: targetClass || 'All Classes',
+            fileUrl: fileUrl,
+            date: new Date().toLocaleDateString('en-GB')
         });
 
         await saveAndSyncData(localData);
