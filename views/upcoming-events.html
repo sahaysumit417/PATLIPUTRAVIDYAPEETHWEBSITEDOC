@@ -7,53 +7,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/c.css">
+    <style>
+        .events-container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 30px; }
+        .event-card { background: #131c2e; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; color: #fff; }
+        .event-card img { width: 100%; height: 200px; object-fit: cover; }
+        .event-card-body { padding: 20px; }
+        .event-card-body h3 { margin: 0 0 10px 0; color: #aeea00; font-size: 1.2rem; }
+        .event-meta { font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .event-desc { font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
-    <!-- 🎯 DYNAMIC HEADER INJECTION CONTAINER -->
-       <nav id="dynamic-header"></nav>
+    <nav id="dynamic-header"></nav>
 
-    <section class="page-banner" style="background: var(--primary-brand, #0a3d62); color: white; padding: 50px 20px; text-align: center;">
-        <h1>Upcoming Events</h1>
-        <p>Stay tuned for our upcoming school activities and announcements</p>
-    </section>
-
-    <section class="container" style="padding: 40px 20px; min-height: 400px;">
-        <div id="upcoming-events-list" class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-            <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading upcoming events...</p>
+    <div class="events-container">
+        <h2 style="font-size: 2rem; border-bottom: 3px solid #aeea00; display: inline-block; padding-bottom: 5px;">
+            📅 Upcoming Events & Programs
+        </h2>
+        
+        <div id="upcoming-events-grid" class="events-grid">
+            <p style="color:#94a3b8;">Loading upcoming events...</p>
         </div>
-    </section>
+    </div>
 
-    <!-- 🎯 DYNAMIC FOOTER INJECTION CONTAINER -->
     <footer id="dynamic-footer"></footer>
 
-    <!-- 🎯 MAIN JS ENGINE (Injects Header & Footer Automatically) -->
-  
+    <script src="/js/main.js"></script>
     <script>
-        fetch('/api/data')
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('upcoming-events-list');
-                const upcoming = (data.events || []).filter(e => e.type === 'upcoming' || e.isUpcoming === true);
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById("upcoming-events-grid");
+                    const events = data.upcomingEvents || [];
 
-                if (!upcoming || upcoming.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; grid-column: 1/-1; width:100%; padding:30px;"><h3 style="color:#0a3d62;">🎉 Abhi koi upcoming event scheduled nahi hai.</h3></div>';
-                    return;
-                }
+                    if (events.length === 0) {
+                        grid.innerHTML = "<p style='grid-column: 1/-1; color:#94a3b8;'>फिलहाल कोई आगामी कार्यक्रम तय नहीं है।</p>";
+                        return;
+                    }
 
-                container.innerHTML = upcoming.map(event => `
-                    <div class="gallery-card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff;">
-                        <img src="${event.coverImage || '/uploads/default-event.jpg'}" style="width:100%; height:200px; object-fit:cover;">
-                        <div style="padding:15px;">
-                            <h3 style="margin:0 0 10px 0; color:var(--primary-brand, #0a3d62);">${event.title}</h3>
-                            <p style="margin:0 0 10px 0; color:#555; font-size:0.9rem;">${event.description || ''}</p>
-                            <small style="color:#888;"><b>Date:</b> ${event.date || 'To be announced'}</small>
-                        </div>
-                    </div>
-                `).join('');
-            })
-            .catch(err => console.error("Upcoming events fetch error:", err));
+                    grid.innerHTML = "";
+                    [...events].reverse().forEach(ev => {
+                        grid.innerHTML += `
+                            <div class="event-card">
+                                ${ev.banner ? `<img src="${ev.banner}" alt="${ev.title}">` : ''}
+                                <div class="event-card-body">
+                                    <h3>${ev.title}</h3>
+                                    <div class="event-meta"><i class="fas fa-calendar-alt" style="color:#aeea00;"></i> ${ev.eventDate}</div>
+                                    <div class="event-meta"><i class="fas fa-map-marker-alt" style="color:#f59e0b;"></i> ${ev.venue}</div>
+                                    ${ev.description ? `<p class="event-desc">${ev.description}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(err => console.error("Error loading upcoming events:", err));
+        });
     </script>
-      <script src="/js/main.js"></script>
 </body>
 </html>

@@ -155,6 +155,10 @@ app.get(['/upcoming-events', '/upcoming-events.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'upcoming-events.html'));
 });
 
+app.get(['/achievements', '/achievements.html'], (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'views', 'achievements.html'));
+});
+
 app.get(['/recent-events', '/recent-events.html'], (req, res) => {
     res.sendFile(path.resolve(__dirname, 'views', 'recent-events.html'));
 });
@@ -264,46 +268,7 @@ app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPho
     }
 });
 
-// 📸 3. GALLERY ALBUMS UPLOAD (SAVED IN 'events' ARRAY FOR gallery.html)
-// app.post('/api/admin/upload-gallery', isAdminAuthenticated, upload.any(), async (req, res) => {
-//     try {
-//         const galleryId = req.body.galleryId || req.body.eventId;
-//         const albumTitle = req.body.albumTitle || req.body.eventTitle || "Gallery Album";
-//         const albumDescription = req.body.albumDescription || req.body.eventDescription || "";
-        
-//         const uploadedFiles = req.files ? req.files.map(f => f.path || f.secure_url || `/uploads/${f.filename}`) : [];
 
-//         let localData = await getLocalData();
-//         if (!localData.events) localData.events = [];
-
-//         if (galleryId) {
-//             let existingAlbum = localData.events.find(g => g.id === parseInt(galleryId));
-//             if (existingAlbum) {
-//                 existingAlbum.title = albumTitle.trim();
-//                 existingAlbum.description = albumDescription.trim();
-//                 if (uploadedFiles.length > 0) {
-//                     existingAlbum.images = existingAlbum.images.concat(uploadedFiles);
-//                     existingAlbum.coverImage = uploadedFiles[0];
-//                 }
-//             }
-//         } else {
-//             localData.events.push({
-//                 id: Date.now(),
-//                 title: albumTitle.trim(),
-//                 description: albumDescription.trim(),
-//                 coverImage: uploadedFiles.length > 0 ? uploadedFiles[0] : '/uploads/default-event.jpg',
-//                 images: uploadedFiles,
-//                 date: new Date().toLocaleDateString('en-GB')
-//             });
-//         }
-
-//         await saveAndSyncData(localData);
-//         res.send('<script>alert("Gallery Photo Album Uploaded Successfully!"); window.location.href="/admin";</script>');
-//     } catch (err) {
-//         console.error("Gallery Upload Error:", err);
-//         res.status(500).send("Failed to upload gallery album.");
-//     }
-// });
 // 📸 3. GALLERY ALBUMS UPLOAD
 app.post('/api/admin/upload-gallery', isAdminAuthenticated, upload.any(), async (req, res) => {
     try {
@@ -393,32 +358,7 @@ app.post('/api/admin/upload-document', isAdminAuthenticated, upload.single('docF
     }
 });
 
-// // 🗑️ DELETE API ENGINE
-// app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
-//     const { type, id } = req.params;
-//     let localData = await getLocalData();
-//     const itemId = parseInt(id);
 
-//     if (type === 'notice') {
-//         if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
-//     } else if (type === 'enquiry') {
-//         if (localData.enquiries) localData.enquiries = localData.enquiries.filter(e => e.id !== itemId);
-//     } else if (type === 'recentPost') {
-//         if (localData.recentPosts) localData.recentPosts = localData.recentPosts.filter(e => e.id !== itemId);
-//     } else if (type === 'gallery' || type === 'event' || type === 'events') {
-//         // गैलरी और इवेंट्स दोनों Arrays से डिलीट करें
-//         if (localData.events) localData.events = localData.events.filter(g => g.id !== itemId);
-//         if (localData.gallery) localData.gallery = localData.gallery.filter(g => g.id !== itemId);
-//     } else if (type === 'document') {
-//         if (localData.documents) localData.documents = localData.documents.filter(d => d.id !== itemId);
-//     } else {
-//         return res.status(400).json({ message: "Invalid type requested" });
-//     }
-
-//     await saveAndSyncData(localData);
-//     res.json({ success: true, message: `Successfully deleted ${type}!` });
-// });
-// 🗑️ DELETE API ENGINE (WITH CLOUDINARY CLEANUP)
 app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res) => {
     const { type, id } = req.params;
     let localData = await getLocalData();
@@ -496,7 +436,54 @@ async function deleteFromCloudinary(fileUrl) {
         console.error("❌ Cloudinary Delete Error:", err.message);
     }
 }
+// 📅 UPCOMING EVENTS UPLOAD ROUTE
+app.post('/api/admin/upload-upcoming-event', isAdminAuthenticated, upload.single('eventBanner'), async (req, res) => {
+    try {
+        const { eventTitle, eventDate, eventVenue, eventDescription } = req.body;
+        const bannerUrl = req.file ? (req.file.path || req.file.secure_url) : '';
 
+        let localData = await getLocalData();
+        if (!localData.upcomingEvents) localData.upcomingEvents = [];
+
+        localData.upcomingEvents.push({
+            id: Date.now(),
+            title: eventTitle.trim(),
+            eventDate: eventDate.trim(),
+            venue: eventVenue ? eventVenue.trim() : 'School Campus',
+            description: eventDescription ? eventDescription.trim() : '',
+            banner: bannerUrl
+        });
+
+        await saveAndSyncData(localData);
+        res.send('<script>alert("Upcoming Event Saved Successfully!"); window.location.href="/admin";</script>');
+    } catch (err) {
+        res.status(500).send("Error saving upcoming event.");
+    }
+});
+
+// 🏆 ACHIEVEMENTS UPLOAD ROUTE
+app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.single('achievementPhoto'), async (req, res) => {
+    try {
+        const { category, title, description } = req.body;
+        const photoUrl = req.file ? (req.file.path || req.file.secure_url) : '';
+
+        let localData = await getLocalData();
+        if (!localData.achievements) localData.achievements = [];
+
+        localData.achievements.push({
+            id: Date.now(),
+            category: category, // class-x, class-xii, or awards
+            title: title.trim(),
+            description: description ? description.trim() : '',
+            photo: photoUrl
+        });
+
+        await saveAndSyncData(localData);
+        res.send('<script>alert("Achievement Saved Successfully!"); window.location.href="/admin";</script>');
+    } catch (err) {
+        res.status(500).send("Error saving achievement.");
+    }
+});
 
 
 // SERVER LISTEN

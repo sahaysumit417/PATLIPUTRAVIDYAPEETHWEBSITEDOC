@@ -76,8 +76,7 @@ function loadWebsiteData() {
                          </h3>
                          </div>
                         <span class="classic-notice-date"><i class="far fa-clock"></i> ${item.date}</span>
-                        <div class="notice-descr-hidden" style="display: none;">${item.description}</div>
-    `;
+                        <div class="notice-descr-hidden" style="display: none;">${item.description}</div>`;
                         noticeList.appendChild(rowItem);
 
                         const cleanTitle = item.title.replace(/"/g, '&quot;');

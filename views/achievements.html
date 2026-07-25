@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Achievements | Patliputra Vidyapeeth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+    <style>
+        .achieve-container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
+        .section-block { margin-bottom: 50px; scroll-margin-top: 100px; }
+        .section-title { font-size: 1.6rem; color: #aeea00; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .achieve-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .achieve-card { background: #131c2e; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 15px; text-align: center; color: #fff; }
+        .achieve-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin: 0 auto 12px; border: 3px solid #aeea00; }
+        .achieve-card h4 { margin: 5px 0; font-size: 1.1rem; color: #f8fafc; }
+        .achieve-card p { font-size: 0.85rem; color: #94a3b8; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <nav id="dynamic-header"></nav>
+
+    <div class="achieve-container">
+        
+        <!-- CLASS X SECTION -->
+        <div id="class-x" class="section-block">
+            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Class X Board Results</h2>
+            <div id="grid-class-x" class="achieve-grid">Loading...</div>
+        </div>
+
+        <!-- CLASS XII SECTION -->
+        <div id="class-xii" class="section-block">
+            <h2 class="section-title"><i class="fas fa-user-graduate"></i> Class XII Board Results</h2>
+            <div id="grid-class-xii" class="achieve-grid">Loading...</div>
+        </div>
+
+        <!-- AWARDS SECTION -->
+        <div id="awards" class="section-block">
+            <h2 class="section-title"><i class="fas fa-trophy"></i> School Awards & Recognition</h2>
+            <div id="grid-awards" class="achieve-grid">Loading...</div>
+        </div>
+
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    const achievements = data.achievements || [];
+                    
+                    renderCategory('class-x', 'grid-class-x', achievements);
+                    renderCategory('class-xii', 'grid-class-xii', achievements);
+                    renderCategory('awards', 'grid-awards', achievements);
+                })
+                .catch(err => console.error("Error loading achievements:", err));
+        });
+
+        function renderCategory(catKey, gridId, allData) {
+            const grid = document.getElementById(gridId);
+            const filtered = allData.filter(item => item.category === catKey);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = "<p style='color:#94a3b8; grid-column: 1/-1;'>कोई रिकॉर्ड उपलब्ध नहीं है।</p>";
+                return;
+            }
+
+            grid.innerHTML = "";
+            filtered.forEach(item => {
+                grid.innerHTML += `
+                    <div class="achieve-card">
+                        ${item.photo ? `<img src="${item.photo}" alt="${item.title}">` : '<div style="height:20px;"></div>'}
+                        <h4>${item.title}</h4>
+                        ${item.description ? `<p>${item.description}</p>` : ''}
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

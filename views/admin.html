@@ -50,16 +50,8 @@
             gap: 12px;
         }
 
-        .navbar-brand i {
-            color: var(--accent-lime);
-            font-size: 1.4rem;
-        }
-
-        .navbar-brand h1 {
-            margin: 0;
-            font-size: 1.15rem;
-            font-weight: 600;
-        }
+        .navbar-brand i { color: var(--accent-lime); font-size: 1.4rem; }
+        .navbar-brand h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
 
         .btn-logout {
             background: rgba(239, 68, 68, 0.1);
@@ -75,35 +67,21 @@
             gap: 8px;
         }
 
-        .btn-logout:hover {
-            background: var(--danger);
-            color: white;
-        }
+        .btn-logout:hover { background: var(--danger); color: white; }
 
         .metrics-ribbon {
             background: rgba(19, 28, 46, 0.4);
             border-bottom: 1px solid var(--border-color);
             padding: 10px 30px;
             display: flex;
-            gap: 40px;
+            gap: 30px;
             align-items: center;
+            overflow-x: auto;
         }
 
-        .metric-mini-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-        }
-
-        .metric-mini-item span {
-            color: var(--text-muted);
-        }
-
-        .metric-mini-item strong {
-            font-size: 1rem;
-            font-weight: 700;
-        }
+        .metric-mini-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; white-space: nowrap; }
+        .metric-mini-item span { color: var(--text-muted); }
+        .metric-mini-item strong { font-size: 0.95rem; font-weight: 700; }
 
         .workspace-layout {
             display: grid;
@@ -117,51 +95,37 @@
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
+            overflow-y: auto;
         }
 
         .tool-nav-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
             text-align: left;
             transition: all 0.2s ease;
         }
 
-        .tool-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-main);
-        }
-
+        .tool-nav-btn:hover { background: rgba(255, 255, 255, 0.03); color: var(--text-main); }
         .tool-nav-btn.active {
             background: rgba(174, 234, 0, 0.08);
             color: var(--accent-lime);
             border: 1px solid rgba(174, 234, 0, 0.15);
         }
 
-        .interface-screen {
-            padding: 30px;
-            overflow-y: auto;
-            box-sizing: border-box;
-            background: var(--bg-main);
-        }
-
-        .tool-split-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 30px;
-            align-items: start;
-        }
+        .interface-screen { padding: 30px; overflow-y: auto; box-sizing: border-box; background: var(--bg-main); }
+        .tool-split-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; align-items: start; }
 
         .form-card {
             background: var(--bg-card);
@@ -170,8 +134,7 @@
             border: 1px solid var(--border-color);
         }
 
-        .form-card h2,
-        .list-panel-header h2 {
+        .form-card h2, .list-panel-header h2 {
             font-size: 1.05rem;
             font-weight: 600;
             color: var(--text-main);
@@ -181,17 +144,9 @@
             gap: 10px;
         }
 
-        label {
-            font-weight: 500;
-            color: var(--text-muted);
-            display: block;
-            margin-top: 15px;
-            font-size: 0.85rem;
-        }
+        label { font-weight: 500; color: var(--text-muted); display: block; margin-top: 15px; font-size: 0.85rem; }
 
-        input,
-        textarea,
-        select {
+        input, textarea, select {
             width: 100%;
             margin-top: 6px;
             padding: 12px 16px;
@@ -204,9 +159,7 @@
             font-size: 0.9rem;
         }
 
-        input:focus,
-        textarea:focus,
-        select:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: var(--accent-lime);
             outline: none;
         }
@@ -241,77 +194,22 @@
             gap: 15px;
         }
 
-        .data-meta strong {
-            display: block;
-            color: var(--text-main);
-            font-weight: 500;
-        }
+        .data-meta strong { display: block; color: var(--text-main); font-weight: 500; }
+        .data-meta small { color: var(--text-muted); display: block; margin-top: 4px; }
 
-        .data-meta small {
-            color: var(--text-muted);
-            display: block;
-            margin-top: 4px;
-        }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-top: 6px; }
+        .badge-enq { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .crud-actions { display: flex; gap: 6px; }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 6px;
-        }
+        .btn-crud { border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 500; border-radius: 4px; cursor: pointer; }
+        .btn-crud-edit { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+        .btn-crud-del { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
 
-        .badge-enq {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
+        .info-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+        .tab-panel { display: none; }
+        .tab-panel.active-panel { display: block; }
 
-        .crud-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-crud {
-            border: none;
-            padding: 6px 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-crud-edit {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--warning);
-        }
-
-        .btn-crud-del {
-            background: rgba(239, 68, 68, 0.12);
-            color: var(--danger);
-        }
-
-        .info-text {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active-panel {
-            display: block;
-        }
-
-        .event-thumb-group {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
+        .event-thumb-group { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
         .event-thumb-group img {
             width: 50px;
             height: 50px;
@@ -328,8 +226,7 @@
     <nav class="top-navbar">
         <div class="navbar-brand">
             <i class="fas fa-shield-halved"></i>
-            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span>
-            </h1>
+            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span></h1>
         </div>
         <a href="/admin/logout" class="btn-logout">
             <i class="fas fa-power-off"></i> Sign Out
@@ -347,12 +244,20 @@
             <span>Notices:</span> <strong id="cnt-notices" style="color:var(--success);">0</strong>
         </div>
         <div class="metric-mini-item">
-            <i class="fas fa-images" style="color:var(--warning);"></i>
-            <span>Gallery Albums:</span> <strong id="cnt-gallery" style="color:var(--warning);">0</strong>
+            <i class="fas fa-calendar-plus" style="color:var(--info);"></i>
+            <span>Upcoming Events:</span> <strong id="cnt-upcoming" style="color:var(--info);">0</strong>
         </div>
         <div class="metric-mini-item">
             <i class="fas fa-newspaper" style="color:var(--info);"></i>
             <span>Recent Posts:</span> <strong id="cnt-events" style="color:var(--info);">0</strong>
+        </div>
+        <div class="metric-mini-item">
+            <i class="fas fa-trophy" style="color:var(--accent-lime);"></i>
+            <span>Achievements:</span> <strong id="cnt-achievements" style="color:var(--accent-lime);">0</strong>
+        </div>
+        <div class="metric-mini-item">
+            <i class="fas fa-images" style="color:var(--warning);"></i>
+            <span>Gallery:</span> <strong id="cnt-gallery" style="color:var(--warning);">0</strong>
         </div>
     </div>
 
@@ -361,8 +266,7 @@
 
         <!-- 🛠️ LEFT MENU TOOLS -->
         <div class="sidebar-tools">
-            <div
-                style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 15px; margin-bottom: 10px;">
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
                 Control Panel Tools
             </div>
 
@@ -374,8 +278,18 @@
                 <i class="fas fa-pen-to-square"></i> Notice Board Manager
             </button>
 
+            <!-- 🎯 EVENTS MENU ITEMS -->
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-upcoming-events', this)">
+                <i class="fas fa-calendar-plus"></i> Upcoming Events
+            </button>
+
             <button class="tool-nav-btn" onclick="switchToolTab('tab-recent-events', this)">
-                <i class="fas fa-newspaper"></i> Recent Event Posts
+                <i class="fas fa-history"></i> Recent Events (Posts)
+            </button>
+
+            <!-- 🎯 ACHIEVEMENTS MENU ITEM -->
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-achievements', this)">
+                <i class="fas fa-trophy"></i> Achievements Manager
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-gallery', this)">
@@ -383,7 +297,7 @@
             </button>
 
             <button class="tool-nav-btn" onclick="switchToolTab('tab-documents', this)">
-                <i class="fas fa-file-pdf"></i> School Documents Manager
+                <i class="fas fa-file-pdf"></i> School Documents
             </button>
         </div>
 
@@ -393,8 +307,7 @@
             <!-- TOOL 1: ENQUIRIES -->
             <div id="tab-enquiries" class="tab-panel active-panel">
                 <div class="list-panel-header">
-                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs
-                    </h2>
+                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs</h2>
                 </div>
                 <div id="sidebar-enquiries" style="max-width: 850px;">Loading database records...</div>
             </div>
@@ -403,16 +316,14 @@
             <div id="tab-notices" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="notice-form-title"><i class="fas fa-bullhorn" style="color:var(--success);"></i>
-                            Dispatch Notice</h2>
+                        <h2 id="notice-form-title"><i class="fas fa-bullhorn" style="color:var(--success);"></i> Dispatch Notice</h2>
                         <form id="notice-form" action="/api/admin/upload-notice" method="POST">
                             <input type="hidden" id="notice-id" name="noticeId" value="">
                             <label>Notice Headline</label>
                             <input type="text" id="notice-title" name="title" required>
                             <label>Notice Content Body</label>
                             <textarea id="notice-desc" name="description" rows="5" required></textarea>
-                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i>
-                                Publish Notice</button>
+                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i> Publish Notice</button>
                         </form>
                     </div>
                     <div>
@@ -424,69 +335,131 @@
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 3: RECENT POSTS -->
+            <!-- 🎯 TOOL 3: UPCOMING EVENTS -->
+            <div id="tab-upcoming-events" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2><i class="fas fa-calendar-plus" style="color:var(--info);"></i> Add Upcoming Event</h2>
+                        <form id="upcoming-event-form" action="/api/admin/upload-upcoming-event" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" id="upcoming-event-id" name="eventId" value="">
+                            
+                            <label>Event Name / Title</label>
+                            <input type="text" id="upcoming-event-title" name="eventTitle" placeholder="e.g. Annual Sports Meet 2026" required>
+                            
+                            <label>Event Date & Time</label>
+                            <input type="text" id="upcoming-event-date" name="eventDate" placeholder="e.g. 15th August 2026, 09:00 AM" required>
+
+                            <label>Event Location / Venue</label>
+                            <input type="text" id="upcoming-event-venue" name="eventVenue" placeholder="e.g. Main School Ground" required>
+                            
+                            <label>Event Details / Description</label>
+                            <textarea id="upcoming-event-desc" name="eventDescription" rows="4" placeholder="Write details about upcoming event..."></textarea>
+                            
+                            <label>Banner Image (Optional)</label>
+                            <input type="file" name="eventBanner" accept="image/*" style="padding:8px;">
+
+                            <button type="submit" class="btn-prime" style="background: var(--info); color: white;">
+                                <i class="fas fa-calendar-check"></i> Save Upcoming Event
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-clock" style="color:var(--info);"></i> Scheduled Upcoming Events</h2>
+                        </div>
+                        <div id="sidebar-upcoming-events">Loading events...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🎯 TOOL 4: RECENT POSTS (EVENTS) -->
             <div id="tab-recent-events" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="recent-event-form-title"><i class="fas fa-newspaper" style="color:var(--info);"></i>
-                            Create Recent Post</h2>
-                        <form id="recent-event-form" action="/api/admin/upload-event" method="POST"
-                            enctype="multipart/form-data">
+                        <h2 id="recent-event-form-title"><i class="fas fa-newspaper" style="color:var(--info);"></i> Create Recent Post</h2>
+                        <form id="recent-event-form" action="/api/admin/upload-event" method="POST" enctype="multipart/form-data">
                             <input type="hidden" id="recent-event-id" name="eventId" value="">
 
                             <label>Post Title / Heading</label>
-                            <input type="text" id="recent-event-title" name="eventTitle"
-                                placeholder="e.g. Science Exhibition Highlights" required>
+                            <input type="text" id="recent-event-title" name="eventTitle" placeholder="e.g. Science Exhibition Highlights" required>
 
                             <label>Post Content / Message</label>
-                            <textarea id="recent-event-desc" name="eventDescription" rows="4"
-                                placeholder="Write message for this post..." required></textarea>
+                            <textarea id="recent-event-desc" name="eventDescription" rows="4" placeholder="Write message for this post..." required></textarea>
 
                             <label>Upload Photos (Max 2 Photos)</label>
-                            <input type="file" id="recent-event-photos" name="eventPhotos" accept="image/*" multiple
-                                style="padding:8px;" onchange="validateMaxTwoImages(this)">
+                            <input type="file" id="recent-event-photos" name="eventPhotos" accept="image/*" multiple style="padding:8px;" onchange="validateMaxTwoImages(this)">
                             <p class="info-text">💡 Ye posts sirf <b>/recent-events</b> page par dikhengi.</p>
 
-                            <button type="submit" id="recent-event-btn" class="btn-prime"
-                                style="background: var(--info); color: white;">
+                            <button type="submit" id="recent-event-btn" class="btn-prime" style="background: var(--info); color: white;">
                                 <i class="fas fa-paper-plane"></i> Publish Post
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-clock-rotate-left" style="color:var(--info);"></i> Active Recent Posts
-                            </h2>
+                            <h2><i class="fas fa-clock-rotate-left" style="color:var(--info);"></i> Active Recent Posts</h2>
                         </div>
                         <div id="sidebar-recent-events">Loading posts...</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 🎯 TOOL 4: GALLERY MANAGER -->
+            <!-- 🎯 TOOL 5: ACHIEVEMENTS MANAGER -->
+            <div id="tab-achievements" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2><i class="fas fa-trophy" style="color:var(--accent-lime);"></i> Add Achievement Record</h2>
+                        <form id="achievement-form" action="/api/admin/upload-achievement" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" id="achievement-id" name="achievementId" value="">
+
+                            <label>Achievement Category</label>
+                            <select id="achievement-category" name="category" required>
+                                <option value="class-x">Class X Result (#class-x)</option>
+                                <option value="class-xii">Class XII Result (#class-xii)</option>
+                                <option value="awards">School Awards (#awards)</option>
+                            </select>
+
+                            <label>Title / Student Name / Award Name</label>
+                            <input type="text" id="achievement-title" name="title" placeholder="e.g. Rahul Kumar (98%) / Best CBSE School Award" required>
+
+                            <label>Details / Highlights</label>
+                            <textarea id="achievement-desc" name="description" rows="3" placeholder="e.g. School Topper in Class 10 Science Stream or District Level Winner"></textarea>
+
+                            <label>Student Photo / Award Image</label>
+                            <input type="file" name="achievementPhoto" accept="image/*" style="padding:8px;">
+
+                            <button type="submit" class="btn-prime">
+                                <i class="fas fa-award"></i> Save Achievement
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-medal" style="color:var(--accent-lime);"></i> Published Achievements</h2>
+                        </div>
+                        <div id="sidebar-achievements">Loading records...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🎯 TOOL 6: GALLERY MANAGER -->
             <div id="tab-gallery" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="gallery-form-title"><i class="fas fa-images" style="color:var(--warning);"></i> Upload
-                            Gallery Album</h2>
+                        <h2 id="gallery-form-title"><i class="fas fa-images" style="color:var(--warning);"></i> Upload Gallery Album</h2>
 
-                        <form id="gallery-form" action="/api/admin/upload-gallery" method="POST"
-                            enctype="multipart/form-data">
+                        <form id="gallery-form" action="/api/admin/upload-gallery" method="POST" enctype="multipart/form-data">
                             <input type="hidden" id="gallery-id" name="galleryId" value="">
 
                             <label>Album Name / Title</label>
-                            <input type="text" id="gallery-title" name="albumTitle"
-                                placeholder="e.g. Annual Sports Day 2026" required>
+                            <input type="text" id="gallery-title" name="albumTitle" placeholder="e.g. Annual Sports Day 2026" required>
 
                             <label>Album Description</label>
-                            <textarea id="gallery-desc" name="albumDescription" rows="3"
-                                placeholder="Brief details about this photo album..."></textarea>
+                            <textarea id="gallery-desc" name="albumDescription" rows="3" placeholder="Brief details about this photo album..."></textarea>
 
                             <label>Upload Photos (Multiple Allowed)</label>
-                            <input type="file" id="gallery-photos" name="galleryPhotos" accept="image/*" multiple
-                                required style="padding:8px;">
-                            <p class="info-text">💡 Ye albums Hero Slider, Home Page aur <b>/gallery.html</b> sabhi
-                                jagah dikhenge.</p>
+                            <input type="file" id="gallery-photos" name="galleryPhotos" accept="image/*" multiple required style="padding:8px;">
+                            <p class="info-text">💡 Ye albums Hero Slider, Home Page aur <b>/gallery.html</b> sabhi jagah dikhenge.</p>
 
                             <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
                                 <i class="fas fa-cloud-arrow-up"></i> Upload Album To Gallery
@@ -495,21 +468,19 @@
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Gallery Albums
-                            </h2>
+                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Gallery Albums</h2>
                         </div>
                         <div id="sidebar-gallery">Loading gallery...</div>
                     </div>
                 </div>
             </div>
 
-            <!-- TOOL 5: DOCUMENTS -->
+            <!-- TOOL 7: DOCUMENTS -->
             <div id="tab-documents" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
                         <h2><i class="fas fa-file-shield" style="color:var(--warning);"></i> Document Upload</h2>
-                        <form id="document-form" action="/api/admin/upload-document" method="POST"
-                            enctype="multipart/form-data">
+                        <form id="document-form" action="/api/admin/upload-document" method="POST" enctype="multipart/form-data">
                             <label>Document Category</label>
                             <select id="doc-category" name="category" required>
                                 <option value="disclosure">CBSE Affiliation</option>
@@ -524,8 +495,7 @@
                             <input type="text" id="doc-title" name="title" required>
 
                             <label>Select PDF File</label>
-                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
-                                style="padding:8px;">
+                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required style="padding:8px;">
 
                             <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
                                 <i class="fas fa-upload"></i> Publish Document
@@ -547,6 +517,8 @@
     <script>
         let globalNotices = [];
         let globalRecentPosts = [];
+        let globalUpcomingEvents = [];
+        let globalAchievements = [];
         let globalGallery = [];
         let globalEnquiries = [];
         let globalDocuments = [];
@@ -572,29 +544,37 @@
         }
 
         document.addEventListener("DOMContentLoaded", fetchSidebarData);
-            function fetchSidebarData() {
-    fetch('/api/data')
-        .then(res => res.json())
-        .then(data => {
-            globalNotices = data.notices || [];
-            globalEnquiries = data.enquiries || [];
-            globalDocuments = data.documents || [];
-            globalRecentPosts = data.recentPosts || [];
-            
-            // events array ही gallery है
-            globalGallery = (data.events && data.events.length > 0) ? data.events : (data.gallery || []);
 
-            document.getElementById("cnt-enquiries").innerText = globalEnquiries.length;
-            document.getElementById("cnt-notices").innerText = globalNotices.length;
-            document.getElementById("cnt-gallery").innerText = globalGallery.length;
-            document.getElementById("cnt-events").innerText = globalRecentPosts.length;
+        function fetchSidebarData() {
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    globalNotices = data.notices || [];
+                    globalEnquiries = data.enquiries || [];
+                    globalDocuments = data.documents || [];
+                    globalRecentPosts = data.recentPosts || [];
+                    globalUpcomingEvents = data.upcomingEvents || [];
+                    globalAchievements = data.achievements || [];
+                    
+                    globalGallery = (data.events && data.events.length > 0) ? data.events : (data.gallery || []);
 
-            renderSidebar();
-        })
-        .catch(err => console.error("Error loading admin data:", err));}
+                    document.getElementById("cnt-enquiries").innerText = globalEnquiries.length;
+                    document.getElementById("cnt-notices").innerText = globalNotices.length;
+                    document.getElementById("cnt-upcoming").innerText = globalUpcomingEvents.length;
+                    document.getElementById("cnt-events").innerText = globalRecentPosts.length;
+                    document.getElementById("cnt-achievements").innerText = globalAchievements.length;
+                    document.getElementById("cnt-gallery").innerText = globalGallery.length;
+
+                    renderSidebar();
+                })
+                .catch(err => console.error("Error loading admin data:", err));
+        }
+
         function renderSidebar() {
             const noticeContainer = document.getElementById("sidebar-notices");
             const eventContainer = document.getElementById("sidebar-recent-events");
+            const upcomingContainer = document.getElementById("sidebar-upcoming-events");
+            const achievementContainer = document.getElementById("sidebar-achievements");
             const galleryContainer = document.getElementById("sidebar-gallery");
             const enquiryContainer = document.getElementById("sidebar-enquiries");
             const docContainer = document.getElementById("sidebar-documents");
@@ -640,7 +620,27 @@
                 });
             }
 
-            // 3. RECENT POSTS
+            // 3. UPCOMING EVENTS
+            if (globalUpcomingEvents.length === 0) {
+                upcomingContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No upcoming events found.</p>";
+            } else {
+                upcomingContainer.innerHTML = "";
+                [...globalUpcomingEvents].reverse().forEach(up => {
+                    upcomingContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--info);">
+                        <div class="data-meta">
+                            <strong>📅 ${up.title}</strong>
+                            <small><i class="fas fa-clock"></i> ${up.eventDate}</small>
+                            <small><i class="fas fa-location-dot"></i> ${up.venue || 'School Campus'}</small>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('upcomingEvent', ${up.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            // 4. RECENT POSTS
             if (globalRecentPosts.length === 0) {
                 eventContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No recent posts found.</p>";
             } else {
@@ -673,7 +673,27 @@
                 });
             }
 
-            // 4. GALLERY ALBUMS
+            // 5. ACHIEVEMENTS
+            if (globalAchievements.length === 0) {
+                achievementContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No achievements records found.</p>";
+            } else {
+                achievementContainer.innerHTML = "";
+                [...globalAchievements].reverse().forEach(ach => {
+                    achievementContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
+                        <div class="data-meta">
+                            <strong>🏆 ${ach.title}</strong>
+                            <span class="badge" style="background:rgba(174,234,0,0.1); color:var(--accent-lime);">${ach.category}</span>
+                            <small>${ach.description || ''}</small>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('achievement', ${ach.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            // 6. GALLERY ALBUMS
             if (globalGallery.length === 0) {
                 galleryContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No gallery albums found.</p>";
             } else {
@@ -705,7 +725,7 @@
                 });
             }
 
-            // 5. DOCUMENTS
+            // 7. DOCUMENTS
             if (globalDocuments.length === 0) {
                 docContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No documents found.</p>";
             } else {
@@ -737,7 +757,7 @@
                 const item = globalRecentPosts.find(e => e.id === id);
                 if (!item) return;
 
-                const btn = document.querySelectorAll('.tool-nav-btn')[2];
+                const btn = document.querySelectorAll('.tool-nav-btn')[3];
                 switchToolTab('tab-recent-events', btn);
 
                 document.getElementById("recent-event-id").value = item.id;
