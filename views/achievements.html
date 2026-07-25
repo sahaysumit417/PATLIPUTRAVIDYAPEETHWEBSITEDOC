@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academic Toppers & Wall of Fame | Patliputra Vidyapeeth</title>
     <!-- Browser Tab Icon (Favicon) -->
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" type="image/png" href="/images/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/c.css">
-    
+
     <!-- 🚀 CANVAS CONFETTI LIBRARY FOR CELEBRATION ANIMATION -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -28,10 +30,10 @@
             padding: 0;
         }
 
-        .achieve-container { 
-            max-width: 1250px; 
-            margin: 110px auto 50px; 
-            padding: 0 20px; 
+        .achieve-container {
+            max-width: 1250px;
+            margin: 110px auto 50px;
+            padding: 0 20px;
         }
 
         /* 🎯 HEADING TITLE */
@@ -89,7 +91,8 @@
             transition: all 0.25s ease;
         }
 
-        .tab-btn:hover, .tab-btn.active-tab {
+        .tab-btn:hover,
+        .tab-btn.active-tab {
             background: var(--dark-green);
             color: #ffffff;
         }
@@ -120,6 +123,7 @@
                 opacity: 0;
                 transform: translateY(12px);
             }
+
             100% {
                 opacity: 1;
                 transform: translateY(0);
@@ -245,7 +249,7 @@
             max-width: 240px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
             background: transparent;
         }
 
@@ -253,10 +257,12 @@
             .page-content-flex {
                 flex-direction: column;
             }
+
             .right-mascot-box {
                 width: 100%;
                 margin-top: 20px;
             }
+
             .right-mascot-box img {
                 max-width: 180px;
             }
@@ -267,19 +273,31 @@
                 grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
                 gap: 14px;
             }
+
             .clean-photo-frame {
                 height: 110px;
             }
         }
+
+        /* 👑 CLEAN MICRO PHOTO FRAME IMAGE ALIGNMENT FIX */
+        .clean-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            /* 👈 Face Alignment Fix: Chahe jaisi bhi image ho, face hamesha center me dikhega */
+            display: block;
+        }
     </style>
 </head>
+
 <body>
 
     <!-- 🎯 DYNAMIC HEADER -->
     <nav id="dynamic-header"></nav>
 
     <div class="achieve-container">
-        
+
         <!-- 🎯 PAGE TITLE HEADER -->
         <div class="simple-page-header">
             <h1>🎉 Academic Toppers & Wall of Fame</h1>
@@ -288,7 +306,7 @@
 
         <!-- 📐 FLEX WRAPPER FOR TOPPERS + CARTOON -->
         <div class="page-content-flex">
-            
+
             <!-- LEFT AREA: TABS & CARDS -->
             <div class="left-toppers-section">
                 <!-- 🎯 TAB NAV BUTTONS -->
@@ -306,13 +324,17 @@
 
                 <!-- 📸 YEARBOOK FRAME DISPLAY GRID -->
                 <div id="yearbook-grid-container" class="yearbook-grid">
-                    <p style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--dark-green); font-size: 0.85rem;">Loading academic toppers...</p>
+                    <p
+                        style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--dark-green); font-size: 0.85rem;">
+                        Loading academic toppers...</p>
                 </div>
             </div>
 
             <!-- RIGHT AREA: REAL TRANSPARENT 3D CHARACTER (INSIDE BODY CONTAINER) -->
             <div class="right-mascot-box">
-                <img src="https://cdni.iconscout.com/illustration/premium/thumb/graduated-student-holding-degree-certificate-illustration-download-in-svg-png-gif-file-formats--diploma-graduation-pack-school-education-illustrations-6490333.png?f=webp&h=700" alt="3D Graduate Mascot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4207/4207253.png';">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/graduated-student-holding-degree-certificate-illustration-download-in-svg-png-gif-file-formats--diploma-graduation-pack-school-education-illustrations-6490333.png?f=webp&h=700"
+                    alt="3D Graduate Mascot"
+                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/4207/4207253.png';">
             </div>
 
         </div>
@@ -325,7 +347,7 @@
     <!-- 🎯 SCRIPT ENGINE -->
     <script src="/js/main.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const urlParams = new URLSearchParams(window.location.search);
             const activeTab = urlParams.get('tab') || 'class-x';
 
@@ -336,7 +358,7 @@
                 .then(data => {
                     const allAchievements = data.achievements || [];
                     renderYearbookTemplateLayout(activeTab, allAchievements);
-                    
+
                     // 🚀 CELEBRATION CONFETTI ANIMATION
                     triggerCelebrationAnimation();
                 })
@@ -403,7 +425,7 @@
                 const studentImg = item.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(item.title) + '&background=064e3b&color=fff';
                 const percentageVal = item.subtitle || item.percentage || 'N/A';
                 const yearVal = item.description || item.year || '2026';
-                
+
                 const animationDelay = index * 0.05;
                 const classLabel = catKey === 'class-xii' ? 'Class XII' : 'Class X';
 
@@ -453,4 +475,5 @@
         }
     </script>
 </body>
+
 </html>
