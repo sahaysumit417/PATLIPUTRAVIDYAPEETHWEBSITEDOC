@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadWebsiteData();
-    initScrollCounter(); // Counter Animation Engine initialized
+    initScrollCounter();
+    fetchMarqueeTicker();
 });
 
 let allEventsData = [];
+
 // 🎬 HERO SECTION VIDEO + CLOUDINARY SLIDER ENGINE
 function renderHeroSliderImages(events) {
     const sliderContainer = document.getElementById("hero-image-slider");
@@ -40,54 +42,40 @@ function renderHeroSliderImages(events) {
         sliderContainer.style.backgroundImage = `url('${heroImages[currentIndex]}')`;
     }, 4000);
 }
+
 function loadWebsiteData() {
     const noticeList = document.getElementById("notice-list");
-    const marqueeElement = document.getElementById("dynamic-marquee-text");
     
     fetch('/api/data')
         .then(response => response.json())
         .then(data => {
             if (data.events && data.events.length > 0) {
-             renderHeroSliderImages(data.events); // 👈 Bas ye ek line call karni hai
+                renderHeroSliderImages(data.events);
             }
-            if (!data.notices || data.notices.length === 0) {
-                // If API response is empty, layout handles fallback elements defined in HTML
-            } else {
-                if (noticeList) {
-                    noticeList.innerHTML = ""; // Clear loader
-                    let marqueeHTML = "";
+            
+            if (noticeList && data.notices && data.notices.length > 0) {
+                noticeList.innerHTML = "";
 
-                    // Array reverse layout engine to list latest at top
-                    const orderedNotices = data.notices.reverse();
+                const orderedNotices = [...data.notices].reverse();
 
-                    orderedNotices.forEach((item, index) => {
-                        const rowItem = document.createElement("div");
-                        rowItem.className = "classic-notice-item";
-                        rowItem.setAttribute("onclick", "openNoticePopup(this)");
+                orderedNotices.forEach((item, index) => {
+                    const rowItem = document.createElement("div");
+                    rowItem.className = "classic-notice-item";
+                    rowItem.setAttribute("onclick", "openNoticePopup(this)");
 
-                        // Check index 0 for the most recent item to add Blinking New Badge
-                        const blinkBadgeHTML = (index === 0) ? `<span class="blink-new-badge">NEW</span>` : '';
+                    const blinkBadgeHTML = (index === 0) ? `<span class="blink-new-badge">NEW</span>` : '';
 
-                       rowItem.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 12px;">
+                    rowItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
                         <i class="fas fa-file-alt" style="color: var(--accent-lime); font-size: 1rem; opacity: 0.7;"></i>
                         <h3 style="margin: 0; color: var(--primary-brand); font-size: 0.95rem; font-weight: 600;">
-                         ${item.title} ${blinkBadgeHTML}
-                         </h3>
-                         </div>
-                        <span class="classic-notice-date"><i class="far fa-clock"></i> ${item.date}</span>
-                        <div class="notice-descr-hidden" style="display: none;">${item.description}</div>`;
-                        noticeList.appendChild(rowItem);
-
-                        const cleanTitle = item.title.replace(/"/g, '&quot;');
-                        const cleanDesc = item.description.replace(/"/g, '&quot;');
-                        marqueeHTML += `<span class="marquee-notice-item" style="margin-right: 50px; display:inline-block;"> 🌟 <b>${cleanTitle}:</b> ${cleanDesc} </span>`;
-                    });
-
-                    if (marqueeElement) {
-                        marqueeElement.innerHTML = marqueeHTML;
-                    }
-                }
+                            ${item.title} ${blinkBadgeHTML}
+                        </h3>
+                    </div>
+                    <span class="classic-notice-date"><i class="far fa-clock"></i> ${item.date}</span>
+                    <div class="notice-descr-hidden" style="display: none;">${item.description}</div>`;
+                    noticeList.appendChild(rowItem);
+                });
             }
 
             allEventsData = data.events || [];
@@ -105,8 +93,55 @@ function loadWebsiteData() {
         });
 }
 
+// 📜 ADVANCED COMBINED MARQUEE TICKER ENGINE
+function fetchMarqueeTicker() {
+    fetch('/api/data')
+        .then(res => res.json())
+        .then(data => {
+            const marqueeElement = document.getElementById("dynamic-marquee-text");
+            if (!marqueeElement) return;
+
+            let tickerItems = [];
+
+            // 1. Dedicated Admin Tickers
+            if (data.tickers && data.tickers.length > 0) {
+                [...data.tickers].reverse().forEach(t => {
+                    tickerItems.push(`🚩 <b>Update:</b> ${t.text}`);
+                });
+            }
+
+            // 2. Checked Achievements (Class 10th / 12th / Awards)
+            if (data.achievements && data.achievements.length > 0) {
+                data.achievements.filter(a => a.showInMarquee).forEach(a => {
+                    const catLabel = a.category === 'class-xii' ? 'Class XII' : (a.category === 'class-x' ? 'Class X' : 'Award');
+                    tickerItems.push(`🏆 <b>${catLabel} Topper:</b> ${a.title} Scored ${a.subtitle}`);
+                });
+            }
+
+            // 3. Checked Upcoming Events
+            if (data.upcomingEvents && data.upcomingEvents.length > 0) {
+                data.upcomingEvents.filter(u => u.showInMarquee).forEach(u => {
+                    tickerItems.push(`📅 <b>Upcoming Event:</b> ${u.title} on ${u.eventDate} (${u.venue})`);
+                });
+            }
+
+            // Render output
+            if (tickerItems.length > 0) {
+                marqueeElement.innerHTML = tickerItems.join(' &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ');
+            } else if (data.notices && data.notices.length > 0) {
+                // Fallback to Latest Notices if nothing selected
+                const noticeText = [...data.notices].reverse().map(n => `📢 <b>${n.title}:</b> ${n.description}`).join(' &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ');
+                marqueeElement.innerHTML = noticeText;
+            } else {
+                marqueeElement.innerHTML = "🎉 Welcome to Patliputra Vidyapeeth! Admissions Open for Session 2026-2027.";
+            }
+        })
+        .catch(err => {
+            console.error("Error fetching ticker data:", err);
+        });
+}
+
 function renderEventCards() {
-    // 🎯 Aapke index.html me ID 'gallery-grid' hai
     const galleryGrid = document.getElementById("gallery-grid");
     if (!galleryGrid) return;
 
@@ -117,7 +152,6 @@ function renderEventCards() {
 
     galleryGrid.innerHTML = "";
 
-    // 🎯 REVERSE (Latest Pehle) + SLICE(0, 4) (Sirf top 4 recent albums)
     const recent4Events = [...allEventsData].reverse().slice(0, 4);
 
     recent4Events.forEach(event => {
@@ -125,7 +159,6 @@ function renderEventCards() {
         const eventCard = document.createElement("div");
         eventCard.className = "gallery-card";
         
-        // 🎯 Wapas purana waala click function link kar diya jo Album kholta tha!
         eventCard.setAttribute("onclick", `openEventGallery(${event.id})`);
         
         eventCard.innerHTML = `
@@ -155,12 +188,14 @@ function openEventGallery(eventId) {
         </div>
     `;
 
-    selectedEvent.images.forEach(imgUrl => {
-        const imgCard = document.createElement("div");
-        imgCard.className = "gallery-card";
-        imgCard.innerHTML = `<img src="${imgUrl}" alt="Event Photo">`;
-        galleryGrid.appendChild(imgCard);
-    });
+    if (selectedEvent.images && Array.isArray(selectedEvent.images)) {
+        selectedEvent.images.forEach(imgUrl => {
+            const imgCard = document.createElement("div");
+            imgCard.className = "gallery-card";
+            imgCard.innerHTML = `<img src="${imgUrl}" alt="Event Photo">`;
+            galleryGrid.appendChild(imgCard);
+        });
+    }
 
     galleryGrid.scrollIntoView({ behavior: 'smooth' });
 }
@@ -197,14 +232,6 @@ function initScrollCounter() {
     counters.forEach(counter => observer.observe(counter));
 }
 
-const labImagesData = {
-    computer: { title: "💻 Computer Science Lab", images: ["/uploads/comp1.jpg", "/uploads/comp2.jpg", "/uploads/comp3.jpg"] },
-    chemistry: { title: "🧪 Chemistry Laboratory", images: ["/uploads/chem1.jpg", "/uploads/chem2.jpg"] },
-    physics: { title: "⚛️ Physics Laboratory", images: ["/uploads/phys1.jpg", "/uploads/phys2.jpg"] },
-    biology: { title: "🧬 Biology Laboratory", images: ["/uploads/bio1.jpg", "/uploads/bio2.jpg"] }
-};
-
-/* ─── 🧪 WORLD-CLASS FACILITIES CAROUSEL ENGINE ─── */
 let currentSlideIndex = 0;
 let totalSlidesCount = 0;
 
@@ -216,7 +243,6 @@ function openLabModal(facilityType) {
 
     if (!modal || !container) return;
 
-    // Reset State
     container.innerHTML = "";
     if (dotsContainer) dotsContainer.innerHTML = "";
     currentSlideIndex = 0;
@@ -224,32 +250,15 @@ function openLabModal(facilityType) {
     let titleText = "";
     let imagesArray = [];
 
-    // Static Data Mapping according to facilityType
     if (facilityType === 'computer') {
         titleText = "🖥️ High-Tech Computer Laboratory";
-        imagesArray = [
-            "/images/comp1.jpg", 
-            "/images/comp2.jpg", 
-            "/images/comp3.jpg"
-        ];
+        imagesArray = ["/images/comp1.jpg", "/images/comp2.jpg", "/images/comp3.jpg"];
     } else if (facilityType === 'science') {
         titleText = "🔬 Advanced Composite Science Lab";
-        // ✅ Ab aap isme 4 images dal sakte hain
-        imagesArray = [
-            "/images/sci1.jpg", 
-            "/images/sci2.jpg",
-            "/images/sci3.jpg",
-          
-        ];
+        imagesArray = ["/images/sci1.jpg", "/images/sci2.jpg", "/images/sci3.jpg"];
     } else if (facilityType === 'library') {
         titleText = "📚 Digital & Resource Rich Library";
-        // ✅ Ab aap isme bhi 4 images dal sakte hain
-        imagesArray = [
-            "/images/lib1.jpg", 
-            "/images/lib2.jpg",
-            "/images/lib3.jpg",
-            "/images/lib4.jpg"
-        ];
+        imagesArray = ["/images/lib1.jpg", "/images/lib2.jpg", "/images/lib3.jpg", "/images/lib4.jpg"];
     } else {
         titleText = "Facilities Gallery";
         imagesArray = ["/images/sports.jpg"];
@@ -258,14 +267,12 @@ function openLabModal(facilityType) {
     titleElement.innerText = titleText;
     totalSlidesCount = imagesArray.length;
 
-    // Inject Slides into the wrapper
     imagesArray.forEach((imgUrl, idx) => {
         const slideDiv = document.createElement("div");
         slideDiv.className = `lab-slide-item ${idx === 0 ? 'active' : ''}`;
         slideDiv.innerHTML = `<img src="${imgUrl}" alt="Slide ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800'">`;
         container.appendChild(slideDiv);
 
-        // Inject Dots
         if (dotsContainer) {
             const dot = document.createElement("span");
             dot.className = `slider-dot ${idx === 0 ? 'active' : ''}`;
@@ -274,7 +281,6 @@ function openLabModal(facilityType) {
         }
     });
 
-    // Display Modal smoothly
     modal.style.display = "flex";
 }
 
@@ -283,7 +289,6 @@ function closeLabModal() {
     if (modal) modal.style.display = "none";
 }
 
-// Slider Controls Logic
 function moveSlide(direction) {
     let newIndex = currentSlideIndex + direction;
     if (newIndex >= totalSlidesCount) newIndex = 0;
@@ -294,28 +299,17 @@ function moveSlide(direction) {
 function goToSlide(targetIndex) {
     currentSlideIndex = targetIndex;
     
-    // Update active slides classes
     const slides = document.querySelectorAll(".lab-slide-item");
     slides.forEach((slide, idx) => {
-        if (idx === currentSlideIndex) {
-            slide.classList.add("active");
-        } else {
-            slide.classList.remove("active");
-        }
+        slide.classList.toggle("active", idx === currentSlideIndex);
     });
 
-    // Update active dots classes
     const dots = document.querySelectorAll(".slider-dot");
     dots.forEach((dot, idx) => {
-        if (idx === currentSlideIndex) {
-            dot.classList.add("active");
-        } else {
-            dot.classList.remove("active");
-        }
+        dot.classList.toggle("active", idx === currentSlideIndex);
     });
 }
 
-// Close Modal when clicking outside the box
 window.addEventListener("click", function(event) {
     const modal = document.getElementById("lab-modal");
     if (event.target === modal) {
@@ -323,20 +317,14 @@ window.addEventListener("click", function(event) {
     }
 });
 
-
-//
-window.onclick = function (event) {
-    const modal = document.getElementById("lab-modal");
-    if (event.target === modal) closeLabModal();
-};
-
-function openEnquiryModal() {
+window.openEnquiryModal = function() {
     const modal = document.getElementById("enquiry-modal");
-    if (modal) { modal.style.display = "flex"; document.body.style.overflow = "hidden"; }
+    if (modal) modal.style.display = "flex";
 }
-function closeEnquiryModal() {
+
+window.closeEnquiryModal = function() {
     const modal = document.getElementById("enquiry-modal");
-    if (modal) { modal.style.display = "none"; document.body.style.overflow = "auto"; }
+    if (modal) modal.style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -406,13 +394,12 @@ function startHeroDynamicLoop(events) {
         }
     }, 6000);
 }
-/* ─── 📱 MASTER-SYNCED MOBILE NAVIGATION & DROPDOWN ENGINE ─── */
+
 function initializeMobileNav() {
     const hamburger = document.getElementById('mobile-toggle-btn');
     const navLinks = document.querySelector('.header-menu-navigation'); 
     const dropdownToggles = document.querySelectorAll('.dropdown-toggle-link');
 
-    // A. मोबाइल हैमबर्गर मेनू ओपन/क्लोज लॉजिक + डायरेक्ट जावास्क्रिप्ट कलर चेंज लॉजिक
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -422,20 +409,17 @@ function initializeMobileNav() {
             
             const icon = hamburger.querySelector("i");
             if (icon) {
-                // 🚀 JS LOGIC: अगर मेनू खुल गया है, तो आइकॉन क्रॉस (X) करो और कलर सफेद (#fff) कर दो!
                 if (navLinks.classList.contains("nav-active") || navLinks.classList.contains("active")) {
                     icon.className = 'fas fa-times'; 
-                    hamburger.style.setProperty('color', '#ffffff', 'important'); // 🎯 बटन का कलर सफेद हो जाएगा
+                    hamburger.style.setProperty('color', '#ffffff', 'important');
                 } else {
-                    // अगर मेनू बंद हो रहा है, तो वापस ग्रीन कर दो
                     icon.className = 'fas fa-bars';  
-                    hamburger.style.setProperty('color', 'var(--primary-brand)', 'important'); // 🎯 वापस ग्रीन हो जाएगा
+                    hamburger.style.setProperty('color', 'var(--primary-brand)', 'important');
                 }
             }
         });
     }
 
-    // B. मोबाइल एकॉर्डियन सब-मेनू लॉजिक
     if (dropdownToggles) {
         dropdownToggles.forEach(toggle => {
             toggle.addEventListener("click", (e) => {
@@ -459,10 +443,8 @@ function initializeMobileNav() {
         });
     }
 
-    // C. मेनू के बाहर कहीं भी क्लिक करने पर ऑटो-क्लोज लॉजिक + कलर रीसेट
     document.addEventListener("click", (e) => {
         if (navLinks && (navLinks.classList.contains("nav-active") || navLinks.classList.contains("active"))) {
-            
             if (e.target.classList.contains('dropdown-toggle-link') || e.target.closest('.dropdown-toggle-link')) {
                 return;
             }
@@ -478,14 +460,13 @@ function initializeMobileNav() {
                 const icon = hamburger.querySelector("i");
                 if (icon) {
                     icon.className = 'fas fa-bars';
-                    // 🚀 JS LOGIC: बाहर क्लिक होकर बंद होने पर भी कलर वापस ग्रीन रीसेट करें
                     hamburger.style.setProperty('color', 'var(--primary-brand)', 'important');
                 }
             }
         }
     });
 }
-/* ─── 🏢 MNC STYLE POPUP WINDOW INTERACTION LOGIC ─── */
+
 function openNoticePopup(cardElement) {
     const dateText = cardElement.querySelector('.classic-notice-date').innerHTML;
     const titleText = cardElement.querySelector('h3').childNodes[0].textContent.trim();
@@ -495,7 +476,6 @@ function openNoticePopup(cardElement) {
     document.getElementById('popup-title').innerText = titleText;
     document.getElementById('popup-body').innerHTML = bodyText;
 
-    // Popup Overlay display block
     document.getElementById('notice-popup').style.display = 'flex';
 }
 
@@ -504,33 +484,16 @@ function closeNoticePopup() {
 }
 
 function closeNoticePopupOutside(event) {
-    // Agar user popup box ke bahr click karta h toh modal auto-close ho jayega
     if (event.target === document.getElementById('notice-popup')) {
         closeNoticePopup();
     }
 }
-// ==========================================
-// 📩 ENQUIRY MODAL LOGIC (Global Functions)
-// ==========================================
-window.openEnquiryModal = function() {
-    const modal = document.getElementById("enquiry-modal");
-    if (modal) modal.style.display = "flex";
-}
-
-window.closeEnquiryModal = function() {
-    const modal = document.getElementById("enquiry-modal");
-    if (modal) modal.style.setProperty('display', 'none');
-}
-
 
 function openDocModal(category) {
-    // 🎯 लाइव डेटाबेस से लिंक्स फेच करना
     fetch('/api/data')
         .then(res => res.json())
         .then(data => {
             const docs = data.documents || [];
-            
-            // चुनी हुई कैटेगरी (cbse, mandatory, calendar आदि) की फाइलें फ़िल्टर करें
             const filteredDocs = docs.filter(d => d.category === category);
 
             if (filteredDocs.length === 0) {
@@ -538,10 +501,7 @@ function openDocModal(category) {
                 return;
             }
 
-            // 🎯 सबसे लास्ट (가장 नवीनतम) अपलोड की गई PDF फाइल को निकालें
             const latestDoc = filteredDocs[filteredDocs.length - 1];
-
-            // 🎯 फाइल को सीधे स्क्रीन पर नए टैब में ओपन करें!
             window.open(latestDoc.fileUrl, '_blank');
         })
         .catch(err => {
@@ -549,6 +509,7 @@ function openDocModal(category) {
             alert("डेटाबेस से फाइल लोड करने में समस्या आ रही है!");
         });
 }
+
 function closeDocModal() {
     document.getElementById('doc-list-modal').style.display = 'none';
 }
@@ -568,9 +529,8 @@ function loadCampusInfrastructure() {
     }
 }
 
-// Surakshit tarika: Agar DOM taiyar hai toh turant chalao, nahi toh wait karo
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", loadCampusInfrastructure);
 } else {
-    loadCampusInfrastructure(); // DOM pehle se loaded hai, seedhe function chalao
+    loadCampusInfrastructure();
 }

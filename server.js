@@ -73,7 +73,7 @@ const upload = multer({ storage: storageStrategy });
 async function getLocalData() {
     const binId = process.env.JSONBIN_BIN_ID;
     const apiKey = process.env.JSONBIN_KEY;
-    let baseData = { notices: [], events: [], gallery: [], enquiries: [], documents: [], recentPosts: [] };
+    let baseData = { notices: [], events: [], gallery: [], enquiries: [], documents: [], recentPosts: [], tickers: [], upcomingEvents: [], achievements: [] };
 
     if (binId && apiKey) {
         try {
@@ -177,6 +177,9 @@ app.get('/api/data', async (req, res) => {
     if (!data.enquiries) data.enquiries = [];
     if (!data.documents) data.documents = [];
     if (!data.recentPosts) data.recentPosts = [];
+    if (!data.tickers) data.tickers = [];
+    if (!data.upcomingEvents) data.upcomingEvents = [];
+    if (!data.achievements) data.achievements = [];
     res.json(data);
 });
 
@@ -206,6 +209,64 @@ app.post('/api/admin/login', (req, res) => {
     }
 });
 
+// 📜 0. UPLOAD / SAVE MARQUEE TICKER
+app.post('/api/admin/upload-ticker', isAdminAuthenticated, async (req, res) => {
+    try {
+        const { tickerId, tickerText, text } = req.body;
+        const actualText = (tickerText || text || '').trim();
+
+        if (!actualText) {
+            return res.send('<script>alert("Ticker text cannot be empty!"); window.location.href="/admin";</script>');
+        }
+
+        let localData = await getLocalData();
+        if (!localData.tickers) localData.tickers = [];
+
+        if (tickerId) {
+            let existingTicker = localData.tickers.find(t => t.id === parseInt(tickerId));
+            if (existingTicker) {
+                existingTicker.text = actualText;
+                existingTicker.date = new Date().toLocaleDateString('en-GB') + ' (Updated)';
+            }
+        } else {
+            localData.tickers.push({
+                id: Date.now(),
+                text: actualText,
+                date: new Date().toLocaleDateString('en-GB')
+            });
+        }
+
+        await saveAndSyncData(localData);
+        res.send('<script>alert("Marquee Ticker Saved Successfully!"); window.location.href="/admin";</script>');
+    } catch (err) {
+        console.error("Ticker Upload Error:", err);
+        res.status(500).send("Failed to save ticker.");
+    }
+});
+
+// 🚩 REAL-TIME TOGGLE MARQUEE STATUS API
+app.post('/api/admin/toggle-marquee', isAdminAuthenticated, async (req, res) => {
+    try {
+        const { type, id, showInMarquee } = req.body;
+        let localData = await getLocalData();
+        const itemId = parseInt(id);
+
+        if (type === 'achievements' && localData.achievements) {
+            let item = localData.achievements.find(a => a.id === itemId);
+            if (item) item.showInMarquee = Boolean(showInMarquee);
+        } else if (type === 'upcomingEvents' && localData.upcomingEvents) {
+            let item = localData.upcomingEvents.find(u => u.id === itemId);
+            if (item) item.showInMarquee = Boolean(showInMarquee);
+        }
+
+        await saveAndSyncData(localData);
+        res.json({ success: true, message: "Marquee status updated successfully" });
+    } catch (err) {
+        console.error("Toggle Marquee Error:", err);
+        res.status(500).json({ success: false, message: "Error updating marquee status" });
+    }
+});
+
 // 📌 1. UPLOAD / SAVE NOTICE
 app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     const { noticeId, title, description } = req.body;
@@ -232,7 +293,7 @@ app.post('/api/admin/upload-notice', isAdminAuthenticated, async (req, res) => {
     res.send('<script>alert("Notice Saved Successfully!"); window.location.href="/admin";</script>');
 });
 
-// 📰 2. RECENT EVENT POSTS (SIRF RECENT EVENTS PAGE KE LIYE)
+// 📰 2. RECENT EVENT POSTS
 app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPhotos', 2), async (req, res) => {
     try {
         const { eventId, eventTitle, eventDescription } = req.body;
@@ -267,7 +328,6 @@ app.post('/api/admin/upload-event', isAdminAuthenticated, upload.array('eventPho
         res.status(500).send("Failed to save recent post.");
     }
 });
-
 
 // 📸 3. GALLERY ALBUMS UPLOAD
 app.post('/api/admin/upload-gallery', isAdminAuthenticated, upload.any(), async (req, res) => {
@@ -363,7 +423,10 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
     let localData = await getLocalData();
     const itemId = parseInt(id);
 
-    if (type === 'notice') {
+    if (type === 'ticker') {
+        if (localData.tickers) localData.tickers = localData.tickers.filter(t => t.id !== itemId);
+
+    } else if (type === 'notice') {
         if (localData.notices) localData.notices = localData.notices.filter(n => n.id !== itemId);
     
     } else if (type === 'enquiry') {
@@ -399,7 +462,6 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
             localData.documents = localData.documents.filter(d => d.id !== itemId);
         }
 
-    // 🏆 Achievements Deletion (Fix)
     } else if (type === 'achievement') {
         if (localData.achievements) {
             const ach = localData.achievements.find(a => a.id === itemId);
@@ -409,7 +471,6 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
             localData.achievements = localData.achievements.filter(a => a.id !== itemId);
         }
 
-    // 📅 Upcoming Events Deletion (Fix)
     } else if (type === 'upcomingEvent') {
         if (localData.upcomingEvents) {
             const upEvent = localData.upcomingEvents.find(u => u.id === itemId);
@@ -427,23 +488,17 @@ app.delete('/api/admin/delete/:type/:id', isAdminAuthenticated, async (req, res)
     res.json({ success: true, message: `Successfully deleted ${type} and cleaned storage!` });
 });
 
-// 🗑️ Helper: Cloudinary से फ़ाइल डिलीट करने का फ़ंक्शन
+// 🗑️ Helper: Cloudinary Cleanup
 async function deleteFromCloudinary(fileUrl) {
     if (!fileUrl || !fileUrl.includes('cloudinary.com')) return;
 
     try {
-        // Cloudinary URL से Public ID निकालना
-        // Example URL: https://res.cloudinary.com/demo/image/upload/v1234567/folder/sample.jpg
         const parts = fileUrl.split('/');
         const uploadIndex = parts.indexOf('upload');
-        
         if (uploadIndex === -1) return;
 
-        // Version (v123456) को छोड़कर पब्लिक आईडी और फ़ाइल एक्सटेंशन निकालना
-        const publicIdWithExt = parts.slice(uploadIndex + 2).join('/'); // "folder/sample.jpg"
-        const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.')); // "folder/sample"
-        
-        // अगर PDF है तो resource_type 'raw' या 'image' हो सकता है
+        const publicIdWithExt = parts.slice(uploadIndex + 2).join('/');
+        const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
         const isPdf = fileUrl.endsWith('.pdf');
         const resourceType = isPdf ? 'raw' : 'image';
 
@@ -453,10 +508,11 @@ async function deleteFromCloudinary(fileUrl) {
         console.error("❌ Cloudinary Delete Error:", err.message);
     }
 }
+
 // 📅 UPCOMING EVENTS UPLOAD ROUTE
 app.post('/api/admin/upload-upcoming-event', isAdminAuthenticated, upload.single('eventBanner'), async (req, res) => {
     try {
-        const { eventTitle, eventDate, eventVenue, eventDescription } = req.body;
+        const { eventTitle, eventDate, eventVenue, eventDescription, showInMarquee } = req.body;
         const bannerUrl = req.file ? (req.file.path || req.file.secure_url) : '';
 
         let localData = await getLocalData();
@@ -468,7 +524,8 @@ app.post('/api/admin/upload-upcoming-event', isAdminAuthenticated, upload.single
             eventDate: eventDate.trim(),
             venue: eventVenue ? eventVenue.trim() : 'School Campus',
             description: eventDescription ? eventDescription.trim() : '',
-            banner: bannerUrl
+            banner: bannerUrl,
+            showInMarquee: Boolean(showInMarquee)
         });
 
         await saveAndSyncData(localData);
@@ -478,12 +535,10 @@ app.post('/api/admin/upload-upcoming-event', isAdminAuthenticated, upload.single
     }
 });
 
-// 🏆 ACHIEVEMENTS UPLOAD ROUTE
-// 🏆 MULTIPLE ACHIEVEMENTS UPLOAD ROUTE (Multer Error Fix)
+// 🏆 ACHIEVEMENTS UPLOAD ROUTE (WITH CHECKBOX SUPPORT)
 app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), async (req, res) => {
     try {
-        const { category, titles, subtitles, descriptions } = req.body;
-        // req.files me saari uploaded photos mil jayengi
+        const { category, titles, subtitles, descriptions, showInMarquee } = req.body;
         const uploadedFiles = req.files || [];
 
         let localData = await getLocalData();
@@ -493,6 +548,7 @@ app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), as
             titles.forEach((title, index) => {
                 const photoFile = uploadedFiles[index];
                 const photoPath = photoFile ? (photoFile.path || photoFile.secure_url || `/uploads/${photoFile.filename}`) : '';
+                const marqueeCheck = Array.isArray(showInMarquee) ? Boolean(showInMarquee[index]) : Boolean(showInMarquee);
 
                 localData.achievements.push({
                     id: Date.now() + index,
@@ -500,7 +556,8 @@ app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), as
                     title: title.trim(),
                     subtitle: subtitles && subtitles[index] ? subtitles[index].trim() : '',
                     description: descriptions && descriptions[index] ? descriptions[index].trim() : '',
-                    photo: photoPath
+                    photo: photoPath,
+                    showInMarquee: marqueeCheck
                 });
             });
         } else if (titles) {
@@ -513,7 +570,8 @@ app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), as
                 title: titles.trim(),
                 subtitle: subtitles ? subtitles.trim() : '',
                 description: descriptions ? descriptions.trim() : '',
-                photo: photoPath
+                photo: photoPath,
+                showInMarquee: Boolean(showInMarquee)
             });
         }
 
@@ -524,29 +582,6 @@ app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.any(), as
         res.status(500).send("Server Error processing achievements");
     }
 });
-// app.post('/api/admin/upload-achievement', isAdminAuthenticated, upload.single('achievementPhoto'), async (req, res) => {
-//     try {
-//         const { category, title, description } = req.body;
-//         const photoUrl = req.file ? (req.file.path || req.file.secure_url) : '';
-
-//         let localData = await getLocalData();
-//         if (!localData.achievements) localData.achievements = [];
-
-//         localData.achievements.push({
-//             id: Date.now(),
-//             category: category, // class-x, class-xii, or awards
-//             title: title.trim(),
-//             description: description ? description.trim() : '',
-//             photo: photoUrl
-//         });
-
-//         await saveAndSyncData(localData);
-//         res.send('<script>alert("Achievement Saved Successfully!"); window.location.href="/admin";</script>');
-//     } catch (err) {
-//         res.status(500).send("Error saving achievement.");
-//     }
-// });
-
 
 // SERVER LISTEN
 app.listen(PORT, () => {

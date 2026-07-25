@@ -181,7 +181,6 @@
             width: 100%;
         }
 
-        /* ➕ DYNAMIC ROW CONTAINER STYLES FOR ACHIEVEMENTS */
         .dynamic-entry-row {
             background: rgba(9, 13, 22, 0.6);
             border: 1px solid var(--border-color);
@@ -289,6 +288,10 @@
 
     <div class="metrics-ribbon">
         <div class="metric-mini-item">
+            <i class="fas fa-scroll" style="color:var(--accent-lime);"></i>
+            <span>Ticker Items:</span> <strong id="cnt-ticker" style="color:var(--accent-lime);">0</strong>
+        </div>
+        <div class="metric-mini-item">
             <i class="fas fa-envelope-open-text" style="color:var(--warning);"></i>
             <span>Enquiries:</span> <strong id="cnt-enquiries" style="color:var(--warning);">0</strong>
         </div>
@@ -321,7 +324,11 @@
                 Control Panel Tools
             </div>
 
-            <button class="tool-nav-btn active" onclick="switchToolTab('tab-enquiries', this)">
+            <button class="tool-nav-btn active" onclick="switchToolTab('tab-ticker', this)">
+                <i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Marquee Ticker Manager
+            </button>
+
+            <button class="tool-nav-btn" onclick="switchToolTab('tab-enquiries', this)">
                 <i class="fas fa-inbox"></i> Admission Enquiries
             </button>
 
@@ -352,7 +359,33 @@
 
         <div class="interface-screen">
 
-            <div id="tab-enquiries" class="tab-panel active-panel">
+            <div id="tab-ticker" class="tab-panel active-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2 id="ticker-form-title"><i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Add / Update Marquee Ticker</h2>
+                        <form id="ticker-form" action="/api/admin/upload-ticker" method="POST">
+                            <input type="hidden" id="ticker-id" name="tickerId" value="">
+                            
+                            <label>Ticker Announcement Text</label>
+                            <textarea id="ticker-text" name="tickerText" rows="4" placeholder="e.g. 🎉 Admissions Open for Session 2026-2027 | Class X Board Results 100% Passed!" required></textarea>
+                            
+                            <p class="info-text">💡 Ye text Home Page (`index.html`) ke top scrolling marquee bar par LIVE chalega.</p>
+
+                            <button type="submit" id="ticker-btn" class="btn-prime" style="background: var(--accent-lime); color: var(--bg-main);">
+                                <i class="fas fa-paper-plane"></i> Publish To Marquee Ticker
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-bullhorn" style="color:var(--accent-lime);"></i> Active Ticker Announcements</h2>
+                        </div>
+                        <div id="sidebar-ticker">Loading ticker records...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-enquiries" class="tab-panel">
                 <div class="list-panel-header">
                     <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs</h2>
                 </div>
@@ -402,6 +435,14 @@
                             
                             <label>Banner Image (Optional)</label>
                             <input type="file" name="eventBanner" accept="image/*" style="padding:8px;">
+
+                            <!-- 🚩 SHOW IN MARQUEE CHECKBOX FOR UPCOMING EVENTS FORM -->
+                            <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="showInMarquee" value="true" id="upcoming-marquee-check" style="width: auto; margin: 0;">
+                                <label for="upcoming-marquee-check" style="margin: 0; font-size: 0.82rem; color: var(--accent-lime); cursor: pointer;">
+                                    🚩 Display on Home Page Marquee Ticker
+                                </label>
+                            </div>
 
                             <button type="submit" class="btn-prime" style="background: var(--info); color: white;">
                                 <i class="fas fa-calendar-check"></i> Save Upcoming Event
@@ -461,8 +502,7 @@
                                 <option value="awards">School Awards & Recognitions</option>
                             </select>
 
-                            <div id="achieve-entries-list">
-                                </div>
+                            <div id="achieve-entries-list"></div>
 
                             <button type="button" class="btn-add-more" onclick="addNewAchievementRow()">
                                 <i class="fas fa-plus-circle" style="font-size:1.1rem;"></i> Add More Student / Award Item
@@ -553,6 +593,7 @@
     </div>
 
     <script>
+        let globalTickers = [];
         let globalNotices = [];
         let globalRecentPosts = [];
         let globalUpcomingEvents = [];
@@ -583,10 +624,9 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             fetchSidebarData();
-            addNewAchievementRow(); // Add 1st student row by default
+            addNewAchievementRow();
         });
 
-        // 🎯 DYNAMIC ROW GENERATOR FOR MULTIPLE STUDENTS / AWARDS
         let achievementRowCount = 0;
         function addNewAchievementRow() {
             achievementRowCount++;
@@ -626,6 +666,14 @@
                         <input type="file" name="photos[]" accept="image/*" style="padding:8px;">
                     </div>
                 </div>
+
+                <!-- 🚩 SHOW IN MARQUEE CHECKBOX FOR ACHIEVEMENTS FORM ROW -->
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" name="showInMarquee[]" value="true" id="achieve-marquee-${achievementRowCount}" style="width: auto; margin: 0;">
+                    <label for="achieve-marquee-${achievementRowCount}" style="margin: 0; font-size: 0.8rem; color: var(--accent-lime); cursor: pointer;">
+                        🚩 Display on Home Page Marquee Ticker
+                    </label>
+                </div>
             `;
 
             container.appendChild(row);
@@ -647,15 +695,16 @@
             fetch('/api/data')
                 .then(res => res.json())
                 .then(data => {
+                    globalTickers = data.tickers || [];
                     globalNotices = data.notices || [];
                     globalEnquiries = data.enquiries || [];
                     globalDocuments = data.documents || [];
                     globalRecentPosts = data.recentPosts || [];
                     globalUpcomingEvents = data.upcomingEvents || [];
                     globalAchievements = data.achievements || [];
-                    
                     globalGallery = (data.events && data.events.length > 0) ? data.events : (data.gallery || []);
 
+                    document.getElementById("cnt-ticker").innerText = globalTickers.length;
                     document.getElementById("cnt-enquiries").innerText = globalEnquiries.length;
                     document.getElementById("cnt-notices").innerText = globalNotices.length;
                     document.getElementById("cnt-upcoming").innerText = globalUpcomingEvents.length;
@@ -668,7 +717,24 @@
                 .catch(err => console.error("Error loading admin data:", err));
         }
 
+        // 🚩 REAL-TIME TOGGLE MARQUEE FUNCTION
+        function toggleMarqueeFeature(type, id, isChecked) {
+            fetch('/api/admin/toggle-marquee', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, id, showInMarquee: isChecked })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if (resData.success) {
+                    console.log("Marquee status updated!");
+                }
+            })
+            .catch(err => alert("Failed to update marquee status"));
+        }
+
         function renderSidebar() {
+            const tickerContainer = document.getElementById("sidebar-ticker");
             const noticeContainer = document.getElementById("sidebar-notices");
             const eventContainer = document.getElementById("sidebar-recent-events");
             const upcomingContainer = document.getElementById("sidebar-upcoming-events");
@@ -676,6 +742,26 @@
             const galleryContainer = document.getElementById("sidebar-gallery");
             const enquiryContainer = document.getElementById("sidebar-enquiries");
             const docContainer = document.getElementById("sidebar-documents");
+
+            // 0. TICKERS
+            if (globalTickers.length === 0) {
+                tickerContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No marquee ticker records found.</p>";
+            } else {
+                tickerContainer.innerHTML = "";
+                [...globalTickers].reverse().forEach(t => {
+                    tickerContainer.innerHTML += `
+                    <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
+                        <div class="data-meta">
+                            <strong>📢 ${t.text}</strong>
+                            <small>Date: ${t.date || 'Recent'}</small>
+                        </div>
+                        <div class="crud-actions">
+                            <button class="btn-crud btn-crud-edit" onclick="setupEdit('ticker', ${t.id})"><i class="fas fa-pen"></i></button>
+                            <button class="btn-crud btn-crud-del" onclick="deleteItem('ticker', ${t.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            }
 
             // 1. ENQUIRIES
             if (globalEnquiries.length === 0) {
@@ -718,18 +804,23 @@
                 });
             }
 
-            // 3. UPCOMING EVENTS (ORIGINAL PRESERVED)
+            // 3. UPCOMING EVENTS (WITH MARQUEE CHECKBOX)
             if (globalUpcomingEvents.length === 0) {
                 upcomingContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No upcoming events found.</p>";
             } else {
                 upcomingContainer.innerHTML = "";
                 [...globalUpcomingEvents].reverse().forEach(up => {
+                    const isChecked = up.showInMarquee ? 'checked' : '';
                     upcomingContainer.innerHTML += `
                     <div class="data-card" style="border-left: 3px solid var(--info);">
                         <div class="data-meta">
                             <strong>📅 ${up.title}</strong>
                             <small><i class="fas fa-clock"></i> ${up.eventDate || up.date || ''}</small>
                             <small><i class="fas fa-location-dot"></i> ${up.venue || 'School Campus'}</small>
+                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--accent-lime); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" ${isChecked} onchange="toggleMarqueeFeature('upcomingEvents', ${up.id}, this.checked)" style="width: auto; margin: 0;">
+                                Show on Marquee Ticker
+                            </label>
                         </div>
                         <div class="crud-actions">
                             <button class="btn-crud btn-crud-del" onclick="deleteItem('upcomingEvent', ${up.id})"><i class="fas fa-trash"></i></button>
@@ -771,18 +862,23 @@
                 });
             }
 
-            // 5. ACHIEVEMENTS
+            // 5. ACHIEVEMENTS (WITH MARQUEE CHECKBOX)
             if (globalAchievements.length === 0) {
                 achievementContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>No achievements records found.</p>";
             } else {
                 achievementContainer.innerHTML = "";
                 [...globalAchievements].reverse().forEach(ach => {
+                    const isChecked = ach.showInMarquee ? 'checked' : '';
                     achievementContainer.innerHTML += `
                     <div class="data-card" style="border-left: 3px solid var(--accent-lime);">
                         <div class="data-meta">
                             <strong>🏆 ${ach.title} (${ach.subtitle || ''})</strong>
                             <span class="badge" style="background:rgba(174,234,0,0.1); color:var(--accent-lime);">${ach.category}</span>
                             <small>${ach.description || ''}</small>
+                            <label style="margin-top: 8px; font-size: 0.78rem; color: var(--accent-lime); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" ${isChecked} onchange="toggleMarqueeFeature('achievements', ${ach.id}, this.checked)" style="width: auto; margin: 0;">
+                                Show on Marquee Ticker
+                            </label>
                         </div>
                         <div class="crud-actions">
                             <button class="btn-crud btn-crud-del" onclick="deleteItem('achievement', ${ach.id})"><i class="fas fa-trash"></i></button>
@@ -844,7 +940,13 @@
         }
 
         function setupEdit(type, id) {
-            if (type === 'notice') {
+            if (type === 'ticker') {
+                const item = globalTickers.find(t => t.id === id);
+                if (!item) return;
+                document.getElementById("ticker-id").value = item.id;
+                document.getElementById("ticker-text").value = item.text;
+                document.getElementById("ticker-text").focus();
+            } else if (type === 'notice') {
                 const item = globalNotices.find(n => n.id === id);
                 if (!item) return;
                 document.getElementById("notice-id").value = item.id;
@@ -855,7 +957,7 @@
                 const item = globalRecentPosts.find(e => e.id === id);
                 if (!item) return;
 
-                const btn = document.querySelectorAll('.tool-nav-btn')[3];
+                const btn = document.querySelectorAll('.tool-nav-btn')[4];
                 switchToolTab('tab-recent-events', btn);
 
                 document.getElementById("recent-event-id").value = item.id;
