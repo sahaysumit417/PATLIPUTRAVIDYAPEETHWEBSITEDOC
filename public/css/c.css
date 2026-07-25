@@ -2143,3 +2143,81 @@ body {
         margin-right: 10px !important;
     }
 }
+/* 🎯 SOCIAL MEDIA OFFICIAL BRAND COLORS */
+
+/* 1. Facebook Official Blue */
+.footer-social-row a .fa-facebook-f {
+    color: #1877F2 !important;
+}
+
+/* 2. Instagram Official Gradient / Color */
+.footer-social-row a .fa-instagram {
+    color: #e1306c !important;
+}
+
+/* 3. YouTube Official Red */
+.footer-social-row a .fa-youtube {
+    color: #FF0000 !important;
+}
+
+/* Hover karne par background white aur icons slightly enlarge ho jae */
+.footer-social-row a:hover {
+    background: #ffffff !important;
+    transform: translateY(-4px) !important;
+}
+/* 🎯 SOCIAL MEDIA OFFICIAL BRAND COLORS & REMOVE UNDERLINE */
+
+/* 1. Link se Underline hatayein */
+.footer-social-row a {
+    text-decoration: none !important;
+}
+
+/* 2. Facebook Official Blue */
+.footer-social-row a .fa-facebook-f {
+    color: #1877F2 !important;
+}
+
+/* 3. Instagram Official Color */
+.footer-social-row a .fa-instagram {
+    color: #e1306c !important;
+}
+
+/* 4. YouTube Official Red */
+.footer-social-row a .fa-youtube {
+    color: #FF0000 !important;
+}
+
+/* Hover Effect */
+.footer-social-row a:hover {
+    background: #ffffff !important;
+    transform: translateY(-4px) !important;
+    text-decoration: none !important;
+}
+/* 🎯 SOCIAL MEDIA OFFICIAL BRAND COLORS, NO UNDERLINE & CLEAN HOVER */
+
+/* 1. Link se Underline hatayein */
+.footer-social-row a {
+    text-decoration: none !important;
+}
+
+/* 2. Facebook Official Blue */
+.footer-social-row a .fa-facebook-f {
+    color: #1877F2 !important;
+}
+
+/* 3. Instagram Official Color */
+.footer-social-row a .fa-instagram {
+    color: #e1306c !important;
+}
+
+/* 4. YouTube Official Red */
+.footer-social-row a .fa-youtube {
+    color: #FF0000 !important;
+}
+
+/* 5. Hover Effect (White background removed) */
+.footer-social-row a:hover {
+    background: rgba(255, 255, 255, 0.08) !important; /* Solid white hata kar subtle glow rakha hai */
+    transform: translateY(-4px) !important;
+    text-decoration: none !important;
+}
