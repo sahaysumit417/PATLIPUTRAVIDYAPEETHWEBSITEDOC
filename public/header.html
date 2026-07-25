@@ -22,18 +22,19 @@
 
 <ul class="nav-links header-menu-navigation">
     <li><a href="/" class="nav-item-link item-home-link"><i class="fas fa-home"></i> Home</a></li>
-<li class="nav-dropdown-item">
-    <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
-        About<i class="fas fa-chevron-down dropdown-caret-icon"></i>
-    </a>
-    <ul class="nav-submenu-list">
-        <li><a href="/about#the-school"><i class="fas fa-school"></i> The School</a></li>
-        <li><a href="/school-timing"><i class="fas fa-clock"></i> School Timing</a></li>
-        <li><a href="/team"><i class="fas fa-users"></i> Our Team</a></li>
-        <!-- Mandatory Disclosure ka direct link -->
-        <li><a href="/mandatory-disclosure"><i class="fas fa-file-invoice"></i> Mandatory Information</a></li>
-    </ul>
-</li>
+    
+    <!-- 🎯 1. ABOUT US DROPDOWN -->
+    <li class="nav-dropdown-item">
+        <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
+            About<i class="fas fa-chevron-down dropdown-caret-icon"></i>
+        </a>
+        <ul class="nav-submenu-list">
+            <li><a href="/about#the-school"><i class="fas fa-school"></i> The School</a></li>
+            <li><a href="/school-timing"><i class="fas fa-clock"></i> School Timing</a></li>
+            <li><a href="/team"><i class="fas fa-users"></i> Our Team</a></li>
+            <li><a href="/mandatory-disclosure"><i class="fas fa-file-invoice"></i> Mandatory Information</a></li>
+        </ul>
+    </li>
 
     <!-- 🎯 2. EVENTS DROPDOWN -->
     <li class="nav-dropdown-item">
@@ -45,7 +46,8 @@
             <li><a href="/recent-events"><i class="fas fa-history"></i> Recent Events</a></li>
         </ul>
     </li>
-     <!-- 🎯 3. ACHIEVEMENTS DROPDOWN -->
+
+    <!-- 🎯 3. ACHIEVEMENTS DROPDOWN -->
     <li class="nav-dropdown-item">
         <a href="javascript:void(0)" class="nav-item-link dropdown-toggle-link">
             Achievements <i class="fas fa-chevron-down dropdown-caret-icon"></i>
@@ -56,9 +58,16 @@
             <li><a href="/achievements?tab=awards"><i class="fas fa-trophy"></i> School Awards</a></li>
         </ul>
     </li>    
+
     <li><a href="/gallery" class="nav-item-link">Gallery</a></li>
     <li><a href="/contact" class="nav-item-link">Contacts</a></li>
     
+    <!-- 🌐 ERP NAV LINK ADDED -->
+    <li>
+        <a href="https://app.schoolcanvas.com/" target="_blank" class="nav-item-link"> ERP Login
+        </a>
+    </li>
+
     <li class="btn-enquiry-list-node">
         <a href="javascript:void(0)" onclick="openEnquiryModal()" class="header-enquiry-trigger-btn">
             Enquiry
