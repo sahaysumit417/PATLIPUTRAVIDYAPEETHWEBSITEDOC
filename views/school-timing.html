@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Timing, Rules & Routine | Patliputra Vidyapeeth</title>
+    <!-- Browser Tab Icon (Favicon) -->
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+    
+    <style>
+        .timing-wrapper { max-width: 1000px; margin: 40px auto; padding: 0 20px; font-family: 'Poppins', sans-serif; }
+        .page-header { border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 30px; }
+        .page-header h1 { color: #064e3b; font-size: 2.2rem; margin: 0; }
+        .page-header p { color: #64748b; margin: 5px 0 0 0; }
+
+        .timing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .timing-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; border-top: 4px solid #064e3b; }
+        .timing-card h2 { color: #064e3b; font-size: 1.3rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        
+        .doc-section { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; margin-top: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .doc-section h2 { color: #064e3b; font-size: 1.4rem; margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        
+        .doc-list { list-style: none; padding: 0; margin: 0; }
+        .doc-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .doc-list li:last-child { border-bottom: none; }
+        .doc-title { font-weight: 500; color: #1e293b; display: flex; align-items: center; gap: 10px; }
+        .btn-view-pdf { background: #064e3b; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease; }
+        .btn-view-pdf:hover { background: #04382a; }
+        .badge-cat { background: #e2e8f0; color: #475569; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <nav id="dynamic-header"></nav>
+
+    <div class="timing-wrapper">
+        <div class="page-header">
+            <h1>School Timing, Routine & Academic Syllabus</h1>
+            <p>Official schedules, attendance rules, daily class routines, and downloadable syllabus PDFs.</p>
+        </div>
+
+        <!-- General Daily Timing Cards -->
+        <div class="timing-grid">
+            <div class="timing-card">
+                <h2><i class="fas fa-sun" style="color: #f59e0b;"></i> Summer Timings</h2>
+                <p><strong>Nursery to Class XII:</strong> 07:30 AM - 01:30 PM</p>
+                <p><strong>Assembly:</strong> 07:35 AM - 07:55 AM</p>
+            </div>
+            <div class="timing-card">
+                <h2><i class="fas fa-snowflake" style="color: #0ea5e9;"></i> Winter Timings</h2>
+                <p><strong>Nursery to Class XII:</strong> 08:30 AM - 02:30 PM</p>
+                <p><strong>Assembly:</strong> 08:35 AM - 08:55 AM</p>
+            </div>
+        </div>
+
+        <!-- Dynamic Admin Uploaded Routine, Rules & Syllabus Section -->
+        <div class="doc-section">
+            <h2><i class="fas fa-file-pdf" style="color: #ef4444;"></i> Routines, Rules & Syllabus Documents</h2>
+            <ul id="academic-docs-list" class="doc-list">
+                <li style="color: #94a3b8;">Loading official documents...</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+
+    <!-- views/school-timing.html ke script portion me update karein -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const listContainer = document.getElementById('academic-docs-list');
+
+        fetch('/api/data')
+            .then(res => res.json())
+            .then(data => {
+                const allDocs = data.documents || [];
+                
+                // Class Routine, Syllabus, Rules & Regulations aur Calendar sabhi isiliye dikhenge
+                const targetCategories = ['routine', 'syllabus', 'rules', 'calendar'];
+                const filteredDocs = allDocs.filter(d => targetCategories.includes(d.category));
+
+                if (filteredDocs.length === 0) {
+                    listContainer.innerHTML = `
+                        <li style="color: #64748b; padding: 20px 0;">
+                            अभी इस सेक्शन में कोई भी Routine, Syllabus या Rules PDF अपलोड नहीं किया गया है।
+                        </li>`;
+                    return;
+                }
+
+                listContainer.innerHTML = "";
+                
+                filteredDocs.reverse().forEach(doc => {
+                    // Category Badge Custom Styling
+                    let badgeColor = '#475569';
+                    if (doc.category === 'syllabus') badgeColor = '#2563eb';
+                    if (doc.category === 'rules') badgeColor = '#d97706';
+                    if (doc.category === 'routine') badgeColor = '#16a34a';
+
+                    listContainer.innerHTML += `
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #e2e8f0;">
+                            <div class="doc-title" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <i class="fas fa-file-pdf" style="color: #ef4444; font-size: 1.4rem;"></i>
+                                <div>
+                                    <strong style="color: #1e293b; font-size: 0.95rem; display: block;">${doc.title}</strong>
+                                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                                        <span style="background: ${badgeColor}; color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase;">
+                                            ${doc.category}
+                                        </span>
+                                        <span style="background: #e2e8f0; color: #334155; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                                            🎓 ${doc.targetClass || 'All Classes'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="${doc.fileUrl}" target="_blank" class="btn-view-pdf" style="background: #064e3b; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                                <i class="fas fa-eye"></i> View PDF
+                            </a>
+                        </li>
+                    `;
+                });
+            })
+            .catch(err => {
+                console.error("Error fetching documents:", err);
+                listContainer.innerHTML = `<li style="color: red;">Error loading documents!</li>`;
+            });
+    });
+</script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

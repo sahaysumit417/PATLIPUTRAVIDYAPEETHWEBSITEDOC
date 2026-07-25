@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team & Leadership | Patliputra Vidyapeeth</title>
+    <!-- Browser Tab Icon (Favicon) -->
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/c.css">
+    
+    <style>
+        :root {
+            --brand-green: #064e3b;
+            --brand-lime: #aeea00;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+
+        .team-page-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header-block {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--brand-green);
+            padding-bottom: 15px;
+        }
+
+        .page-header-block h1 {
+            color: var(--brand-green);
+            font-size: 2.2rem;
+            margin: 0 0 5px 0;
+            font-weight: 700;
+        }
+
+        .page-header-block p {
+            color: #64748b;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* 2-Column Split Layout */
+        .team-split-layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 35px;
+            align-items: start;
+        }
+
+        /* Left Side: Group Image Container */
+        .group-image-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .group-image-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .group-image-caption {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .group-image-caption h3 {
+            margin: 0;
+            color: var(--brand-green);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .group-image-caption p {
+            margin: 4px 0 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Right Side: Leadership Messages Stack */
+        .leadership-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .leader-profile-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--brand-green);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .leader-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        /* Face alignment fix: object-position top center se face ache se dikhega */
+        .leader-header-flex img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center; 
+            border: 3px solid var(--brand-green);
+            flex-shrink: 0;
+        }
+
+        .leader-meta h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            color: var(--brand-green);
+            font-weight: 700;
+        }
+
+        .leader-meta .designation {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #d97706;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .leader-message-body {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.6;
+            position: relative;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 0;
+            font-style: italic;
+        }
+
+        @media (max-width: 900px) {
+            .team-split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="dynamic-header"></nav>
+
+    <div class="team-page-wrapper">
+        
+        <div class="page-header-block">
+            <h1>Our Team & School Management</h1>
+            <p>The dedicated faculty and leadership driving educational excellence at Patliputra Vidyapeeth.</p>
+        </div>
+
+        <div class="team-split-layout">
+            
+            <!-- 📸 LEFT SIDE: ALL TEAM MEMBERS GROUP IMAGE -->
+            <div class="group-image-card">
+                <img src="/images/pv-staff-group.jpg" alt="Patliputra Vidyapeeth Faculty Team" onerror="this.src='https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1000&auto=format&fit=crop'">
+                <div class="group-image-caption">
+                    <h3>Patliputra Vidyapeeth Faculty & Staff</h3>
+                    <p>Our passionate educators committed to nurturing young minds every day.</p>
+                </div>
+            </div>
+
+            <!-- 👔 RIGHT SIDE: SECRETARY SIR (TOP) & PRINCIPAL MA'AM (BOTTOM) -->
+            <div class="leadership-sidebar">
+                
+                <!-- 1. Secretary Sir Block (Top) -->
+                <div class="leader-profile-box">
+                    <div class="leader-header-flex">
+                        <img src="/images/Director.JPG" alt="Sri. Akash Sulabh" onerror="this.src='https://placehold.co/320x420?text=Secretary+Photo';">
+                        <div class="leader-meta">
+                            <h3>Sri. Akash Sulabh</h3>
+                            <span class="designation"><i class="fas fa-user-tie"></i> Secretary / Chairman</span>
+                        </div>
+                    </div>
+                    <p class="leader-message-body">
+                        "We use modern techniques of education in an Indian cultural environment. We are committed to enlightening your ward and making them all-rounded individuals prepared for leadership as caring global citizens."
+                    </p>
+                </div>
+
+                <!-- 2. Principal Ma'am Block (Below Secretary) -->
+                <div class="leader-profile-box" style="border-left-color: #0ea5e9;">
+                    <div class="leader-header-flex">
+                        <img src="/images/principal.jpg" alt="Smt. Menka" style="border-color: #0ea5e9;" onerror="this.src='https://placehold.co/280x350?text=Principal+Photo';">
+                        <div class="leader-meta">
+                            <h3>Smt. Menka</h3>
+                            <span class="designation" style="color: #0ea5e9;"><i class="fas fa-graduation-cap"></i> Principal</span>
+                        </div>
+                    </div>
+                    <p class="leader-message-body">
+                        "We focus on an education system which explores and empowers the potential innate in every learner. We strive to provide an environment that enriches intellectual, emotional, and physical development."
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer id="dynamic-footer"></footer>
+    <script src="/js/main.js"></script>
+</body>
+</html>

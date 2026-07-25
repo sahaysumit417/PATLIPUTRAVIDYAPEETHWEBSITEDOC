@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Admin Dashboard | Patliputra Vidyapeeth</title>
+    <!-- Browser Tab Icon (Favicon) -->
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" type="image/png" href="/images/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -50,8 +53,16 @@
             gap: 12px;
         }
 
-        .navbar-brand i { color: var(--accent-lime); font-size: 1.4rem; }
-        .navbar-brand h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+        .navbar-brand i {
+            color: var(--accent-lime);
+            font-size: 1.4rem;
+        }
+
+        .navbar-brand h1 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
 
         .btn-logout {
             background: rgba(239, 68, 68, 0.1);
@@ -67,7 +78,10 @@
             gap: 8px;
         }
 
-        .btn-logout:hover { background: var(--danger); color: white; }
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
 
         .metrics-ribbon {
             background: rgba(19, 28, 46, 0.4);
@@ -79,9 +93,22 @@
             overflow-x: auto;
         }
 
-        .metric-mini-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; white-space: nowrap; }
-        .metric-mini-item span { color: var(--text-muted); }
-        .metric-mini-item strong { font-size: 0.95rem; font-weight: 700; }
+        .metric-mini-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .metric-mini-item span {
+            color: var(--text-muted);
+        }
+
+        .metric-mini-item strong {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
 
         .workspace-layout {
             display: grid;
@@ -117,15 +144,30 @@
             transition: all 0.2s ease;
         }
 
-        .tool-nav-btn:hover { background: rgba(255, 255, 255, 0.03); color: var(--text-main); }
+        .tool-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+        }
+
         .tool-nav-btn.active {
             background: rgba(174, 234, 0, 0.08);
             color: var(--accent-lime);
             border: 1px solid rgba(174, 234, 0, 0.15);
         }
 
-        .interface-screen { padding: 30px; overflow-y: auto; box-sizing: border-box; background: var(--bg-main); }
-        .tool-split-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; align-items: start; }
+        .interface-screen {
+            padding: 30px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            background: var(--bg-main);
+        }
+
+        .tool-split-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
 
         .form-card {
             background: var(--bg-card);
@@ -134,7 +176,8 @@
             border: 1px solid var(--border-color);
         }
 
-        .form-card h2, .list-panel-header h2 {
+        .form-card h2,
+        .list-panel-header h2 {
             font-size: 1.05rem;
             font-weight: 600;
             color: var(--text-main);
@@ -144,9 +187,17 @@
             gap: 10px;
         }
 
-        label { font-weight: 500; color: var(--text-muted); display: block; margin-top: 15px; font-size: 0.85rem; }
+        label {
+            font-weight: 500;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             width: 100%;
             margin-top: 6px;
             padding: 12px 16px;
@@ -159,7 +210,9 @@
             font-size: 0.9rem;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             border-color: var(--accent-lime);
             outline: none;
         }
@@ -248,22 +301,77 @@
             gap: 15px;
         }
 
-        .data-meta strong { display: block; color: var(--text-main); font-weight: 500; }
-        .data-meta small { color: var(--text-muted); display: block; margin-top: 4px; }
+        .data-meta strong {
+            display: block;
+            color: var(--text-main);
+            font-weight: 500;
+        }
 
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-top: 6px; }
-        .badge-enq { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .crud-actions { display: flex; gap: 6px; }
+        .data-meta small {
+            color: var(--text-muted);
+            display: block;
+            margin-top: 4px;
+        }
 
-        .btn-crud { border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 500; border-radius: 4px; cursor: pointer; }
-        .btn-crud-edit { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
-        .btn-crud-del { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
 
-        .info-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
-        .tab-panel { display: none; }
-        .tab-panel.active-panel { display: block; }
+        .badge-enq {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
 
-        .event-thumb-group { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .crud-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-crud {
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-crud-edit {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--warning);
+        }
+
+        .btn-crud-del {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active-panel {
+            display: block;
+        }
+
+        .event-thumb-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
         .event-thumb-group img {
             width: 50px;
             height: 50px;
@@ -279,7 +387,8 @@
     <nav class="top-navbar">
         <div class="navbar-brand">
             <i class="fas fa-shield-halved"></i>
-            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span></h1>
+            <h1>Patliputra Vidyapeeth <span style="color: var(--text-muted); font-weight: 300;">| Control Console</span>
+            </h1>
         </div>
         <a href="/admin/logout" class="btn-logout">
             <i class="fas fa-power-off"></i> Sign Out
@@ -320,7 +429,8 @@
     <div class="workspace-layout">
 
         <div class="sidebar-tools">
-            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
+            <div
+                style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding-left: 10px; margin-bottom: 6px;">
                 Control Panel Tools
             </div>
 
@@ -362,23 +472,29 @@
             <div id="tab-ticker" class="tab-panel active-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="ticker-form-title"><i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Add / Update Marquee Ticker</h2>
+                        <h2 id="ticker-form-title"><i class="fas fa-scroll" style="color:var(--accent-lime);"></i> Add /
+                            Update Marquee Ticker</h2>
                         <form id="ticker-form" action="/api/admin/upload-ticker" method="POST">
                             <input type="hidden" id="ticker-id" name="tickerId" value="">
-                            
-                            <label>Ticker Announcement Text</label>
-                            <textarea id="ticker-text" name="tickerText" rows="4" placeholder="e.g. 🎉 Admissions Open for Session 2026-2027 | Class X Board Results 100% Passed!" required></textarea>
-                            
-                            <p class="info-text">💡 Ye text Home Page (`index.html`) ke top scrolling marquee bar par LIVE chalega.</p>
 
-                            <button type="submit" id="ticker-btn" class="btn-prime" style="background: var(--accent-lime); color: var(--bg-main);">
+                            <label>Ticker Announcement Text</label>
+                            <textarea id="ticker-text" name="tickerText" rows="4"
+                                placeholder="e.g. 🎉 Admissions Open for Session 2026-2027 | Class X Board Results 100% Passed!"
+                                required></textarea>
+
+                            <p class="info-text">💡 Ye text Home Page (`index.html`) ke top scrolling marquee bar par
+                                LIVE chalega.</p>
+
+                            <button type="submit" id="ticker-btn" class="btn-prime"
+                                style="background: var(--accent-lime); color: var(--bg-main);">
                                 <i class="fas fa-paper-plane"></i> Publish To Marquee Ticker
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-bullhorn" style="color:var(--accent-lime);"></i> Active Ticker Announcements</h2>
+                            <h2><i class="fas fa-bullhorn" style="color:var(--accent-lime);"></i> Active Ticker
+                                Announcements</h2>
                         </div>
                         <div id="sidebar-ticker">Loading ticker records...</div>
                     </div>
@@ -387,7 +503,8 @@
 
             <div id="tab-enquiries" class="tab-panel">
                 <div class="list-panel-header">
-                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs</h2>
+                    <h2><i class="fas fa-envelope-open-text" style="color:var(--warning);"></i> Parent Enquiries Logs
+                    </h2>
                 </div>
                 <div id="sidebar-enquiries" style="max-width: 850px;">Loading database records...</div>
             </div>
@@ -395,14 +512,16 @@
             <div id="tab-notices" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="notice-form-title"><i class="fas fa-bullhorn" style="color:var(--success);"></i> Dispatch Notice</h2>
+                        <h2 id="notice-form-title"><i class="fas fa-bullhorn" style="color:var(--success);"></i>
+                            Dispatch Notice</h2>
                         <form id="notice-form" action="/api/admin/upload-notice" method="POST">
                             <input type="hidden" id="notice-id" name="noticeId" value="">
                             <label>Notice Headline</label>
                             <input type="text" id="notice-title" name="title" required>
                             <label>Notice Content Body</label>
                             <textarea id="notice-desc" name="description" rows="5" required></textarea>
-                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i> Publish Notice</button>
+                            <button type="submit" id="notice-btn" class="btn-prime"><i class="fas fa-paper-plane"></i>
+                                Publish Notice</button>
                         </form>
                     </div>
                     <div>
@@ -418,28 +537,35 @@
                 <div class="tool-split-grid">
                     <div class="form-card">
                         <h2><i class="fas fa-calendar-plus" style="color:var(--info);"></i> Add Upcoming Event</h2>
-                        <form id="upcoming-event-form" action="/api/admin/upload-upcoming-event" method="POST" enctype="multipart/form-data">
+                        <form id="upcoming-event-form" action="/api/admin/upload-upcoming-event" method="POST"
+                            enctype="multipart/form-data">
                             <input type="hidden" id="upcoming-event-id" name="eventId" value="">
-                            
+
                             <label>Event Name / Title</label>
-                            <input type="text" id="upcoming-event-title" name="eventTitle" placeholder="e.g. Annual Sports Meet 2026" required>
-                            
+                            <input type="text" id="upcoming-event-title" name="eventTitle"
+                                placeholder="e.g. Annual Sports Meet 2026" required>
+
                             <label>Event Date & Time</label>
-                            <input type="text" id="upcoming-event-date" name="eventDate" placeholder="e.g. 15th August 2026, 09:00 AM" required>
+                            <input type="text" id="upcoming-event-date" name="eventDate"
+                                placeholder="e.g. 15th August 2026, 09:00 AM" required>
 
                             <label>Event Location / Venue</label>
-                            <input type="text" id="upcoming-event-venue" name="eventVenue" placeholder="e.g. Main School Ground" required>
-                            
+                            <input type="text" id="upcoming-event-venue" name="eventVenue"
+                                placeholder="e.g. Main School Ground" required>
+
                             <label>Event Details / Description</label>
-                            <textarea id="upcoming-event-desc" name="eventDescription" rows="4" placeholder="Write details about upcoming event..."></textarea>
-                            
+                            <textarea id="upcoming-event-desc" name="eventDescription" rows="4"
+                                placeholder="Write details about upcoming event..."></textarea>
+
                             <label>Banner Image (Optional)</label>
                             <input type="file" name="eventBanner" accept="image/*" style="padding:8px;">
 
                             <!-- 🚩 SHOW IN MARQUEE CHECKBOX FOR UPCOMING EVENTS FORM -->
                             <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" name="showInMarquee" value="true" id="upcoming-marquee-check" style="width: auto; margin: 0;">
-                                <label for="upcoming-marquee-check" style="margin: 0; font-size: 0.82rem; color: var(--accent-lime); cursor: pointer;">
+                                <input type="checkbox" name="showInMarquee" value="true" id="upcoming-marquee-check"
+                                    style="width: auto; margin: 0;">
+                                <label for="upcoming-marquee-check"
+                                    style="margin: 0; font-size: 0.82rem; color: var(--accent-lime); cursor: pointer;">
                                     🚩 Display on Home Page Marquee Ticker
                                 </label>
                             </div>
@@ -461,28 +587,35 @@
             <div id="tab-recent-events" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="recent-event-form-title"><i class="fas fa-newspaper" style="color:var(--info);"></i> Create Recent Post</h2>
-                        <form id="recent-event-form" action="/api/admin/upload-event" method="POST" enctype="multipart/form-data">
+                        <h2 id="recent-event-form-title"><i class="fas fa-newspaper" style="color:var(--info);"></i>
+                            Create Recent Post</h2>
+                        <form id="recent-event-form" action="/api/admin/upload-event" method="POST"
+                            enctype="multipart/form-data">
                             <input type="hidden" id="recent-event-id" name="eventId" value="">
 
                             <label>Post Title / Heading</label>
-                            <input type="text" id="recent-event-title" name="eventTitle" placeholder="e.g. Science Exhibition Highlights" required>
+                            <input type="text" id="recent-event-title" name="eventTitle"
+                                placeholder="e.g. Science Exhibition Highlights" required>
 
                             <label>Post Content / Message</label>
-                            <textarea id="recent-event-desc" name="eventDescription" rows="4" placeholder="Write message for this post..." required></textarea>
+                            <textarea id="recent-event-desc" name="eventDescription" rows="4"
+                                placeholder="Write message for this post..." required></textarea>
 
                             <label>Upload Photos (Max 2 Photos)</label>
-                            <input type="file" id="recent-event-photos" name="eventPhotos" accept="image/*" multiple style="padding:8px;" onchange="validateMaxTwoImages(this)">
+                            <input type="file" id="recent-event-photos" name="eventPhotos" accept="image/*" multiple
+                                style="padding:8px;" onchange="validateMaxTwoImages(this)">
                             <p class="info-text">💡 Ye posts sirf <b>/recent-events</b> page par dikhengi.</p>
 
-                            <button type="submit" id="recent-event-btn" class="btn-prime" style="background: var(--info); color: white;">
+                            <button type="submit" id="recent-event-btn" class="btn-prime"
+                                style="background: var(--info); color: white;">
                                 <i class="fas fa-paper-plane"></i> Publish Post
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-clock-rotate-left" style="color:var(--info);"></i> Active Recent Posts</h2>
+                            <h2><i class="fas fa-clock-rotate-left" style="color:var(--info);"></i> Active Recent Posts
+                            </h2>
                         </div>
                         <div id="sidebar-recent-events">Loading posts...</div>
                     </div>
@@ -493,10 +626,12 @@
                 <div class="tool-split-grid">
                     <div class="form-card">
                         <h2><i class="fas fa-trophy" style="color:var(--accent-lime);"></i> Add Achievements Record</h2>
-                        
-                        <form id="achievement-form" action="/api/admin/upload-achievement" method="POST" enctype="multipart/form-data">
+
+                        <form id="achievement-form" action="/api/admin/upload-achievement" method="POST"
+                            enctype="multipart/form-data">
                             <label>Select Achievement Category</label>
-                            <select id="achieve-category" name="category" onchange="handleAchieveCategoryChange(this.value)" required>
+                            <select id="achieve-category" name="category"
+                                onchange="handleAchieveCategoryChange(this.value)" required>
                                 <option value="class-x">Class 10 Board Result</option>
                                 <option value="class-xii">Class 12 Board Result</option>
                                 <option value="awards">School Awards & Recognitions</option>
@@ -505,17 +640,20 @@
                             <div id="achieve-entries-list"></div>
 
                             <button type="button" class="btn-add-more" onclick="addNewAchievementRow()">
-                                <i class="fas fa-plus-circle" style="font-size:1.1rem;"></i> Add More Student / Award Item
+                                <i class="fas fa-plus-circle" style="font-size:1.1rem;"></i> Add More Student / Award
+                                Item
                             </button>
 
-                            <button type="submit" class="btn-prime" style="background: var(--accent-lime); color: var(--bg-main);">
+                            <button type="submit" class="btn-prime"
+                                style="background: var(--accent-lime); color: var(--bg-main);">
                                 <i class="fas fa-check-circle"></i> Save All Achievements
                             </button>
                         </form>
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-medal" style="color:var(--accent-lime);"></i> Published Achievements</h2>
+                            <h2><i class="fas fa-medal" style="color:var(--accent-lime);"></i> Published Achievements
+                            </h2>
                         </div>
                         <div id="sidebar-achievements">Loading records...</div>
                     </div>
@@ -525,20 +663,26 @@
             <div id="tab-gallery" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
-                        <h2 id="gallery-form-title"><i class="fas fa-images" style="color:var(--warning);"></i> Upload Gallery Album</h2>
+                        <h2 id="gallery-form-title"><i class="fas fa-images" style="color:var(--warning);"></i> Upload
+                            Gallery Album</h2>
 
-                        <form id="gallery-form" action="/api/admin/upload-gallery" method="POST" enctype="multipart/form-data">
+                        <form id="gallery-form" action="/api/admin/upload-gallery" method="POST"
+                            enctype="multipart/form-data">
                             <input type="hidden" id="gallery-id" name="galleryId" value="">
 
                             <label>Album Name / Title</label>
-                            <input type="text" id="gallery-title" name="albumTitle" placeholder="e.g. Annual Sports Day 2026" required>
+                            <input type="text" id="gallery-title" name="albumTitle"
+                                placeholder="e.g. Annual Sports Day 2026" required>
 
                             <label>Album Description</label>
-                            <textarea id="gallery-desc" name="albumDescription" rows="3" placeholder="Brief details about this photo album..."></textarea>
+                            <textarea id="gallery-desc" name="albumDescription" rows="3"
+                                placeholder="Brief details about this photo album..."></textarea>
 
                             <label>Upload Photos (Multiple Allowed)</label>
-                            <input type="file" id="gallery-photos" name="galleryPhotos" accept="image/*" multiple required style="padding:8px;">
-                            <p class="info-text">💡 Ye albums Hero Slider, Home Page aur <b>/gallery.html</b> sabhi jagah dikhenge.</p>
+                            <input type="file" id="gallery-photos" name="galleryPhotos" accept="image/*" multiple
+                                required style="padding:8px;">
+                            <p class="info-text">💡 Ye albums Hero Slider, Home Page aur <b>/gallery.html</b> sabhi
+                                jagah dikhenge.</p>
 
                             <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
                                 <i class="fas fa-cloud-arrow-up"></i> Upload Album To Gallery
@@ -547,33 +691,60 @@
                     </div>
                     <div>
                         <div class="list-panel-header">
-                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Gallery Albums</h2>
+                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Gallery Albums
+                            </h2>
                         </div>
                         <div id="sidebar-gallery">Loading gallery...</div>
                     </div>
                 </div>
             </div>
-
+            <!-- views/admin.html me tab-documents form section -->
             <div id="tab-documents" class="tab-panel">
                 <div class="tool-split-grid">
                     <div class="form-card">
                         <h2><i class="fas fa-file-shield" style="color:var(--warning);"></i> Document Upload</h2>
-                        <form id="document-form" action="/api/admin/upload-document" method="POST" enctype="multipart/form-data">
+                        <form id="document-form" action="/api/admin/upload-document" method="POST"
+                            enctype="multipart/form-data">
+
                             <label>Document Category</label>
                             <select id="doc-category" name="category" required>
+                                <option value="routine">Class Routine / Schedule PDF</option>
+                                <option value="syllabus">Syllabus PDF</option>
+                                <option value="rules">School Rules & Regulations</option>
+                                <option value="calendar">Academic Calendar</option>
                                 <option value="disclosure">CBSE Affiliation</option>
                                 <option value="mandatory">Mandatory Disclosure</option>
-                                <option value="calendar">Academic Calendar</option>
-                                <option value="rules">Rules & Regulations</option>
                                 <option value="tc">Transfer Certificate (TC)</option>
-                                <option value="report">Annual Academic Report</option>
+                                <!-- 🎯 Yahan value="fee" set karein -->
+                                <option value="fee">Fee Structure</option>
+                            </select>
+
+                            <!-- 🎯 CLASS SELECTION DROPDOWN -->
+                            <label>Select Class (Only for Syllabus/Routine/Rules)</label>
+                            <select id="doc-class" name="targetClass">
+                                <option value="All Classes">All Classes (General / Common)</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="LKG">LKG</option>
+                                <option value="LKG">UKG</option>
+                                <option value="Class 1">Class 1st</option>
+                                <option value="Class 2">Class 6th</option>
+                                <option value="Class 3">Class 9th</option>
+                                <option value="Class 4">Class 4th</option>
+                                <option value="Class 5">Class 5th</option>
+                                <option value="Class 6">Class 6th</option>
+                                <option value="Class 7">Class 9th</option>
+                                <option value="Class 8">Class 4th</option>
+                                <option value="Class 9">Class 5th</option>
+                                <option value="Class 10">Class 6th</option>
                             </select>
 
                             <label>Document Title</label>
-                            <input type="text" id="doc-title" name="title" required>
+                            <input type="text" id="doc-title" name="title"
+                                placeholder="e.g. Class 10th Annual Syllabus 2026-27" required>
 
                             <label>Select PDF File</label>
-                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required style="padding:8px;">
+                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
+                                style="padding:8px;">
 
                             <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
                                 <i class="fas fa-upload"></i> Publish Document
@@ -588,6 +759,45 @@
                     </div>
                 </div>
             </div>
+            <!-- 
+            <div id="tab-documents" class="tab-panel">
+                <div class="tool-split-grid">
+                    <div class="form-card">
+                        <h2><i class="fas fa-file-shield" style="color:var(--warning);"></i> Document Upload</h2>
+                        <form id="document-form" action="/api/admin/upload-document" method="POST"
+                            enctype="multipart/form-data">
+                            <label>Document Category</label>
+                            <select id="doc-category" name="category" required>
+                                <option value="routine">Class Routine / Schedule PDF</option>
+                                <option value="syllabus">Syllabus PDF</option>
+                                <option value="rules">School Rules & Regulations</option>
+                                <option value="calendar">Academic Calendar</option>
+                                <option value="disclosure">CBSE Affiliation</option>
+                                <option value="mandatory">Mandatory Disclosure</option>
+                                <option value="tc">Transfer Certificate (TC)</option>
+                                <option value="report">Annual Academic Report</option>
+                            </select>
+
+                            <label>Document Title</label>
+                            <input type="text" id="doc-title" name="title" required>
+
+                            <label>Select PDF File</label>
+                            <input type="file" id="doc-file" name="docFile" accept="application/pdf" required
+                                style="padding:8px;">
+
+                            <button type="submit" class="btn-prime" style="background: var(--warning); color: black;">
+                                <i class="fas fa-upload"></i> Publish Document
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="list-panel-header">
+                            <h2><i class="fas fa-folder-open" style="color:var(--warning);"></i> Active Documents</h2>
+                        </div>
+                        <div id="sidebar-documents">Loading documents...</div>
+                    </div>
+                </div>
+            </div> -->
 
         </div>
     </div>
@@ -622,7 +832,7 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             fetchSidebarData();
             addNewAchievementRow();
         });
@@ -724,13 +934,13 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type, id, showInMarquee: isChecked })
             })
-            .then(res => res.json())
-            .then(resData => {
-                if (resData.success) {
-                    console.log("Marquee status updated!");
-                }
-            })
-            .catch(err => alert("Failed to update marquee status"));
+                .then(res => res.json())
+                .then(resData => {
+                    if (resData.success) {
+                        console.log("Marquee status updated!");
+                    }
+                })
+                .catch(err => alert("Failed to update marquee status"));
         }
 
         function renderSidebar() {
