@@ -70,37 +70,65 @@ if (cloudName && apiKey && apiSecret) {
 
 const upload = multer({ storage: storageStrategy });
 
-// 📥 DATA READER
+// ⚡ FAST IN-MEMORY CACHE ENGINE (5 MINUTES TTL)
+let memoryCache = null;
+let lastCacheTime = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 Minutes (300,000 ms)
+
+// 📥 DATA READER (OPTIMIZED WITH 3.5S TIMEOUT & 5-MIN CACHE)
 async function getLocalData() {
     const binId = process.env.JSONBIN_BIN_ID;
     const apiKey = process.env.JSONBIN_KEY;
+    const currentTime = Date.now();
+
     let baseData = { notices: [], events: [], gallery: [], enquiries: [], documents: [], recentPosts: [], tickers: [], upcomingEvents: [], achievements: [] };
 
+    // 1. Return Memory Cache instantly (0ms) if valid
+    if (memoryCache && (currentTime - lastCacheTime < CACHE_TTL)) {
+        return memoryCache;
+    }
+
+    // 2. Fetch from Cloud DB with 3.5s Timeout Guard
     if (binId && apiKey) {
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3500);
+
             const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-                headers: { 'X-Master-Key': apiKey }
+                headers: { 'X-Master-Key': apiKey },
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
+
             if (response.ok) {
                 const resData = await response.json();
-                return Object.assign(baseData, resData.record || {});
+                memoryCache = Object.assign(baseData, resData.record || {});
+                lastCacheTime = Date.now();
+                return memoryCache;
             }
         } catch (err) {
-            console.error("❌ Cloud DB Read Error:", err.message);
+            console.error("⚠️ Cloud DB Delay/Timeout:", err.message);
         }
     }
 
+    // 3. Fallback: Local database file
     if (!fs.existsSync(DATA_FILE)) return baseData;
     try {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-        return raw ? Object.assign(baseData, JSON.parse(raw)) : baseData;
+        memoryCache = raw ? Object.assign(baseData, JSON.parse(raw)) : baseData;
+        lastCacheTime = Date.now();
+        return memoryCache;
     } catch (e) {
         return baseData;
     }
 }
 
-// 📤 DATA SAVER
+// 📤 DATA SAVER (INSTANT CACHE UPDATE + BACKGROUND CLOUD SYNC)
 async function saveAndSyncData(data) {
+    // ⚡ Instant Cache Refresh: Admin update turant live hoga
+    memoryCache = data;
+    lastCacheTime = Date.now();
+
     try {
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     } catch (e) {
